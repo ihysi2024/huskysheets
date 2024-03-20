@@ -26,8 +26,20 @@ public class EventPanel extends JPanel {
    */
   private final List<ViewFeatures> featuresListeners;
 
+  private JButton createEvent;
   private JButton modifyEvent;
   private JButton removeEvent;
+
+  private JLabel eventNameLabel;
+
+  private JLabel locationLabel;
+
+  private JLabel startTimeLabel;
+
+  private JLabel endTimeLabel;
+
+  private JLabel usersListLabel;
+
 
   private JTextField eventName;
 
@@ -37,12 +49,11 @@ public class EventPanel extends JPanel {
 
   private JTextField endTime;
 
-  private JTextField usersList;
+  private JList<String> usersList;
 
   // need:
   // buttons for selecting online/not online
   // buttons for start + end day
-
 
 
   /**
@@ -56,6 +67,47 @@ public class EventPanel extends JPanel {
     MouseEventsListener listener = new MouseEventsListener();
     this.addMouseListener(listener);
     this.addMouseMotionListener(listener);
+
+    // we will need to figure out what layout(s) to use
+    this.setLayout(new FlowLayout());
+    //this.setLayout(new SpringLayout());
+
+
+    // adding a bunch of labels + buttons
+    eventNameLabel = new JLabel("Event Name:");
+    this.add(eventNameLabel);
+
+    eventName = new JTextField(10);
+    this.add(eventName);
+
+    locationLabel = new JLabel("Location:");
+    this.add(locationLabel);
+
+    location = new JTextField(10);
+    this.add(location);
+
+    startTimeLabel = new JLabel("Start Time:");
+    this.add(startTimeLabel);
+
+    startTime = new JTextField(10);
+    this.add(startTime);
+
+    endTimeLabel = new JLabel("End Time:");
+    this.add(endTimeLabel);
+
+    endTime = new JTextField(10);
+    this.add(endTime);
+
+    usersListLabel = new JLabel("User List:");
+    this.add(usersListLabel);
+
+    usersList = new JList<>();
+    this.add(usersList);
+
+
+  //  pack();
+    setVisible(true);
+
   }
 
   /**
@@ -84,8 +136,6 @@ public class EventPanel extends JPanel {
     this.featuresListeners.add(Objects.requireNonNull(features));
   }
 
-
-
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
@@ -102,7 +152,7 @@ public class EventPanel extends JPanel {
     // x & y should be (0, 0) --> coordinates start in top left
     // RED line will start in upper left corner
     // BLUE line will start in upper right corner
-    g2d.setColor(Color.RED);
+    g2d.setColor(Color.YELLOW);
     //NOW:
     // RED line starts in bottom left
     // BLUE line starts in bottom right
@@ -110,7 +160,7 @@ public class EventPanel extends JPanel {
             preferred.width, preferred.height);
 
     //g2d.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
-    g2d.setColor(Color.BLUE);
+    g2d.setColor(Color.GREEN);
     g2d.drawLine(preferred.width, -1 * preferred.height,
             -1 * preferred.width, preferred.height);
 

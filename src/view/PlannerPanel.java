@@ -26,15 +26,11 @@ public class PlannerPanel extends JPanel {
    */
   private final List<ViewFeatures> featuresListeners;
 
-  private JButton createEvent;
   private JButton scheduleEvent;
 
-  private JButton modifyEvent;
-  private JButton removeEvent;
+  private JButton createEvent;
 
-
-  private JTextField input;
-
+  private JButton selectUser; // I don't think this will actually be a JButton, some other type?
 
   /**
    * Creates a panel that will house the view representation of the Simon game

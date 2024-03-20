@@ -3,6 +3,7 @@ package controller;
 import java.util.List;
 
 import model.PlannerSystem;
+import view.IEventView;
 import view.IScheduleView;
 
 
@@ -12,14 +13,16 @@ import view.IScheduleView;
 public class Controller implements ViewFeatures {
   private final PlannerSystem model;
 
-  private final IScheduleView view;
+ // private final IScheduleView view;
+   private final IEventView view;
+
 
   /**
    * Creates an instance of a Simon game controller to control user input (mouse clicks).
    * @param model Simon model
    * @param view Simon view
    */
-  public Controller(PlannerSystem model, IScheduleView view) {
+  public Controller(PlannerSystem model, IEventView view) {
     this.model = model;
     this.view = view;
     this.view.addFeatureListener(this);
