@@ -20,6 +20,14 @@ public class ScheduleView extends JFrame implements IScheduleView {
     this.pack();
   }
 
+  public void openEventView(ReadOnlyPlanner model) {
+    EventPanel newEvent = new EventPanel(model);
+    System.out.println("Event created");
+    newEvent.setVisible(true);
+  }
+
+
+
   @Override
   public void addFeatureListener(ViewFeatures features) {
     this.panel.addFeaturesListener(features);

@@ -4,6 +4,7 @@ import model.NUPlanner;
 import model.PlannerSystem;
 import view.EventView;
 import view.IEventView;
+import view.IScheduleTextView;
 import view.IScheduleView;
 import view.ScheduleView;
 
@@ -15,7 +16,7 @@ public class MainPlanner {
   public static void main(String[] args) {
     PlannerSystem model = new NUPlanner(); // Feel free to customize this as desired
   //  IScheduleView view = new ScheduleView(model);
-    IEventView view = new EventView(model); // (michelle) currently working on event view so changed this here + in controller.
+    IScheduleView view = new ScheduleView(model); // (michelle) currently working on event view so changed this here + in controller.
     Controller controller = new Controller(model, view);
     controller.goPlayGame();
   }

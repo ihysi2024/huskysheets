@@ -10,6 +10,8 @@ public interface ViewFeatures {
 
   // won't implement anything yet
   void scheduleEvent();
+
+  void openEventView();
   void createEvent(String eventName, String startDay, String startTime,
                    String endDate, String endTime, String location, List<String> users);
 
