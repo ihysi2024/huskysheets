@@ -1,9 +1,12 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.PlannerSystem;
 import model.ReadOnlyPlanner;
+import model.Schedule;
+import model.User;
 import view.EventPanel;
 import view.IEventView;
 import view.IScheduleView;
@@ -25,6 +28,8 @@ public class Controller implements ViewFeatures {
    */
   public Controller(PlannerSystem model) {
     this.model = model;
+    this.model.addUser(new User("Prof. Lucia", new Schedule(new ArrayList<>())));
+    this.model.addUser(new User("Me", new Schedule(new ArrayList<>())));
   }
 
   public void setView(IScheduleView v) {
@@ -59,12 +64,14 @@ public class Controller implements ViewFeatures {
                           String endDate, String endTime, String location, List<String> users) {
   }
 
+  /**
   @Override
   public void modifyEvent(String eventName, String startDay, String startTime,
                           String endDate, String endTime, String location, List<String> users) {
 
   }
 
+   **/
   @Override
   public void removeEvent() {
 

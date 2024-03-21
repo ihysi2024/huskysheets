@@ -16,8 +16,7 @@ public interface ViewFeatures {
                    String endDate, String endTime, String location, List<String> users);
 
   // list of strings or just a string of users? somewhere would need to separate by newline/comma
-  void modifyEvent(String eventName, String startDay, String startTime,
-                   String endDate, String endTime, String location, List<String> users);
+
 
   void removeEvent();
 

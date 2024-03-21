@@ -26,8 +26,8 @@ public class EventView extends JFrame implements IEventView {
   }
 
   @Override
-  public void addFeatureListener(ViewFeatures features) {
-    this.panel.addFeaturesListener(features);
+  public void addFeatures(ViewFeatures features) {
+    this.panel.addFeatures(features);
   }
 
   @Override

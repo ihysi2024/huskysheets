@@ -13,7 +13,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
   private final PlannerPanel panel;
   private JButton createEventButton;
-  private JButton dummyButton;
 
   /**
    * Creates a view of the Simon game.
@@ -44,8 +43,10 @@ public class ScheduleView extends JFrame implements IScheduleView {
     System.out.println("Event created");
   }
 
+
   public void addFeatures(ViewFeatures features) {
     createEventButton.addActionListener(evt -> features.openEventView());
+
 
   }
 
