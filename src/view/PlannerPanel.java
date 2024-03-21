@@ -14,7 +14,7 @@ import javax.swing.event.MouseInputAdapter;
 import controller.ViewFeatures;
 import model.ReadOnlyPlanner;
 
-public class PlannerPanel extends JPanel {
+public class PlannerPanel extends JPanel implements IScheduleView{
 
   /**
    * Our view will need to display a model, so it needs to get the current sequence from the model.
@@ -26,11 +26,11 @@ public class PlannerPanel extends JPanel {
    */
   private final List<ViewFeatures> featuresListeners;
 
-  private JButton scheduleEvent;
+  private JButton scheduleEventButton;
 
-  private JButton createEvent;
+  private JButton createEventButton;
 
-  private JButton selectUser; // I don't think this will actually be a JButton, some other type?
+  private JButton selectUserButton; // I don't think this will actually be a JButton, some other type?
 
   /**
    * Creates a panel that will house the view representation of the Simon game
@@ -43,7 +43,16 @@ public class PlannerPanel extends JPanel {
     MouseEventsListener listener = new MouseEventsListener();
     this.addMouseListener(listener);
     this.addMouseMotionListener(listener);
+
+    //createEventButton = new JButton("Create Event");
+    //createEventButton.setActionCommand("Create Event");
+    //this.add(createEventButton);
+    System.out.println("Got to constructor");
+
+
   }
+
+
 
   /**
    * This method tells Swing what the "natural" size should be
@@ -67,8 +76,36 @@ public class PlannerPanel extends JPanel {
     return new Dimension(40, 40);
   }
 
+
+  @Override
+  public void addFeatureListener(ViewFeatures features) {
+
+  }
+
+  @Override
+  public void display(boolean show) {
+
+  }
+
+  @Override
+  public void openEventView(ReadOnlyPlanner model) {
+
+  }
+
+  public void addFeatures(ViewFeatures features) {
+    System.out.println("got to add features in planner panel");
+    createEventButton.addActionListener(evt -> features.openEventView());
+    this.addMouseListener(new MouseEventsListener() {
+      public void mouseClicked(MouseEvent e) {
+        super.mouseClicked(e);
+        features.openEventView();
+      }
+    });
+  }
+
   public void addFeaturesListener(ViewFeatures features) {
     this.featuresListeners.add(Objects.requireNonNull(features));
+
   }
 
 

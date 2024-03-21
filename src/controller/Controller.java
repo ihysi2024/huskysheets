@@ -3,6 +3,8 @@ package controller;
 import java.util.List;
 
 import model.PlannerSystem;
+import model.ReadOnlyPlanner;
+import view.EventPanel;
 import view.IEventView;
 import view.IScheduleView;
 
@@ -13,19 +15,21 @@ import view.IScheduleView;
 public class Controller implements ViewFeatures {
   private final PlannerSystem model;
 
- // private final IScheduleView view;
-   private final IEventView view;
+  private IScheduleView view;
+   // private final IEventView view;
 
 
   /**
    * Creates an instance of a Simon game controller to control user input (mouse clicks).
    * @param model Simon model
-   * @param view Simon view
    */
-  public Controller(PlannerSystem model, IEventView view) {
+  public Controller(PlannerSystem model) {
     this.model = model;
-    this.view = view;
-    this.view.addFeatureListener(this);
+  }
+
+  public void setView(IScheduleView v) {
+    view = v;
+    view.addFeatures(this);
   }
 
   public void goPlayGame() {
@@ -44,9 +48,15 @@ public class Controller implements ViewFeatures {
   }
 
   @Override
+  public void openEventView() {
+    System.out.println("Got to controller");
+    view.openEventView(model);
+  }
+
+
+  @Override
   public void createEvent(String eventName, String startDay, String startTime,
                           String endDate, String endTime, String location, List<String> users) {
-
   }
 
   @Override
