@@ -1,0 +1,42 @@
+1. Refactor model into two interfaces
+    a. PlannerModel
+        i. extends a ReadonlyPlannerModel
+        ii. contains all the mutator methods
+    b. ReadonlyPlannerModel
+        i. should contain all the
+        observation methods of your model
+
+2. Create two frames
+    a. one for event
+        i. Text box for event name, location name, start time, end time
+        ii. Drop down menu for online, starting day and ending day
+        iii. JList for list of users
+        iv. Modify event
+        v. Remove event
+    b. one for schedule and main system
+        i. file menu to load an XML and another to export an XML
+        ii. create event
+        iii. schedule event
+        iv. drop down menu for user to examine
+        v. Color events on the schedule red
+
+3. Design 2-4 Interfaces for view
+    a. one to describe what main system's frame is capable of
+    b. one to describe what the event's frame is capable of
+    c. one might be needed to describe what the schedule panel
+     ought to be capable of
+    d. one might be needed to describe what the event
+     frame's panel out to be capable of
+    e. View constructor should take in a ReadonlyPlannerModel
+
+
+5. Clicking on "create event" button should print a message using
+System.out with the words "Create event:" and the event's details
+Same with remove event.
+6. Clicking on the red button to close the window should
+dispose the window
+7. Clicking the create/remove button should print a message
+stating some kind of error.
+8. XML loader should open a JFileChooser to allow the user to find
+and select the XML then print the path to that XML file with System.out
+9. add a PlannerRunner class as a placeholder
