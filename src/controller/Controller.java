@@ -22,17 +22,14 @@ public class Controller implements ViewFeatures {
   /**
    * Creates an instance of a Simon game controller to control user input (mouse clicks).
    * @param model Simon model
-   * @param view Simon view
    */
-  public Controller(PlannerSystem model, IScheduleView view) {
+  public Controller(PlannerSystem model) {
     this.model = model;
-    this.view = view;
-    this.view.addFeatures(this);
   }
 
   public void setView(IScheduleView v) {
     view = v;
-    view.addFeatureListener(this);
+    view.addFeatures(this);
   }
 
   public void goPlayGame() {

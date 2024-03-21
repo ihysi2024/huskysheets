@@ -14,7 +14,7 @@ import javax.swing.event.MouseInputAdapter;
 import controller.ViewFeatures;
 import model.ReadOnlyPlanner;
 
-public class PlannerPanel extends JPanel {
+public class PlannerPanel extends JPanel implements IScheduleView{
 
   /**
    * Our view will need to display a model, so it needs to get the current sequence from the model.
@@ -44,9 +44,9 @@ public class PlannerPanel extends JPanel {
     this.addMouseListener(listener);
     this.addMouseMotionListener(listener);
 
-    createEventButton = new JButton("Create Event");
-    createEventButton.setActionCommand("Create Event");
-    this.add(createEventButton);
+    //createEventButton = new JButton("Create Event");
+    //createEventButton.setActionCommand("Create Event");
+    //this.add(createEventButton);
     System.out.println("Got to constructor");
 
 
@@ -77,9 +77,30 @@ public class PlannerPanel extends JPanel {
   }
 
 
+  @Override
+  public void addFeatureListener(ViewFeatures features) {
+
+  }
+
+  @Override
+  public void display(boolean show) {
+
+  }
+
+  @Override
+  public void openEventView(ReadOnlyPlanner model) {
+
+  }
+
   public void addFeatures(ViewFeatures features) {
     System.out.println("got to add features in planner panel");
     createEventButton.addActionListener(evt -> features.openEventView());
+    this.addMouseListener(new MouseEventsListener() {
+      public void mouseClicked(MouseEvent e) {
+        super.mouseClicked(e);
+        features.openEventView();
+      }
+    });
   }
 
   public void addFeaturesListener(ViewFeatures features) {
@@ -87,13 +108,6 @@ public class PlannerPanel extends JPanel {
 
   }
 
-
-
-  public void openEventPanel() {
-    EventPanel newEvent = new EventPanel(model);
-    System.out.println("Event created");
-    newEvent.setVisible(true);
-  }
 
 
   @Override
