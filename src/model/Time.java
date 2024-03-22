@@ -38,6 +38,11 @@ public class Time implements ITime {
       return dayString;
     }
 
+    public int getDayIdx() {
+      return dayIdx;
+    }
+
+
   }
 
   /**
@@ -73,6 +78,16 @@ public class Time implements ITime {
    */
   public int getMinutes() {
     return this.minutes;
+  }
+
+  /**
+   * Calculates the # of minutes since midnight that have passed prior to event beginning.
+   * If event starts at midnight, returns 0.
+   *
+   * @return # of minutes since midnight until beginning of event
+   */
+  public int minutesSinceMidnight() {
+    return 60*this.getHours() + this.getMinutes();
   }
 
   /**

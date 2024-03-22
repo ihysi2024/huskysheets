@@ -40,4 +40,14 @@ public interface ITime {
    * @return String rep of time in readable format
    */
   String timeToString();
+
+
+  /**
+   * Calculates the # of minutes since midnight that have passed prior to event beginning.
+   * If event starts at midnight, returns 0.
+   *
+   * @return # of minutes since midnight until beginning of event
+   */
+  int minutesSinceMidnight();
+
 }

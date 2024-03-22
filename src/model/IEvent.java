@@ -23,6 +23,21 @@ public interface IEvent {
   Time getStartTime();
 
   /**
+   * Getting the event's end time to be used in other event calculations.
+   *
+   * @return the event's end time
+   */
+  Time getEndTime();
+
+
+  /**
+   * Calculates the duration of this event in minutes.
+   *
+   * @return event's duration in minutes
+   */
+  int eventDuration();
+
+  /**
    * Compares two events to see if their times coincide with each other.
    * if the event's start time is the same or after the previous event's end time,
    * the event do not coincide.

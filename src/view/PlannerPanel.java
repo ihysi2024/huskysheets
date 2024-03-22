@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +13,10 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
 import controller.ViewFeatures;
+import model.Event;
+import model.IEvent;
 import model.ReadOnlyPlanner;
+import model.Time;
 
 import static java.lang.Math.floor;
 
@@ -110,6 +114,75 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
   }
 
+  private void paintEvent(Graphics g, IEvent event) {
+    Color color = new Color(255, 100, 200, 100);
+    Graphics2D g2d = (Graphics2D) g.create();
+    g2d.setColor(color);
+
+    Dimension preferred = getPreferredLogicalSize();
+
+
+    Time startTime = event.getStartTime();
+    Time endTime = event.getEndTime();
+   /// int rectWidth = (int) Math.round(preferred.width / 7.0);
+    int rectWidth = preferred.width - ((int) Math.round(preferred.width / 7.0));
+  //  int rectWidth = (int) Math.round((6 * preferred.width) / 7.0);
+    int[] xy_coords = this.timeToPaintLoc(g, startTime);
+    //int rectHeight = (int) Math.round(event.eventDuration() / 1440.0);
+    int rectHeight = 100;
+    System.out.println("rect width: " + rectWidth);
+    System.out.println("rect height: " + rectHeight);
+
+    g2d.fillRect(xy_coords[0], xy_coords[1], rectWidth, rectHeight);
+  }
+
+  // for painting the events
+  // divide the view into 1440 sections (24 hours * 60 minutes), use that to determine
+  // where an event should be drawn
+  private int[] timeToPaintLoc(Graphics g, Time time) {
+    Dimension preferred = getPreferredLogicalSize();
+    int[] x_y_coords = new int[2];
+
+    // width of the rectangle (for one day) will always be constant
+    // width of the board / 7
+    // (x, y) coordinate --> x coordinate will correspond to the day event is starting
+    // y coordinate will correspond to the time
+    // height of rectangle will correspond to duration
+
+    int weekColXCoord = (int) Math.round((time.getDate().getDayIdx() / 7.0) * preferred.width); // int division will be an issue?
+    //01:30 --> 90 minutes
+    // (1440
+  //  int weekColYCoord = (int) Math.round(time.minutesSinceMidnight() / 1440.0);
+    int weekColYCoord = (int) Math.round(this.dayLoc(time) * preferred.height);
+   // int rectHeight = (int) Math.round(time.minutesSinceMidnight() / 1440.0);
+    System.out.println("x coord: " + weekColXCoord);
+    System.out.println("y coord: " + weekColYCoord);
+
+    x_y_coords[0] = weekColXCoord;
+    x_y_coords[1] = weekColYCoord;
+    return x_y_coords;
+    // g2d.drawLine(weekCol * getWidth()/7, row * getHeight()/3
+  //          , (col + 1) * getWidth()/3, (row+1) * getHeight()/3);
+  }
+
+  // -1 to 1
+  // need to split into 1440 sections and determine what coordinate to place
+  private double minLoc(Time time) {
+    int timePos = time.minutesSinceMidnight();
+    // make an array
+    double[] lineArr = getLineSpacings(60*24);
+    return lineArr[timePos];
+  }
+
+  private double dayLoc(Time time) {
+    int dayPos = time.getDate().getDayIdx();
+    // make an array
+    double[] lineArr = getLineSpacings(8);
+    System.out.println("day coord: " + lineArr[dayPos]);
+    return lineArr[dayPos];
+  }
+
+
 
 
   @Override
@@ -121,6 +194,15 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     this.paintLines(g2d, Color.GRAY, 8, 1, true);
     this.paintLines(g2d, Color.GRAY, 25, 1, false);
     this.paintLines(g2d, Color.BLACK, 7, 2, false);
+
+    this.paintEvent(g, new Event("CS3500 Morning Lecture",
+            new Time(Time.Day.TUESDAY, 9, 50),
+            new Time(Time.Day.TUESDAY, 11, 30),
+            false,
+            "Churchill Hall 101",
+            new ArrayList<>(Arrays.asList("Prof. Lucia",
+                    "Student Anon",
+                    "Chat"))));
 
     /*
         Dimension preferred = getPreferredLogicalSize();
