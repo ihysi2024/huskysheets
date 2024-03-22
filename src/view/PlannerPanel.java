@@ -73,7 +73,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
    * @return Our preferred *logical* size.
    */
   private Dimension getPreferredLogicalSize() {
-    return new Dimension(40, 40);
+    return new Dimension(100, 100);
   }
 
 
@@ -141,7 +141,50 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     g2d.drawLine(preferred.width, -1 * preferred.height,
             -1 * preferred.width, preferred.height);
 
+    this.paintVerticalLines(g2d, 3);
 
+/*
+ g2d.drawLine(this.getWidth() / 3, 0,
+            this.getWidth()/3, this.getHeight());
+    g2d.drawLine(2 * this.getWidth() / 3, 0,
+            2 * this.getWidth() /3, this.getHeight());
+    g2d.drawLine(0, this.getHeight() / 3,
+            this.getWidth(), this.getHeight() / 3);
+    g2d.drawLine(0, 2 * this.getHeight() / 3,
+            this.getWidth(), 2 * this.getHeight() / 3);
+
+ */
+
+  }
+
+  private void paintVerticalLines(Graphics g, int numLines) {
+    Dimension preferred = getPreferredLogicalSize();
+    Graphics2D g2d = (Graphics2D) g.create();
+    g2d.setColor(Color.BLACK);
+    System.out.println("width: " + preferred.width);
+    System.out.println("height: " + preferred.height);
+
+    double[] lineSpacings = getLineSpacings(numLines);
+
+    for (int index = 0; index < numLines; index++) {
+      int x_coord = (index * preferred.width) / numLines;
+      System.out.println("x coord: " +x_coord);
+      g2d.drawLine((int) ((lineSpacings[index] * preferred.width) / numLines), -1 * preferred.height,
+              (int) ((lineSpacings[index] * preferred.width) / numLines), preferred.height);
+
+     // g2d.drawLine((i * this.getWidth()) / numLines, this.getHeight(),
+    //          (i * this.getWidth()) / numLines, 0);
+    }
+  }
+
+  private double[] getLineSpacings(int numLines) {
+    double[] d = new double[numLines];
+    for (int i = 0; i < numLines; i++){
+      //d[i] = min + i * (max - min) / (points - 1);
+      d[i] = -1 + (double) (2 * i) / (numLines - 1);
+
+    }
+    return d;
   }
 
 
