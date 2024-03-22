@@ -14,6 +14,8 @@ import javax.swing.event.MouseInputAdapter;
 import controller.ViewFeatures;
 import model.ReadOnlyPlanner;
 
+import static java.lang.Math.floor;
+
 public class PlannerPanel extends JPanel implements IScheduleView{
 
   /**
@@ -114,25 +116,17 @@ public class PlannerPanel extends JPanel implements IScheduleView{
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     Graphics2D g2d = (Graphics2D) g.create();
-
-    // Draw your calibration pattern here
-    Rectangle bounds = this.getBounds();
-
-    // g2d.translate(0, bounds.height);
-    // g2d.scale(1, -1);
-
-    Dimension preferred = getPreferredLogicalSize();
-
     g2d.transform(transformLogicalToPhysical());
 
-    //ORIGINALLY:
-    // x & y should be (0, 0) --> coordinates start in top left
-    // RED line will start in upper left corner
-    // BLUE line will start in upper right corner
+    this.paintLines(g2d, Color.GRAY, 8, 1, true);
+    this.paintLines(g2d, Color.GRAY, 25, 1, false);
+    this.paintLines(g2d, Color.BLACK, 7, 2, false);
+
+    /*
+        Dimension preferred = getPreferredLogicalSize();
+            Rectangle bounds = this.getBounds();
+
     g2d.setColor(Color.RED);
-    //NOW:
-    // RED line starts in bottom left
-    // BLUE line starts in bottom right
     g2d.drawLine(-1 * preferred.width, -1 * preferred.height,
             preferred.width, preferred.height);
 
@@ -140,49 +134,62 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     g2d.setColor(Color.BLUE);
     g2d.drawLine(preferred.width, -1 * preferred.height,
             -1 * preferred.width, preferred.height);
-
-    this.paintVerticalLines(g2d, 3);
-
-/*
- g2d.drawLine(this.getWidth() / 3, 0,
-            this.getWidth()/3, this.getHeight());
-    g2d.drawLine(2 * this.getWidth() / 3, 0,
-            2 * this.getWidth() /3, this.getHeight());
-    g2d.drawLine(0, this.getHeight() / 3,
-            this.getWidth(), this.getHeight() / 3);
-    g2d.drawLine(0, 2 * this.getHeight() / 3,
-            this.getWidth(), 2 * this.getHeight() / 3);
-
- */
-
+     */
   }
 
-  private void paintVerticalLines(Graphics g, int numLines) {
-    Dimension preferred = getPreferredLogicalSize();
-    Graphics2D g2d = (Graphics2D) g.create();
-    g2d.setColor(Color.BLACK);
-    System.out.println("width: " + preferred.width);
-    System.out.println("height: " + preferred.height);
+  /**
+   * Paints desired number of equally spaced lines. Number of lines will include lines drawn on
+   * the left and right sides of the bounds.
+   * Can specify the color, width, and orientation of the lines.
+   * @param g instance of Graphics
+   * @param color desired color for lines
+   * @param numLines number of equally spaced lines desired. must be >= 2 to work
+   * @param strokeWidth desired stroke width for lines
+   * @param vert true if vertical lines desired, false if horizontal
+   */
+  private void paintLines(Graphics g, Color color, int numLines, int strokeWidth, boolean vert) {
+    try {
+      Dimension preferred = getPreferredLogicalSize();
+      Graphics2D g2d = (Graphics2D) g.create();
+      g2d.setColor(color);
+      g2d.setStroke(new BasicStroke(strokeWidth));
 
-    double[] lineSpacings = getLineSpacings(numLines);
+      double[] lineSpacings = getLineSpacings(numLines); // get spacings between each line
 
-    for (int index = 0; index < numLines; index++) {
-      int x_coord = (index * preferred.width) / numLines;
-      System.out.println("x coord: " +x_coord);
-      g2d.drawLine((int) ((lineSpacings[index] * preferred.width) / numLines), -1 * preferred.height,
-              (int) ((lineSpacings[index] * preferred.width) / numLines), preferred.height);
-
-     // g2d.drawLine((i * this.getWidth()) / numLines, this.getHeight(),
-    //          (i * this.getWidth()) / numLines, 0);
+      for (int index = 0; index < numLines; index++) {
+        if (vert) {
+          g2d.drawLine((int) Math.round(lineSpacings[index] * preferred.width),
+                  -1 * preferred.height,
+                  (int) Math.round(lineSpacings[index] * preferred.width),
+                  preferred.height);
+        }
+        else {
+          g2d.drawLine(-1 * preferred.width,
+                  (int) Math.round(lineSpacings[index] * preferred.height),
+                  preferred.width,
+                  (int) Math.round(lineSpacings[index] * preferred.height));
+        }
+      }
     }
+    catch (IllegalArgumentException ex) {
+     // throw new IllegalArgumentException("number of lines must be >= 2");
+    }
+
   }
 
+  /**
+   * Creates an array of given length consisting of equally spaced values from -1 to 1.
+   * @param numLines number of lines desired in array. must be > 1
+   * @return array of equally spaced values from -1 to 1
+   * @throws IllegalArgumentException if the # of lines is <= 1
+   */
   private double[] getLineSpacings(int numLines) {
+    if (numLines <= 1) {
+      throw new IllegalArgumentException("num lines must be > 1");
+    }
     double[] d = new double[numLines];
     for (int i = 0; i < numLines; i++){
-      //d[i] = min + i * (max - min) / (points - 1);
       d[i] = -1 + (double) (2 * i) / (numLines - 1);
-
     }
     return d;
   }
