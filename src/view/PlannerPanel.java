@@ -122,16 +122,26 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     Dimension preferred = getPreferredLogicalSize();
 
 
+
     Time startTime = event.getStartTime();
     Time endTime = event.getEndTime();
    /// int rectWidth = (int) Math.round(preferred.width / 7.0);
-    int rectWidth = preferred.width - ((int) Math.round(preferred.width / 7.0));
-  //  int rectWidth = (int) Math.round((6 * preferred.width) / 7.0);
-    int[] xy_coords = this.timeToPaintLoc(g, startTime);
+   // int rectWidth = preferred.width - ((int) Math.round(preferred.width / 7.0));
+   // int rectWidth = 14;
+    int rectWidth = (int) Math.round(this.getWidth() / 7.0);
+  //  int[] xy_coords = this.timeToPaintLoc(g, startTime);
+    int[] xy_coords_test = this.timeToPaintLoc(g, startTime);
+
+    int[] xy_coords = {xy_coords_test[0], 0};
     //int rectHeight = (int) Math.round(event.eventDuration() / 1440.0);
-    int rectHeight = 100;
+    int rectHeight = (int) Math.round(this.getWidth() / 6.0);
     System.out.println("rect width: " + rectWidth);
     System.out.println("rect height: " + rectHeight);
+
+    System.out.println("curr width: " + this.getWidth());
+    System.out.println("curr height: " + this.getHeight());
+
+    g2d.fillOval(0, 0, 40, 40);
 
     g2d.fillRect(xy_coords[0], xy_coords[1], rectWidth, rectHeight);
   }
@@ -149,11 +159,15 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     // y coordinate will correspond to the time
     // height of rectangle will correspond to duration
 
-    int weekColXCoord = (int) Math.round((time.getDate().getDayIdx() / 7.0) * preferred.width); // int division will be an issue?
+    System.out.print("preferred width: " + preferred.width);
+
+    System.out.print("preferred height: " + preferred.height);
+
+    int weekColXCoord = (int) Math.round((time.getDate().getDayIdx() / 7.0) * this.getWidth()); // int division will be an issue?
     //01:30 --> 90 minutes
     // (1440
   //  int weekColYCoord = (int) Math.round(time.minutesSinceMidnight() / 1440.0);
-    int weekColYCoord = (int) Math.round(this.dayLoc(time) * preferred.height);
+    int weekColYCoord = (int) Math.round(this.dayLoc(time) * this.getHeight());
    // int rectHeight = (int) Math.round(time.minutesSinceMidnight() / 1440.0);
     System.out.println("x coord: " + weekColXCoord);
     System.out.println("y coord: " + weekColYCoord);
@@ -161,8 +175,6 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     x_y_coords[0] = weekColXCoord;
     x_y_coords[1] = weekColYCoord;
     return x_y_coords;
-    // g2d.drawLine(weekCol * getWidth()/7, row * getHeight()/3
-  //          , (col + 1) * getWidth()/3, (row+1) * getHeight()/3);
   }
 
   // -1 to 1
