@@ -19,6 +19,7 @@ import model.ReadOnlyPlanner;
 import model.Time;
 
 import static java.lang.Math.floor;
+import static model.Time.stringToTime;
 
 public class PlannerPanel extends JPanel implements IScheduleView{
 
@@ -111,7 +112,6 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
   public void addFeaturesListener(ViewFeatures features) {
     this.featuresListeners.add(Objects.requireNonNull(features));
-
   }
 
   private void paintEvent(Graphics g, IEvent event) {
@@ -119,83 +119,88 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     Graphics2D g2d = (Graphics2D) g.create();
     g2d.setColor(color);
 
-    Dimension preferred = getPreferredLogicalSize();
-
-
-
     Time startTime = event.getStartTime();
     Time endTime = event.getEndTime();
-   /// int rectWidth = (int) Math.round(preferred.width / 7.0);
-   // int rectWidth = preferred.width - ((int) Math.round(preferred.width / 7.0));
-   // int rectWidth = 14;
-    int rectWidth = (int) Math.round(this.getWidth() / 7.0);
-  //  int[] xy_coords = this.timeToPaintLoc(g, startTime);
-    int[] xy_coords_test = this.timeToPaintLoc(g, startTime);
 
-    int[] xy_coords = {xy_coords_test[0], 0};
-    //int rectHeight = (int) Math.round(event.eventDuration() / 1440.0);
-    int rectHeight = (int) Math.round(this.getWidth() / 6.0);
-    System.out.println("rect width: " + rectWidth);
-    System.out.println("rect height: " + rectHeight);
+    int rectWidth = (int) Math.round(this.getWidth() / 7.0); // constant, width of one day
 
-    System.out.println("curr width: " + this.getWidth());
-    System.out.println("curr height: " + this.getHeight());
+    int[] eventStartCoords = this.timeToPaintLoc(startTime);
+    int[] eventEndCoords = this.timeToPaintLoc(endTime);
+
+    int rectHeight = eventEndCoords[1] - eventStartCoords[1];
 
     g2d.fillOval(0, 0, 40, 40);
 
-    g2d.fillRect(xy_coords[0], xy_coords[1], rectWidth, rectHeight);
+
+    if (eventStartCoords[0] == eventEndCoords[0]) { // event starts + ends on same day
+      g2d.fillRect(eventStartCoords[0], eventStartCoords[1], rectWidth, rectHeight);
+    }
+    else {
+      if (eventEndCoords[0] < eventStartCoords[0]) { // event goes to next week
+        endTime = new Time(Time.Day.SATURDAY, 23, 59);
+        int[] sunday2359 = this.timeToPaintLoc(endTime);
+        eventEndCoords[0] = sunday2359[0]; // setting end day to Saturday
+        eventEndCoords[1] = sunday2359[1]; // setting end time to 23:59 PM
+      }
+
+      int endOfFirstDay =
+              (int) Math.round(this.minLoc(new Time(Time.Day.SATURDAY, 23, 59))
+                      * this.getHeight());
+      int rectHeightFirstDay = endOfFirstDay - eventStartCoords[1];
+      g2d.fillRect(eventStartCoords[0], eventStartCoords[1], rectWidth, rectHeightFirstDay);
+
+      int startDayIndex = startTime.getDate().getDayIdx();
+      int endDayIndex = endTime.getDate().getDayIdx();
+
+      for (int indexFullDay = startDayIndex + 1; indexFullDay < endDayIndex; indexFullDay++) {
+        int[] currDayCoords = this.timeToPaintLoc(startTime.indexToTime(indexFullDay));
+        g2d.fillRect(currDayCoords[0], currDayCoords[1], rectWidth, this.getHeight());
+      }
+
+      // draw the last day. starts at 00:00, ends at actual end of the event
+      int startOfLastDay =
+              (int) Math.round(this.minLoc(new Time(Time.Day.SATURDAY, 0, 0))
+                      * this.getHeight());
+
+      int[] endDayCoords = this.timeToPaintLoc(endTime.indexToTime(endDayIndex));
+
+      g2d.fillRect(endDayCoords[0], endDayCoords[1], rectWidth, eventEndCoords[1]);
+    }
+
+    // get the start + end coordinates
+    // make sure that you're only looking at the current week (don't roll over to next one)
   }
 
-  // for painting the events
-  // divide the view into 1440 sections (24 hours * 60 minutes), use that to determine
-  // where an event should be drawn
-  private int[] timeToPaintLoc(Graphics g, Time time) {
-    Dimension preferred = getPreferredLogicalSize();
+  /**
+   * Calculates the top left coordinate of the given time. The x coordinate corresponds
+   * to the day, the y coordinate corresponds to the time to minute granularity.
+   * Changes based on the size of the board.
+   *
+   * @param time given time
+   * @return 2-value int array containing top left coordinate of given time
+   */
+  private int[] timeToPaintLoc(Time time) {
     int[] x_y_coords = new int[2];
 
-    // width of the rectangle (for one day) will always be constant
-    // width of the board / 7
-    // (x, y) coordinate --> x coordinate will correspond to the day event is starting
-    // y coordinate will correspond to the time
-    // height of rectangle will correspond to duration
-
-    System.out.print("preferred width: " + preferred.width);
-
-    System.out.print("preferred height: " + preferred.height);
-
-    int weekColXCoord = (int) Math.round((time.getDate().getDayIdx() / 7.0) * this.getWidth()); // int division will be an issue?
-    //01:30 --> 90 minutes
-    // (1440
-  //  int weekColYCoord = (int) Math.round(time.minutesSinceMidnight() / 1440.0);
-    int weekColYCoord = (int) Math.round(this.dayLoc(time) * this.getHeight());
-   // int rectHeight = (int) Math.round(time.minutesSinceMidnight() / 1440.0);
-    System.out.println("x coord: " + weekColXCoord);
-    System.out.println("y coord: " + weekColYCoord);
+    int weekColXCoord = (int) Math.round((time.getDate().getDayIdx() / 7.0) * this.getWidth());
+    int weekColYCoord = (int) Math.round(this.minLoc(time) * this.getHeight());
 
     x_y_coords[0] = weekColXCoord;
     x_y_coords[1] = weekColYCoord;
     return x_y_coords;
   }
 
-  // -1 to 1
-  // need to split into 1440 sections and determine what coordinate to place
+  /**
+   * Calculates the time position from [0, 1) that the given time falls, with 0 representing
+   * midnight.
+   *
+   * @param time Time to use for calculations
+   * @return the decimal value representing the time's position
+   */
   private double minLoc(Time time) {
     int timePos = time.minutesSinceMidnight();
-    // make an array
-    double[] lineArr = getLineSpacings(60*24);
-    return lineArr[timePos];
+    return timePos / (60.0*24.0);
   }
-
-  private double dayLoc(Time time) {
-    int dayPos = time.getDate().getDayIdx();
-    // make an array
-    double[] lineArr = getLineSpacings(8);
-    System.out.println("day coord: " + lineArr[dayPos]);
-    return lineArr[dayPos];
-  }
-
-
-
 
   @Override
   protected void paintComponent(Graphics g) {
@@ -214,6 +219,30 @@ public class PlannerPanel extends JPanel implements IScheduleView{
             "Churchill Hall 101",
             new ArrayList<>(Arrays.asList("Prof. Lucia",
                     "Student Anon",
+                    "Chat"))));
+
+    this.paintEvent(g, new Event("CS3500 Afternoon Lecture",
+            new Time(Time.Day.TUESDAY, 13, 35),
+            new Time(Time.Day.TUESDAY, 15, 15),
+            false,
+            "Churchill Hall 101",
+            new ArrayList<>(Arrays.asList("Prof. Lucia",
+                    "Chat"))));
+
+    this.paintEvent(g, new Event("Sleep",
+            new Time(Time.Day.WEDNESDAY, 18, 35),
+            new Time(Time.Day.MONDAY, 15, 15),
+            false,
+            "Churchill Hall 101",
+            new ArrayList<>(Arrays.asList("Prof. Lucia",
+                    "Chat"))));
+
+    this.paintEvent(g, new Event("Retreat",
+            new Time(Time.Day.SUNDAY, 0, 5),
+            new Time(Time.Day.TUESDAY, 1, 15),
+            false,
+            "Churchill Hall 101",
+            new ArrayList<>(Arrays.asList("Prof. Lucia",
                     "Chat"))));
 
     /*

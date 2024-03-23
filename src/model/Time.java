@@ -182,4 +182,20 @@ public class Time implements ITime {
     return this.date.dayString + ": " + hoursStr + ":" + minutesStr;
   }
 
+  /**
+   * Creates a time from the given day index that starts at 00:00
+   *
+   * @param dayIndex day of the week
+   * @return Time with given day and time 00:00
+   */
+  public Time indexToTime(int dayIndex) {
+    Day tempDay = Day.SUNDAY;
+    for (Day constDay : Day.values()) {
+      if (dayIndex == constDay.getDayIdx()) {
+        tempDay = constDay;
+      }
+    }
+    return new Time(tempDay, 0, 0);
+  }
+
 }
