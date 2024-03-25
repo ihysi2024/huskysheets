@@ -2,6 +2,7 @@ package view;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Objects;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
+import controller.Controller;
 import controller.ViewFeatures;
 import model.Event;
 import model.IEvent;
@@ -127,48 +129,40 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     int[] eventStartCoords = this.timeToPaintLoc(startTime);
     int[] eventEndCoords = this.timeToPaintLoc(endTime);
 
-    int rectHeight = eventEndCoords[1] - eventStartCoords[1];
-
-    g2d.fillOval(0, 0, 40, 40);
-
+    int rectHeight = eventEndCoords[1] - eventStartCoords[1];  // length of one-day event
 
     if (eventStartCoords[0] == eventEndCoords[0]) { // event starts + ends on same day
       g2d.fillRect(eventStartCoords[0], eventStartCoords[1], rectWidth, rectHeight);
     }
     else {
-      if (eventEndCoords[0] < eventStartCoords[0]) { // event goes to next week
+      // event goes to next week, changing end time to Sunday @23:59
+      if (eventEndCoords[0] < eventStartCoords[0]) {
         endTime = new Time(Time.Day.SATURDAY, 23, 59);
         int[] sunday2359 = this.timeToPaintLoc(endTime);
-        eventEndCoords[0] = sunday2359[0]; // setting end day to Saturday
-        eventEndCoords[1] = sunday2359[1]; // setting end time to 23:59 PM
+        eventEndCoords[0] = sunday2359[0];
+        eventEndCoords[1] = sunday2359[1];
       }
 
       int endOfFirstDay =
               (int) Math.round(this.minLoc(new Time(Time.Day.SATURDAY, 23, 59))
-                      * this.getHeight());
+                      * this.getHeight()); // day doesn't matter, only time
       int rectHeightFirstDay = endOfFirstDay - eventStartCoords[1];
       g2d.fillRect(eventStartCoords[0], eventStartCoords[1], rectWidth, rectHeightFirstDay);
 
       int startDayIndex = startTime.getDate().getDayIdx();
       int endDayIndex = endTime.getDate().getDayIdx();
 
+      // drawing each full day
       for (int indexFullDay = startDayIndex + 1; indexFullDay < endDayIndex; indexFullDay++) {
         int[] currDayCoords = this.timeToPaintLoc(startTime.indexToTime(indexFullDay));
         g2d.fillRect(currDayCoords[0], currDayCoords[1], rectWidth, this.getHeight());
       }
 
       // draw the last day. starts at 00:00, ends at actual end of the event
-      int startOfLastDay =
-              (int) Math.round(this.minLoc(new Time(Time.Day.SATURDAY, 0, 0))
-                      * this.getHeight());
-
       int[] endDayCoords = this.timeToPaintLoc(endTime.indexToTime(endDayIndex));
-
       g2d.fillRect(endDayCoords[0], endDayCoords[1], rectWidth, eventEndCoords[1]);
     }
 
-    // get the start + end coordinates
-    // make sure that you're only looking at the current week (don't roll over to next one)
   }
 
   /**
@@ -238,7 +232,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
                     "Chat"))));
 
     this.paintEvent(g, new Event("Retreat",
-            new Time(Time.Day.SUNDAY, 0, 5),
+            new Time(Time.Day.SUNDAY, 5, 5),
             new Time(Time.Day.TUESDAY, 1, 15),
             false,
             "Churchill Hall 101",
@@ -258,6 +252,62 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     g2d.drawLine(preferred.width, -1 * preferred.height,
             -1 * preferred.width, preferred.height);
      */
+  }
+
+  /**
+   * Determines what Time on the calendar system corresponds to the given mouse click.
+   *
+   * @param e MouseEvent that occurred
+   * @return Time corresponding to the given click location
+   */
+  // what if there is no Time at that click?
+  // use the method that takes in an int and gives back a time
+  // then have to change the time of the event.
+  // figure out what seventh of the board the click occured at (x value)
+  private Time timeAtClick(MouseEvent e) {
+    int x_coord = e.getX();
+    int y_coord = e.getY();
+    System.out.println("x coord: " + x_coord);
+    System.out.println("y coord: " + y_coord);
+    return new Time(Time.Day.FRIDAY, 0, 0);
+  }
+
+  public void addClickListener(Controller controller) {
+    this.addMouseListener(new MouseListener() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+       // TTTPanel panel = TTTPanel.this;
+        PlannerPanel panel = PlannerPanel.this;
+        int x_coord = e.getX();
+        int y_coord = e.getY();
+        System.out.println("x coord: " + x_coord);
+        System.out.println("y coord: " + y_coord);
+
+        int row = (e.getY() / (panel.getHeight() / 3)) + 1;
+        int col = (e.getX() / (panel.getWidth() / 3)) + 1;
+       // controller.handleCellClick(row, col);
+      }
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseEntered(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+
+      }
+    });
   }
 
   /**

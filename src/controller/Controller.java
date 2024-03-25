@@ -33,6 +33,7 @@ public class Controller implements ViewFeatures {
   }
 
   public void goPlayGame() {
+    this.view.addClickListener(this);
     this.view.display(true);
   }
 

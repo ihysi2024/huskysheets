@@ -12,4 +12,6 @@ public interface IScheduleView {
   void openEventView(ReadOnlyPlanner model);
 
   void addFeatures(ViewFeatures features);
+
+  void addClickListener(Controller listener);
 }

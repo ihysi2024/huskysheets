@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
+import controller.Controller;
 import controller.ViewFeatures;
 import model.ReadOnlyPlanner;
 
@@ -47,6 +48,11 @@ public class ScheduleView extends JFrame implements IScheduleView {
   public void addFeatures(ViewFeatures features) {
     createEventButton.addActionListener(evt -> features.openEventView());
 
+  }
+
+  @Override
+  public void addClickListener(Controller listener) {
+    panel.addClickListener(listener);
   }
 
 
