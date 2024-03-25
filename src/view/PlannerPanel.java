@@ -155,12 +155,16 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
       // drawing each full day
       for (int indexFullDay = startDayIndex + 1; indexFullDay < endDayIndex; indexFullDay++) {
-        int[] currDayCoords = this.timeToPaintLoc(startTime.indexToTime(indexFullDay));
+        // full day starts at time 00:00
+        int[] currDayCoords = this.timeToPaintLoc(indexToTime(indexFullDay,0));
+
         g2d.fillRect(currDayCoords[0], currDayCoords[1], rectWidth, this.getHeight());
       }
 
       // draw the last day. starts at 00:00, ends at actual end of the event
-      int[] endDayCoords = this.timeToPaintLoc(endTime.indexToTime(endDayIndex));
+     // int[] endDayCoords = this.timeToPaintLoc(endTime.indexToTime(endDayIndex));
+      int[] endDayCoords = this.timeToPaintLoc(indexToTime(endDayIndex,0));
+
       g2d.fillRect(endDayCoords[0], endDayCoords[1], rectWidth, eventEndCoords[1]);
     }
 
