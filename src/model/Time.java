@@ -198,4 +198,25 @@ public class Time implements ITime {
     return new Time(tempDay, 0, 0);
   }
 
+  /**
+   * Creates a time from the given day index and time
+   *
+   * @param dayIndex day of the week
+   * @param totMinutes minutes of the time
+   * @return Time with given day and time
+   */
+  public static Time indexToTime(int dayIndex, int totMinutes) {
+    Day tempDay = Day.SUNDAY;
+    for (Day constDay : Day.values()) {
+      if (dayIndex == constDay.getDayIdx()) {
+        tempDay = constDay;
+      }
+    }
+
+    int hours = totMinutes / 60;
+    int minutes = totMinutes % 60;
+
+    return new Time(tempDay, hours, minutes);
+  }
+
 }

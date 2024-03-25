@@ -21,6 +21,7 @@ import model.ReadOnlyPlanner;
 import model.Time;
 
 import static java.lang.Math.floor;
+import static model.Time.indexToTime;
 import static model.Time.stringToTime;
 
 public class PlannerPanel extends JPanel implements IScheduleView{
@@ -260,16 +261,10 @@ public class PlannerPanel extends JPanel implements IScheduleView{
    * @param e MouseEvent that occurred
    * @return Time corresponding to the given click location
    */
-  // what if there is no Time at that click?
-  // use the method that takes in an int and gives back a time
-  // then have to change the time of the event.
-  // figure out what seventh of the board the click occured at (x value)
   private Time timeAtClick(MouseEvent e) {
-    int x_coord = e.getX();
-    int y_coord = e.getY();
-    System.out.println("x coord: " + x_coord);
-    System.out.println("y coord: " + y_coord);
-    return new Time(Time.Day.FRIDAY, 0, 0);
+    int dayIndex = e.getX() / (this.getWidth() / 7);
+    int totMinutes = (int) Math.round(e.getY() / (this.getHeight() / (60.0*24)));
+    return indexToTime(dayIndex, totMinutes);
   }
 
   public void addClickListener(Controller controller) {
@@ -278,10 +273,8 @@ public class PlannerPanel extends JPanel implements IScheduleView{
       public void mouseClicked(MouseEvent e) {
        // TTTPanel panel = TTTPanel.this;
         PlannerPanel panel = PlannerPanel.this;
-        int x_coord = e.getX();
-        int y_coord = e.getY();
-        System.out.println("x coord: " + x_coord);
-        System.out.println("y coord: " + y_coord);
+
+        System.out.print(timeAtClick(e).timeToString());
 
         int row = (e.getY() / (panel.getHeight() / 3)) + 1;
         int col = (e.getX() / (panel.getWidth() / 3)) + 1;
