@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +19,8 @@ import model.IEvent;
 import model.ReadOnlyPlanner;
 import model.Time;
 import model.User;
+
+import static model.User.makeEvent;
 
 public class EventPanel extends JPanel {
 
@@ -32,8 +35,9 @@ public class EventPanel extends JPanel {
   private final List<ViewFeatures> featuresListeners;
 
   private JButton createEvent;
-  private JButton modifyEvent;
-  private JButton removeEvent;
+  // private JButton modifyEvent;
+  // private JButton removeEvent;
+  // private JButton saveEvent;
 
   private JLabel eventNameLabel;
 
@@ -154,36 +158,90 @@ public class EventPanel extends JPanel {
     usersList = new JList<>(allUsers);
     this.add(usersList);
 
-  //  pack();
+    //  pack();
     setVisible(true);
+
+    /**
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
     modifyEvent = new JButton("Modify Event");
     removeEvent = new JButton("Remove Event");
-
+    saveEvent = new JButton("Create Event");
+    buttonPanel.add(saveEvent);
     buttonPanel.add(modifyEvent);
     buttonPanel.add(removeEvent);
     this.add(buttonPanel);
 
-    saveValuesToNewEvent();
-    System.out.println(this.event.getStartTime().timeToString());
+     **/
+
+
+    //System.out.println(this.event.getStartTime().timeToString());
   }
 
-  public void saveValuesToNewEvent() {
-    Time finalEndTime = Time.stringToTime(endDay.getSelectedItem().toString(), endTime.getText());
-    Time finalStartTime = Time.stringToTime(startDay.getSelectedItem().toString(), startTime.getText());
-    String finalEventName = eventName.getText();
-    Boolean online = onlineMenu.getSelectedItem().toString().toLowerCase().equals("true");
-    String finalLocation = location.getText();
-    List<String> users = new ArrayList<>();
+
+  /**
+  public boolean fieldValuesEmpty() {
+    String eventNameStringInput = eventName.getText();
+    String endDayStringInput = endDay.getSelectedItem().toString();
+    String startDayStringInput = startDay.getSelectedItem().toString();
+    String endTimeStringInput = endTime.getText();
+    String startTimeStringInput = startTime.getText();
+    String onlineStringInput = onlineMenu.getSelectedItem().toString();
+    String locationStringInput = location.getText();
+    List<String> usersStringInput = new ArrayList<>();
     for (String user: usersList.getSelectedValuesList()) {
-      users.add(user);
+      usersStringInput.add(user);
     }
-    this.event = new Event(finalEventName, finalStartTime, finalEndTime, online,
-            finalLocation,
-            users);
-
+    System.out.println("endTimeStringInput: " + endTimeStringInput);
+    return (eventNameStringInput.isEmpty()
+            && endTimeStringInput.isEmpty()
+            && startTimeStringInput.isEmpty()
+            && locationStringInput.isEmpty()
+            && usersStringInput.isEmpty());
   }
+  public void saveValuesToNewEventOne() {
+    System.out.println("empty or nah" + saveValuesToNewEvent());
+    List<String> users = new ArrayList<>();
+    while (eventName.getText().isEmpty() && users.isEmpty()
+            && location.getText().isEmpty() && endTime.getText().isEmpty()
+            && startTime.getText().isEmpty()) {
+      Time finalEndTime = Time.stringToTime(endDay.getSelectedItem().toString(), endTime.getText());
+      Time finalStartTime = Time.stringToTime(startDay.getSelectedItem().toString(), startTime.getText());
+      String finalEventName = eventName.getText();
+      Boolean online = onlineMenu.getSelectedItem().toString().toLowerCase().equals("true");
+      String finalLocation = location.getText();
+      for (String user: usersList.getSelectedValuesList()) {
+        users.add(user);
+      }
+      this.event = new Event(finalEventName, finalStartTime, finalEndTime, online,
+              finalLocation,
+              users);
+    }
+  }
+
+**/
+  public String[] getEventNameInput() {
+    return new String[]{eventName.getText()};
+  }
+
+  public String[] getTimeInput() {
+    return new String[]{startDay.getSelectedItem().toString(), startTime.getText(),
+            endDay.getSelectedItem().toString(), endTime.getText()};
+  }
+
+  public String[] getLocationInput() {
+    return new String[]{onlineMenu.getSelectedItem().toString(), location.getText()};
+  }
+
+  public String[] getUsersInput() {
+    return new String[]{usersList.getSelectedValuesList().toString()};
+  }
+
+  /**
+  public void addFeatures(ViewFeatures features) {
+    saveEvent.addActionListener(evt -> features.createEvent());
+  }
+   **/
 
   /**
    * This method tells Swing what the "natural" size should be
@@ -194,6 +252,8 @@ public class EventPanel extends JPanel {
   public Dimension getPreferredSize() {
     return new Dimension(350, 350);
   }
+
+
 
   /**
    * Conceptually, we can choose a different coordinate system
@@ -207,9 +267,6 @@ public class EventPanel extends JPanel {
     return new Dimension(40, 40);
   }
 
-  public void addFeatures(ViewFeatures features) {
-
-  }
 
   @Override
   protected void paintComponent(Graphics g) {

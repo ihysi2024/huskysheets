@@ -14,7 +14,7 @@ import javax.swing.event.MouseInputAdapter;
 import controller.ViewFeatures;
 import model.ReadOnlyPlanner;
 
-public class PlannerPanel extends JPanel implements IScheduleView{
+public class PlannerPanel extends JPanel implements IScheduleView {
 
   /**
    * Our view will need to display a model, so it needs to get the current sequence from the model.
@@ -88,7 +88,12 @@ public class PlannerPanel extends JPanel implements IScheduleView{
   }
 
   @Override
-  public void openEventView(ReadOnlyPlanner model) {
+  public void openScheduleView(ReadOnlyPlanner model) {
+
+  }
+
+  @Override
+  public void closeScheduleView(ReadOnlyPlanner model) {
 
   }
 

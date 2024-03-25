@@ -16,9 +16,11 @@ public class MainPlanner {
   public static void main(String[] args) {
     PlannerSystem model = new NUPlanner(); // Feel free to customize this as desired
   //  IScheduleView view = new ScheduleView(model);
-    IScheduleView view = new ScheduleView(model); // (michelle) currently working on event view so changed this here + in controller.
+    IScheduleView schedView = new ScheduleView(model); // (michelle) currently working on event view so changed this here + in controller.
+    IEventView eView = new EventView(model);
     Controller controller = new Controller(model);
-    controller.setView(view);
+    controller.setScheduleView(schedView);
+    controller.setEventView(eView);
     controller.goPlayGame();
   }
 

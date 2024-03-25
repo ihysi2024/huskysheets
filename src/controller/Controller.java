@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Event;
 import model.PlannerSystem;
 import model.ReadOnlyPlanner;
 import model.Schedule;
@@ -18,7 +19,9 @@ import view.IScheduleView;
 public class Controller implements ViewFeatures {
   private final PlannerSystem model;
 
-  private IScheduleView view;
+  private IScheduleView scheduleView;
+
+  private IEventView eventView;
    // private final IEventView view;
 
 
@@ -32,13 +35,18 @@ public class Controller implements ViewFeatures {
     this.model.addUser(new User("Me", new Schedule(new ArrayList<>())));
   }
 
-  public void setView(IScheduleView v) {
-    view = v;
-    view.addFeatures(this);
+  public void setScheduleView(IScheduleView v) {
+    scheduleView = v;
+    scheduleView.addFeatures(this);
+  }
+
+  public void setEventView(IEventView v) {
+    eventView = v;
+    eventView.addFeatures(this);
   }
 
   public void goPlayGame() {
-    this.view.display(true);
+    this.scheduleView.display(true);
   }
 
 
@@ -52,16 +60,32 @@ public class Controller implements ViewFeatures {
 
   }
 
+  public void closeScheduleView() {
+    System.out.println("Close schedule");
+    scheduleView.closeScheduleView(model);
+  }
   @Override
   public void openEventView() {
-    System.out.println("Got to controller");
-    view.openEventView(model);
+    System.out.println("Open event");
+    eventView.openEvent(model);
   }
 
+  public void openScheduleView() {
+    scheduleView.openScheduleView(model);
+  }
+
+  public void modifyEvent(Event newEvent) {
+    model.modifyEvent(eventView.storeOpenedEvent(), newEvent);
+  }
+
+  public void removeEvent() {
+    eventView.removeEventFromSchedule(model);
+  }
 
   @Override
-  public void createEvent(String eventName, String startDay, String startTime,
-                          String endDate, String endTime, String location, List<String> users) {
+  public void createEvent() {
+    System.out.println("got to controller for event");
+    eventView.createEvent(model);
   }
 
   /**

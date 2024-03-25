@@ -203,7 +203,12 @@ public class User implements IUser {
       }
     }
     // input these variables to a new event and return it
-    return new Event(tempEventName, tempStartTime, tempEndTime, online, location, userList);
+    try {
+      return new Event(tempEventName, tempStartTime, tempEndTime, online, location, userList);
+    }
+    catch (IllegalArgumentException e) {
+      return null;
+    }
   }
 
   /**

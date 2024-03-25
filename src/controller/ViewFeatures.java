@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import model.Event;
 import model.Time;
 
 public interface ViewFeatures {
@@ -11,9 +12,14 @@ public interface ViewFeatures {
   // won't implement anything yet
   void scheduleEvent();
 
+  void closeScheduleView();
+
+  void openScheduleView();
+
   void openEventView();
-  void createEvent(String eventName, String startDay, String startTime,
-                   String endDate, String endTime, String location, List<String> users);
+  void createEvent();
+
+  void modifyEvent(Event updatedEvent);
 
   // list of strings or just a string of users? somewhere would need to separate by newline/comma
 

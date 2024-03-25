@@ -9,7 +9,10 @@ public interface IScheduleView {
 
   void display(boolean show);
 
-  void openEventView(ReadOnlyPlanner model);
+  void openScheduleView(ReadOnlyPlanner model);
+  void closeScheduleView(ReadOnlyPlanner model);
+
+  //void createEventView(ReadOnlyPlanner model);
 
   void addFeatures(ViewFeatures features);
 }
