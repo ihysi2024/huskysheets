@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +32,6 @@ public class Controller implements ViewFeatures {
    */
   public Controller(PlannerSystem model) {
     this.model = model;
-    this.model.addUser(new User("Prof. Lucia", new Schedule(new ArrayList<>())));
-    this.model.addUser(new User("Me", new Schedule(new ArrayList<>())));
   }
 
   public void setScheduleView(IScheduleView v) {
@@ -46,7 +45,10 @@ public class Controller implements ViewFeatures {
   }
 
   public void goPlayGame() {
+
+    this.scheduleView.addClickListener(this);
     this.scheduleView.display(true);
+
   }
 
 
@@ -68,6 +70,14 @@ public class Controller implements ViewFeatures {
   public void openEventView() {
     System.out.println("Open event");
     eventView.openEvent(model);
+  }
+
+  public void selectUserSchedule(String userName) {
+    for (User user: model.getUsers()) {
+      if (user.getName().equals(userName)) {
+        scheduleView.displayUserSchedule(this.model, user);
+      }
+    }
   }
 
   public void openScheduleView() {

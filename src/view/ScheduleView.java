@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
@@ -17,7 +18,11 @@ import static model.User.makeEvent;
 public class ScheduleView extends JFrame implements IScheduleView {
 
   private final PlannerPanel panel;
+
+  private final JPanel menuPanel;
   private JButton createEventButton;
+  private JButton scheduleEventButton;
+  private JComboBox selectUserButton;
 
   //private JButton saveEventButton;
 
@@ -31,13 +36,26 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
     System.out.println("SCHEDULEVIEW CONSTRUCTOR");
     this.panel = new PlannerPanel(model);
+    this.menuPanel = new JPanel();
+    this.panel.setLayout(new BorderLayout());
     this.add(panel);
 
     //panel.getPreferredSize();
     createEventButton = new JButton("Create Event");
     createEventButton.setActionCommand("Create Event");
-
-    panel.add(createEventButton);
+    scheduleEventButton = new JButton("Schedule Event");
+    scheduleEventButton.setActionCommand("Schedule Event")
+    ;
+    this.selectUserButton = new JComboBox();
+    for (User user: model.getUsers()) {
+      selectUserButton.addItem(user.getName());
+    }
+    selectUserButton.setActionCommand("Select User");
+    menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.X_AXIS));
+    menuPanel.add(selectUserButton);
+    menuPanel.add(createEventButton);
+    menuPanel.add(scheduleEventButton);
+    panel.add(menuPanel, BorderLayout.SOUTH);
     this.setVisible(true);
 
     this.pack();
@@ -55,14 +73,16 @@ public class ScheduleView extends JFrame implements IScheduleView {
   }
 
 
+
+
   public void addFeatures(ViewFeatures features) {
     createEventButton.addActionListener(evt -> features.closeScheduleView());
     createEventButton.addActionListener(evt -> features.openEventView());
+    selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
     // handle when a user has clicked on an event
     this.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        // open the event panel for the event they clicked on
 
       }
 
@@ -88,8 +108,11 @@ public class ScheduleView extends JFrame implements IScheduleView {
     });
   }
 
-    //saveEventButton.addActionListener(evt -> features.createEvent());
 
+  @Override
+  public void addClickListener(Controller listener) {
+    panel.addClickListener(listener);
+  }
 
   @Override
   public void addFeatureListener(ViewFeatures features) {
@@ -104,6 +127,21 @@ public class ScheduleView extends JFrame implements IScheduleView {
   @Override
   public void openScheduleView(ReadOnlyPlanner model) {
     this.setVisible(true);
+  }
+
+
+  @Override
+  public void displayUserSchedule(ReadOnlyPlanner model, User userToShow) {
+    this.panel.resetPanel();
+    this.add(panel);
+    for (Event event: userToShow.getSchedule().getEvents()) {
+      this.panel.paintEvent(getGraphics(), event);
+    }
+    menuPanel.revalidate();
+    menuPanel.repaint();
+    panel.add(menuPanel, BorderLayout.SOUTH);
+    this.add(panel);
+
   }
 
 }

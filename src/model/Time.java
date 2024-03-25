@@ -38,6 +38,11 @@ public class Time implements ITime {
       return dayString;
     }
 
+    public int getDayIdx() {
+      return dayIdx;
+    }
+
+
   }
 
   /**
@@ -73,6 +78,16 @@ public class Time implements ITime {
    */
   public int getMinutes() {
     return this.minutes;
+  }
+
+  /**
+   * Calculates the # of minutes since midnight that have passed prior to event beginning.
+   * If event starts at midnight, returns 0.
+   *
+   * @return # of minutes since midnight until beginning of event
+   */
+  public int minutesSinceMidnight() {
+    return 60*this.getHours() + this.getMinutes();
   }
 
   /**
@@ -165,6 +180,22 @@ public class Time implements ITime {
       minutesStr = "0" + minutesStr;
     }
     return this.date.dayString + ": " + hoursStr + ":" + minutesStr;
+  }
+
+  /**
+   * Creates a time from the given day index that starts at 00:00
+   *
+   * @param dayIndex day of the week
+   * @return Time with given day and time 00:00
+   */
+  public Time indexToTime(int dayIndex) {
+    Day tempDay = Day.SUNDAY;
+    for (Day constDay : Day.values()) {
+      if (dayIndex == constDay.getDayIdx()) {
+        tempDay = constDay;
+      }
+    }
+    return new Time(tempDay, 0, 0);
   }
 
 }

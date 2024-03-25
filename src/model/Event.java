@@ -85,6 +85,16 @@ public class Event implements IEvent {
     return this.endTime;
   }
 
+
+  /**
+   * Calculates the duration of this event in minutes.
+   *
+   * @return event's duration in minutes
+   */
+  public int eventDuration() {
+    return this.startTime.minutesSinceMidnight() - this.endTime.minutesSinceMidnight();
+  }
+
   /**
    * Compares two events to see if their times coincide with each other.
    * if the event's start time is the same or after the previous event's end time,

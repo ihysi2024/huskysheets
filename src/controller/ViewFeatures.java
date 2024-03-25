@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.*;
 import java.util.List;
 
 import model.Event;
@@ -20,6 +21,8 @@ public interface ViewFeatures {
   void createEvent();
 
   void modifyEvent(Event updatedEvent);
+
+  void selectUserSchedule(String userName);
 
   // list of strings or just a string of users? somewhere would need to separate by newline/comma
 
