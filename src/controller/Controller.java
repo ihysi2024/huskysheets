@@ -1,9 +1,15 @@
 package controller;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
+import model.Event;
 import model.PlannerSystem;
 import model.ReadOnlyPlanner;
+import model.Schedule;
+import model.Time;
+import model.User;
 import view.EventPanel;
 import view.IEventView;
 import view.IScheduleView;
@@ -15,7 +21,9 @@ import view.IScheduleView;
 public class Controller implements ViewFeatures {
   private final PlannerSystem model;
 
-  private IScheduleView view;
+  private IScheduleView scheduleView;
+
+  private IEventView eventView;
    // private final IEventView view;
 
 
@@ -27,14 +35,21 @@ public class Controller implements ViewFeatures {
     this.model = model;
   }
 
-  public void setView(IScheduleView v) {
-    view = v;
-    view.addFeatures(this);
+  public void setScheduleView(IScheduleView v) {
+    scheduleView = v;
+    scheduleView.addFeatures(this);
+  }
+
+  public void setEventView(IEventView v) {
+    eventView = v;
+    eventView.addFeatures(this);
   }
 
   public void goPlayGame() {
-    this.view.addClickListener(this);
-    this.view.display(true);
+
+    this.scheduleView.addClickListener(this);
+    this.scheduleView.display(true);
+
   }
 
 
@@ -48,28 +63,84 @@ public class Controller implements ViewFeatures {
 
   }
 
+
+  public void closeScheduleView() {
+    System.out.println("Close schedule");
+    scheduleView.closeScheduleView(model);
+  }
   @Override
   public void openEventView() {
-    System.out.println("Got to controller");
-    view.openEventView(model);
+    System.out.println("Open event");
+    eventView.openEvent(model);
   }
 
+  public void selectUserSchedule(String userName) {
+    for (User user: model.getUsers()) {
+      if (user.getName().equals(userName)) {
+        scheduleView.displayUserSchedule(this.model, user);
+      }
+    }
+  }
+
+  public void closeEventView() {
+    eventView.closeEvent();
+  }
+
+  public Event findEvent(Time timeOfEvent) {
+    Event clickedEvent = null;
+    for (User user: this.model.getUsers()) {
+      for (Event event: user.getSchedule().getEvents()) {
+        if (((event.getStartTime().compareTimes(timeOfEvent) < 0) &&
+                (event.getEndTime().compareTimes(timeOfEvent) > 0)) ||
+                ((event.getStartTime().compareTimes(timeOfEvent) == 0) &&
+                        (event.getEndTime().compareTimes(timeOfEvent) == 0))) {
+          clickedEvent = event;
+        }
+      }
+    }
+    System.out.println(clickedEvent == null);
+    return clickedEvent;
+  }
+
+  public void populateEvent(Event event) {
+    eventView.populateEventInPanel(event);
+  }
+  public void openScheduleView() {
+    scheduleView.openScheduleView(model);
+  }
+
+  public void updatedEvent(Event oldEvent) {
+
+    //model.modifyEvent(eventView.storeOpenedEvent(), newEvent);
+  }
+
+  public void modifyEvent(Event oldEvent, Event newEvent) {
+    model.modifyEvent(oldEvent, newEvent);
+  }
+
+
+  public void removeEvent() {
+    eventView.removeEventFromSchedule(model);
+  }
 
   @Override
-  public void createEvent(String eventName, String startDay, String startTime,
-                          String endDate, String endTime, String location, List<String> users) {
+  public void createEvent() {
+    System.out.println("got to controller for event");
+    eventView.createEvent(model);
   }
 
+  public Event storeEvent() {
+    return eventView.storeOpenedEvent();
+  }
+
+  /**
   @Override
   public void modifyEvent(String eventName, String startDay, String startTime,
                           String endDate, String endTime, String location, List<String> users) {
 
   }
 
-  @Override
-  public void removeEvent() {
-
-  }
+   **/
 
   @Override
   public void quitEditingEvent() {

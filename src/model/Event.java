@@ -235,4 +235,16 @@ public class Event implements IEvent {
       eventXML.append(indents + "<uid>" + invitee + "</uid>" + "\n");
     }
   }
+
+  public String getEventName() {
+    return this.eventName;
+  }
+
+  public String getLocation() {
+    return this.location;
+  }
+
+  public Boolean getOnline() {
+    return this.online;
+  }
 }

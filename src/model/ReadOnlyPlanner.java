@@ -1,6 +1,7 @@
 package model;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ReadOnlyPlanner {
 
@@ -12,5 +13,11 @@ public interface ReadOnlyPlanner {
    * @throws IllegalArgumentException if user doesn't exist or doesn't have a schedule
    */
   List<Event> retrieveUserScheduleAtTime(User user, Time givenTime);
+
+  /**
+   * User list
+   */
+
+  Set<User> getUsers();
 
 }

@@ -19,6 +19,7 @@ import model.Event;
 import model.IEvent;
 import model.ReadOnlyPlanner;
 import model.Time;
+import model.User;
 
 import static java.lang.Math.floor;
 import static model.Time.indexToTime;
@@ -40,7 +41,6 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
   private JButton createEventButton;
 
-  private JButton selectUserButton; // I don't think this will actually be a JButton, some other type?
 
   /**
    * Creates a panel that will house the view representation of the Simon game
@@ -60,6 +60,10 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     System.out.println("Got to constructor");
 
 
+  }
+
+  public void resetPanel() {
+    this.paintComponent(getGraphics());
   }
 
 
@@ -98,26 +102,41 @@ public class PlannerPanel extends JPanel implements IScheduleView{
   }
 
   @Override
-  public void openEventView(ReadOnlyPlanner model) {
+  public void openScheduleView(ReadOnlyPlanner model) {
+
+  }
+
+  @Override
+  public void displayUserSchedule(ReadOnlyPlanner model, User userToShow) {
+
+  }
+
+  @Override
+  public void closeScheduleView(ReadOnlyPlanner model) {
 
   }
 
   public void addFeatures(ViewFeatures features) {
+
     System.out.println("got to add features in planner panel");
     createEventButton.addActionListener(evt -> features.openEventView());
+    createEventButton.addActionListener(evt -> features.closeScheduleView());
     this.addMouseListener(new MouseEventsListener() {
       public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
-        features.openEventView();
+        System.out.println("clicked");
+
       }
     });
   }
+
+
 
   public void addFeaturesListener(ViewFeatures features) {
     this.featuresListeners.add(Objects.requireNonNull(features));
   }
 
-  private void paintEvent(Graphics g, IEvent event) {
+  public void paintEvent(Graphics g, IEvent event) {
     Color color = new Color(255, 100, 200, 100);
     Graphics2D g2d = (Graphics2D) g.create();
     g2d.setColor(color);
@@ -211,6 +230,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     this.paintLines(g2d, Color.GRAY, 25, 1, false);
     this.paintLines(g2d, Color.BLACK, 7, 2, false);
 
+    /**
     this.paintEvent(g, new Event("CS3500 Morning Lecture",
             new Time(Time.Day.TUESDAY, 9, 50),
             new Time(Time.Day.TUESDAY, 11, 30),
@@ -244,6 +264,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
             new ArrayList<>(Arrays.asList("Prof. Lucia",
                     "Chat"))));
 
+     **/
     /*
         Dimension preferred = getPreferredLogicalSize();
             Rectangle bounds = this.getBounds();
@@ -265,18 +286,35 @@ public class PlannerPanel extends JPanel implements IScheduleView{
    * @param e MouseEvent that occurred
    * @return Time corresponding to the given click location
    */
-  private Time timeAtClick(MouseEvent e) {
+  public Time timeAtClick(MouseEvent e) {
     int dayIndex = e.getX() / (this.getWidth() / 7);
     int totMinutes = (int) Math.round(e.getY() / (this.getHeight() / (60.0*24)));
     return indexToTime(dayIndex, totMinutes);
   }
 
-  public void addClickListener(Controller controller) {
+  public void closePanelView() {
+    this.setVisible(false);
+  }
+
+  public void addClickListener(ViewFeatures features) {
     this.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
        // TTTPanel panel = TTTPanel.this;
         PlannerPanel panel = PlannerPanel.this;
+        Time timeOfEvent = panel.timeAtClick(e);
+        try {
+          System.out.println("HERE");
+          Event eventClicked = features.findEvent(timeOfEvent);
+          if (eventClicked != null) {
+            panel.setVisible(false);
+            features.openEventView();
+            features.populateEvent(eventClicked);
+          }
+        }
+        catch (NullPointerException ignored) {
+
+        }
 
         System.out.println(timeAtClick(e).timeToString());
        // controller.handleCellClick(row, col);
