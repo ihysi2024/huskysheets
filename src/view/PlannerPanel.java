@@ -274,10 +274,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
        // TTTPanel panel = TTTPanel.this;
         PlannerPanel panel = PlannerPanel.this;
 
-        System.out.print(timeAtClick(e).timeToString());
-
-        int row = (e.getY() / (panel.getHeight() / 3)) + 1;
-        int col = (e.getX() / (panel.getWidth() / 3)) + 1;
+        System.out.println(timeAtClick(e).timeToString());
        // controller.handleCellClick(row, col);
       }
 
