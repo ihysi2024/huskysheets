@@ -96,10 +96,6 @@ public class Controller implements ViewFeatures {
   }
 
    **/
-  @Override
-  public void removeEvent() {
-
-  }
 
   @Override
   public void quitEditingEvent() {
