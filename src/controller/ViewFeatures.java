@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.List;
 
 import model.Event;
+import model.ReadOnlyPlanner;
 import model.Time;
 
 public interface ViewFeatures {
@@ -20,13 +21,21 @@ public interface ViewFeatures {
   void openEventView();
   void createEvent();
 
-  void modifyEvent(Event updatedEvent);
+  void updatedEvent(Event updatedEvent);
+
+  Event storeEvent();
+
+  void modifyEvent(Event oldEvent, Event newEvent);
+
+  void populateEvent(Event event);
 
   void selectUserSchedule(String userName);
 
   // list of strings or just a string of users? somewhere would need to separate by newline/comma
 
+  void closeEventView();
 
+  Event findEvent(Time timeOfEvent);
   void removeEvent();
 
   void quitEditingEvent();

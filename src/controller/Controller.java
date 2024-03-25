@@ -8,6 +8,7 @@ import model.Event;
 import model.PlannerSystem;
 import model.ReadOnlyPlanner;
 import model.Schedule;
+import model.Time;
 import model.User;
 import view.EventPanel;
 import view.IEventView;
@@ -62,6 +63,7 @@ public class Controller implements ViewFeatures {
 
   }
 
+
   public void closeScheduleView() {
     System.out.println("Close schedule");
     scheduleView.closeScheduleView(model);
@@ -80,13 +82,42 @@ public class Controller implements ViewFeatures {
     }
   }
 
+  public void closeEventView() {
+    eventView.closeEvent();
+  }
+
+  public Event findEvent(Time timeOfEvent) {
+    Event clickedEvent = null;
+    for (User user: this.model.getUsers()) {
+      for (Event event: user.getSchedule().getEvents()) {
+        if (((event.getStartTime().compareTimes(timeOfEvent) < 0) &&
+                (event.getEndTime().compareTimes(timeOfEvent) > 0)) ||
+                ((event.getStartTime().compareTimes(timeOfEvent) == 0) &&
+                        (event.getEndTime().compareTimes(timeOfEvent) == 0))) {
+          clickedEvent = event;
+        }
+      }
+    }
+    System.out.println(clickedEvent == null);
+    return clickedEvent;
+  }
+
+  public void populateEvent(Event event) {
+    eventView.populateEventInPanel(event);
+  }
   public void openScheduleView() {
     scheduleView.openScheduleView(model);
   }
 
-  public void modifyEvent(Event newEvent) {
-    model.modifyEvent(eventView.storeOpenedEvent(), newEvent);
+  public void updatedEvent(Event oldEvent) {
+
+    //model.modifyEvent(eventView.storeOpenedEvent(), newEvent);
   }
+
+  public void modifyEvent(Event oldEvent, Event newEvent) {
+    model.modifyEvent(oldEvent, newEvent);
+  }
+
 
   public void removeEvent() {
     eventView.removeEventFromSchedule(model);
@@ -96,6 +127,10 @@ public class Controller implements ViewFeatures {
   public void createEvent() {
     System.out.println("got to controller for event");
     eventView.createEvent(model);
+  }
+
+  public Event storeEvent() {
+    return eventView.storeOpenedEvent();
   }
 
   /**

@@ -80,10 +80,12 @@ public class EventView extends JFrame implements IEventView {
     this.setVisible(true);
   }
 
-  @Override
-  public void modifyEventInSchedule(ReadOnlyPlanner model) {
+
+  public void populateEventInPanel(Event event) {
+    this.panel.populateEventContents(event);
 
   }
+
 
   @Override
   public void removeEventFromSchedule(ReadOnlyPlanner model) {
@@ -113,9 +115,22 @@ public class EventView extends JFrame implements IEventView {
     saveEvent.addActionListener(evt -> features.createEvent());
     if (!this.isVisible()) {
       saveEvent.addActionListener(evt -> features.openScheduleView());
+      saveEvent.addActionListener(evt -> features.closeEventView());
+      //saveEvent.addActionListener(evt -> features.displayUserSchedule());
     }
-    modifyEvent.addActionListener(evt -> features.modifyEvent(this.storeOpenedEvent()));
+    try {
+      Event oldEvent = features.storeEvent();
+      System.out.println(oldEvent.getEventName());
+      modifyEvent.addActionListener(evt -> features.modifyEvent(oldEvent, this.storeOpenedEvent()));
+    }
+    catch (NullPointerException ignored) {
+
+    }
     removeEvent.addActionListener(evt -> features.removeEvent());
+  }
+
+  public void closeEvent() {
+    this.setVisible(false);
   }
 
   @Override

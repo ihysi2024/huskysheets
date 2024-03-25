@@ -11,6 +11,7 @@ import controller.Controller;
 import controller.ViewFeatures;
 import model.Event;
 import model.ReadOnlyPlanner;
+import model.Time;
 import model.User;
 
 import static model.User.makeEvent;
@@ -20,9 +21,9 @@ public class ScheduleView extends JFrame implements IScheduleView {
   private final PlannerPanel panel;
 
   private final JPanel menuPanel;
-  private JButton createEventButton;
-  private JButton scheduleEventButton;
-  private JComboBox selectUserButton;
+  protected JButton createEventButton;
+  protected JButton scheduleEventButton;
+  protected JComboBox selectUserButton;
 
   //private JButton saveEventButton;
 
@@ -75,6 +76,7 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
 
 
+
   public void addFeatures(ViewFeatures features) {
     createEventButton.addActionListener(evt -> features.closeScheduleView());
     createEventButton.addActionListener(evt -> features.openEventView());
@@ -83,6 +85,14 @@ public class ScheduleView extends JFrame implements IScheduleView {
     this.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        System.out.println("ADD FEATURES IN VIEW");
+        Time timeOfEvent = panel.timeAtClick(e);
+        try {
+          Event eventClicked = features.findEvent(timeOfEvent);
+          features.openEventView();
+        }
+        catch (NullPointerException ignored) {
+        }
 
       }
 
@@ -108,10 +118,9 @@ public class ScheduleView extends JFrame implements IScheduleView {
     });
   }
 
-
   @Override
-  public void addClickListener(Controller listener) {
-    panel.addClickListener(listener);
+  public void addClickListener(ViewFeatures features) {
+    panel.addClickListener(features);
   }
 
   @Override
@@ -126,6 +135,13 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
   @Override
   public void openScheduleView(ReadOnlyPlanner model) {
+    String userName = selectUserButton.getSelectedItem().toString();
+    for (User user: model.getUsers()) {
+      if (user.getName().equals(userName)) {
+        System.out.println(user.getName());
+        this.displayUserSchedule(model, user);
+      }
+    }
     this.setVisible(true);
   }
 

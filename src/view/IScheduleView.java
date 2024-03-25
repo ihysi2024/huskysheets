@@ -21,5 +21,5 @@ public interface IScheduleView {
 
   void addFeatures(ViewFeatures features);
 
-  void addClickListener(Controller listener);
+  void addClickListener(ViewFeatures features);
 }

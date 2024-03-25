@@ -178,6 +178,38 @@ public class EventPanel extends JPanel {
     //System.out.println(this.event.getStartTime().timeToString());
   }
 
+  public void populateEventContents(Event event) {
+    eventName.setText(event.getEventName());
+    startDay.setSelectedIndex(event.getStartTime().getDate().getDayIdx());
+    startTime.setText(String.valueOf(event.getStartTime().getHours())
+            + String.valueOf(event.getStartTime().getMinutes()));
+    endDay.setSelectedIndex(event.getEndTime().getDate().getDayIdx());
+    endTime.setText(String.valueOf(event.getEndTime().getHours())
+            + String.valueOf(event.getEndTime().getMinutes()));
+    location.setText(event.getLocation());
+    if (event.getOnline()) {
+      onlineMenu.setSelectedIndex(0);
+    }
+    else {
+      onlineMenu.setSelectedIndex(1);
+    }
+    int idx = 0;
+    for (User plannerUsers: model.getUsers()) {
+      for (String eventUser: event.getUsers()) {
+        System.out.println(eventUser);
+        if (eventUser.equals(plannerUsers.getName())) {
+          usersList.setSelectedIndex(idx);
+        }
+      }
+      idx++;
+    }
+    System.out.println("SELECTED" + usersList.getSelectedIndex());
+    //for (String user: event.getUsers()) {
+    //  usersList.setSelectedIndex(usersList.getSelectedIndex());
+    //}
+
+
+  }
 
   /**
   public boolean fieldValuesEmpty() {

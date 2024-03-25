@@ -14,8 +14,8 @@ public interface IEventView {
 
   void openEvent(ReadOnlyPlanner model);
 
-  void modifyEventInSchedule(ReadOnlyPlanner model);
-
+  void closeEvent();
+  void populateEventInPanel(Event event);
   void removeEventFromSchedule(ReadOnlyPlanner model);
 
   Event storeOpenedEvent();

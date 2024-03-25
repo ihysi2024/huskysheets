@@ -117,15 +117,20 @@ public class PlannerPanel extends JPanel implements IScheduleView{
   }
 
   public void addFeatures(ViewFeatures features) {
+
     System.out.println("got to add features in planner panel");
     createEventButton.addActionListener(evt -> features.openEventView());
+    createEventButton.addActionListener(evt -> features.closeScheduleView());
     this.addMouseListener(new MouseEventsListener() {
       public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
-        features.openEventView();
+        System.out.println("clicked");
+
       }
     });
   }
+
+
 
   public void addFeaturesListener(ViewFeatures features) {
     this.featuresListeners.add(Objects.requireNonNull(features));
@@ -277,18 +282,35 @@ public class PlannerPanel extends JPanel implements IScheduleView{
    * @param e MouseEvent that occurred
    * @return Time corresponding to the given click location
    */
-  private Time timeAtClick(MouseEvent e) {
+  public Time timeAtClick(MouseEvent e) {
     int dayIndex = e.getX() / (this.getWidth() / 7);
     int totMinutes = (int) Math.round(e.getY() / (this.getHeight() / (60.0*24)));
     return indexToTime(dayIndex, totMinutes);
   }
 
-  public void addClickListener(Controller controller) {
+  public void closePanelView() {
+    this.setVisible(false);
+  }
+
+  public void addClickListener(ViewFeatures features) {
     this.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
        // TTTPanel panel = TTTPanel.this;
         PlannerPanel panel = PlannerPanel.this;
+        Time timeOfEvent = panel.timeAtClick(e);
+        try {
+          System.out.println("HERE");
+          Event eventClicked = features.findEvent(timeOfEvent);
+          if (eventClicked != null) {
+            panel.setVisible(false);
+            features.openEventView();
+            features.populateEvent(eventClicked);
+          }
+        }
+        catch (NullPointerException ignored) {
+
+        }
 
         System.out.println(timeAtClick(e).timeToString());
        // controller.handleCellClick(row, col);
