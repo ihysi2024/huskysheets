@@ -19,7 +19,7 @@ import static controller.UtilsXML.writeToFile;
 public class User implements IUser {
   private final String name;
 
-  private final Schedule schedule;
+  private final ISchedule schedule;
 
   /**
    * A user of the planner system has the ability to add, modify, and remove events
@@ -28,7 +28,7 @@ public class User implements IUser {
    * @param name a string representing the user name
    * @param schedule the user's schedule in the planner system
    */
-  public User(String name, Schedule schedule) {
+  public User(String name, ISchedule schedule) {
     this.name = Objects.requireNonNull(name);
     this.schedule = schedule;
   }
@@ -49,7 +49,7 @@ public class User implements IUser {
    * @return a Schedule as a list of events that is specific to the current user
    */
 
-  public Schedule getSchedule() {
+  public ISchedule getSchedule() {
     return this.schedule;
   }
 
@@ -80,11 +80,11 @@ public class User implements IUser {
    */
 
   // should take in a Document instead - if not a bit of coupling but okay
-  public static List<Event> interpretXML(Document xmlDoc) {
+  public static List<IEvent> interpretXML(Document xmlDoc) {
     // create an empty list of events represented as hashmaps
     List<HashMap<String, String[]>> listEventsMap = new ArrayList<>();
     // create an empty list of events represented as events
-    List<Event> listEvents = new ArrayList<>();
+    List<IEvent> listEvents = new ArrayList<>();
     // open the XML as a document
  //   Document xmlDoc = readXML(filePath);
     // grab the schedule node and a list of its children nodes representing events
@@ -171,7 +171,7 @@ public class User implements IUser {
    * @param eventToMake HashMap of attribute name->list of values to convert to events.
    * @return the event corresponding to the HashMap
    */
-  public static Event makeEvent(HashMap<String, String[]> eventToMake) {
+  public static IEvent makeEvent(HashMap<String, String[]> eventToMake) {
     // generate temporary values for the event
     String tempEventName = "";
     Time tempStartTime = null;
@@ -215,7 +215,7 @@ public class User implements IUser {
    * Adds an event to a user's schedule.
    * @param event event to add
    */
-  public void addEventForUser(Event event) {
+  public void addEventForUser(IEvent event) {
     this.schedule.addEvent(event);
   }
 
@@ -223,7 +223,7 @@ public class User implements IUser {
    * Removes an event from a user's schedule.
    * @param event to remove
    */
-  public void removeEventForUser(Event event) {
+  public void removeEventForUser(IEvent event) {
     this.schedule.removeEvent(event);
   }
 

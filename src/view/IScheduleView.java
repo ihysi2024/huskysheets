@@ -4,6 +4,7 @@ import java.awt.*;
 
 import controller.Controller;
 import controller.ViewFeatures;
+import model.IUser;
 import model.ReadOnlyPlanner;
 import model.User;
 
@@ -16,9 +17,9 @@ public interface IScheduleView {
 
   void setCurrentUser(ReadOnlyPlanner model);
 
-  User getCurrentUser();
+  IUser getCurrentUser();
 
-  void displayUserSchedule(ReadOnlyPlanner model, User userToShow);
+  void displayUserSchedule(ReadOnlyPlanner model, IUser userToShow);
   void closeScheduleView(ReadOnlyPlanner model);
 
   //void createEventView(ReadOnlyPlanner model);

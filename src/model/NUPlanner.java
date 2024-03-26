@@ -8,6 +8,9 @@ import java.util.Set;
 
 /**
  * Planner system that contains a set of users and their corresponding schedules.
+ * Allows a user to display their schedule, create new events, modify existing events, and
+ * remove old events. Also allows users to upload their schedules in the form of an XML file
+ * or export their schedules as XML.
  */
 public class NUPlanner implements PlannerSystem {
 
@@ -18,14 +21,14 @@ public class NUPlanner implements PlannerSystem {
    * users cannot be added to the system by the inclusion of a set of users
    * instead of a list.
    */
-  private final Set<User> users;
+  private final Set<IUser> users;
 
   /**
    * Initialize a planner system with a given set of users.
    *
    * @param users non-duplicate user list in the system
    */
-  public NUPlanner(Set<User> users) {
+  public NUPlanner(Set<IUser> users) {
     this.users = new LinkedHashSet<>(users);
   }
 
@@ -41,7 +44,7 @@ public class NUPlanner implements PlannerSystem {
    * @return a set of users
    */
 
-  public Set<User> getUsers() {
+  public Set<IUser> getUsers() {
     return this.users;
   }
 
@@ -52,7 +55,7 @@ public class NUPlanner implements PlannerSystem {
    * @return a list of this user's events
    */
   @Override
-  public List<Event> retrieveUserEvents(User user) {
+  public List<IEvent> retrieveUserEvents(IUser user) {
     return user.getSchedule().getEvents();
   }
 
@@ -61,7 +64,7 @@ public class NUPlanner implements PlannerSystem {
    * @param filePathToSave where to save the XML file
    */
   public void exportScheduleAsXML(String filePathToSave) {
-    for (User user: this.users) {
+    for (IUser user: this.users) {
       user.userSchedToXML(filePathToSave);
     }
   }
@@ -75,7 +78,7 @@ public class NUPlanner implements PlannerSystem {
    * @throws IllegalArgumentException if user doesn't exist or doesn't have a schedule
    */
   @Override
-  public Event retrieveUserScheduleAtTime(User user, Time givenTime) {
+  public IEvent retrieveUserScheduleAtTime(IUser user, ITime givenTime) {
     return user.getSchedule().eventOccurring(givenTime);
   }
 
@@ -84,8 +87,8 @@ public class NUPlanner implements PlannerSystem {
    *
    * @param eventToAdd event to add to the relevant user schedule
    */
-  public void addEventForRelevantUsers(Event eventToAdd) {
-    for (User currUser : this.users) {
+  public void addEventForRelevantUsers(IEvent eventToAdd) {
+    for (IUser currUser : this.users) {
       if (eventToAdd.getUsers().contains(currUser.getName())) {
         try {
           // add event to current user's schedule
@@ -103,7 +106,7 @@ public class NUPlanner implements PlannerSystem {
    * @param userToAdd user to add to Planner
    */
   @Override
-  public void addUser(User userToAdd) {
+  public void addUser(IUser userToAdd) {
     this.users.add(userToAdd);
   }
 
@@ -113,9 +116,9 @@ public class NUPlanner implements PlannerSystem {
    * @param newEvent what the previous event should be modified to
    * @throws IllegalArgumentException if user listed cannot attend the modified event
    **/
-  public void modifyEvent(Event prevEvent, Event newEvent) {
-    User host = null;
-    for (User user: this.users) {
+  public void modifyEvent(IEvent prevEvent, IEvent newEvent) {
+    IUser host = null;
+    for (IUser user: this.users) {
       if (user.getName().equals(prevEvent.getUsers().get(0))) {
         host = new User(user.getName(), user.getSchedule());
       }
@@ -146,12 +149,12 @@ public class NUPlanner implements PlannerSystem {
    * @param eventToRemove event to remove from planner system
    * @param userRemovingEvent user removing the event
    */
-  public void removeEventForRelevantUsers(Event eventToRemove, User userRemovingEvent) {
-    Iterator<User> iterUsers = this.users.iterator();
+  public void removeEventForRelevantUsers(IEvent eventToRemove, IUser userRemovingEvent) {
+    Iterator<IUser> iterUsers = this.users.iterator();
 
     if (userRemovingEvent.getName().equals(eventToRemove.getUsers().get(0))) {
       while (iterUsers.hasNext()) {
-        User currUser = iterUsers.next();
+        IUser currUser = iterUsers.next();
         if (eventToRemove.getUsers().contains(currUser.getName())) {
           try {
             // remove the event from the current user's schedule

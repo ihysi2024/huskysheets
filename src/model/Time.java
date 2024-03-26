@@ -105,7 +105,7 @@ public class Time implements ITime {
    *        -1 if this time comes before that time
    *         1 if this time comes after that time
    */
-  public int compareTimes(Time refTime) {
+  public int compareTimes(ITime refTime) {
     if (this.date.dayIdx < refTime.getDate().dayIdx) {
       return -1;
     }

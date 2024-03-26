@@ -20,7 +20,7 @@ public interface IUser {
    * of an event from the schedules of all relevant invitees to the event.
    * @return a Schedule as a list of events that is specific to the current user
    */
-  Schedule getSchedule();
+  ISchedule getSchedule();
 
   /**
    * Show the user's schedule in a text format.
@@ -42,7 +42,7 @@ public interface IUser {
    * @param filePath path where XML is located
    * @return a list of events
    */
-  static List<Event> interpretXML(String filePath) {
+  static List<IEvent> interpretXML(String filePath) {
     return null;
   }
 
@@ -52,7 +52,7 @@ public interface IUser {
    * @param eventToMake HashMap of attribute name->list of values to convert to events.
    * @return the event corresponding to the HashMap
    */
-  static Event makeEvent(HashMap<String, String[]> eventToMake) {
+  static IEvent makeEvent(HashMap<String, String[]> eventToMake) {
     return null;
   }
 
@@ -60,11 +60,13 @@ public interface IUser {
    * Adds an event to a user's schedule.
    * @param event event to add
    */
-  void addEventForUser(Event event);
+  void addEventForUser(IEvent event);
 
   /**
    * Removes an event from a user's schedule.
    * @param event to remove
    */
-  void removeEventForUser(Event event);
+  void removeEventForUser(IEvent event);
+
+
 }
