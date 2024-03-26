@@ -30,7 +30,10 @@ public class EventView extends JFrame implements IEventView {
    * @param model desired model to represent Simon game
    */
   public EventView(ReadOnlyPlanner model) {
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    System.out.println("EVENT VIEW CREATED");
+    //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.panel = new EventPanel(model);
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -86,7 +89,7 @@ public class EventView extends JFrame implements IEventView {
 
 
   @Override
-  public void removeEventFromSchedule(ReadOnlyPlanner model) {
+  public void removeEventFromSchedule(ReadOnlyPlanner model, Event eventToRemove, User userRemoving) {
 
   }
 
@@ -120,7 +123,18 @@ public class EventView extends JFrame implements IEventView {
     catch (NullPointerException ignored) {
 
     }
-    removeEvent.addActionListener(evt -> features.removeEvent());
+    try {
+      Event oldEvent = features.storeEvent();
+      System.out.println(oldEvent.getEventName());
+      removeEvent.addActionListener(evt -> features.removeEvent(oldEvent));
+      System.out.println("done");
+
+      removeEvent.addActionListener(evt -> features.closeEventView());
+      removeEvent.addActionListener(evt -> features.openScheduleView());
+    }
+    catch (NullPointerException ignored) {
+
+    }
   }
 
   public void closeEvent() {

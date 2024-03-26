@@ -16,6 +16,8 @@ public interface IScheduleView {
 
   void setCurrentUser(ReadOnlyPlanner model);
 
+  User getCurrentUser();
+
   void displayUserSchedule(ReadOnlyPlanner model, User userToShow);
   void closeScheduleView(ReadOnlyPlanner model);
 
@@ -24,4 +26,6 @@ public interface IScheduleView {
   void addFeatures(ViewFeatures features);
 
   void addClickListener(ViewFeatures features);
+
+  void addCalendarInfo();
 }

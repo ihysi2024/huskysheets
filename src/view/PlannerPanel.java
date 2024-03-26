@@ -3,8 +3,11 @@ package view;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.font.TextAttribute;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +44,10 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
   private JButton createEventButton;
 
+//  private JMenuItem addCalendar;
+
+
+
 
   /**
    * Creates a panel that will house the view representation of the Simon game
@@ -68,6 +75,9 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
 
 
+  public User getCurrentUser() {
+    return null;
+  }
   /**
    * This method tells Swing what the "natural" size should be
    * for this panel.  Here, we set it to 400x400 pixels.
@@ -75,7 +85,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
    */
   @Override
   public Dimension getPreferredSize() {
-    return new Dimension(350, 350);
+    return new Dimension(500, 500);
   }
 
   /**
@@ -124,8 +134,10 @@ public class PlannerPanel extends JPanel implements IScheduleView{
   public void addFeatures(ViewFeatures features) {
 
     System.out.println("got to add features in planner panel");
-    createEventButton.addActionListener(evt -> features.openEventView());
-    createEventButton.addActionListener(evt -> features.closeScheduleView());
+    //createEventButton.addActionListener(evt -> features.openEventView());
+   // createEventButton.addActionListener(evt -> features.closeScheduleView());
+   // addCalendar.addActionListener(evt -> features.addCalendar());
+
     this.addMouseListener(new MouseEventsListener() {
       public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
@@ -176,7 +188,6 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
       int startDayIndex = startTime.getDate().getDayIdx();
       int endDayIndex = endTime.getDate().getDayIdx();
-
       // drawing each full day
       for (int indexFullDay = startDayIndex + 1; indexFullDay < endDayIndex; indexFullDay++) {
         // full day starts at time 00:00
@@ -191,7 +202,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
       g2d.fillRect(endDayCoords[0], endDayCoords[1], rectWidth, eventEndCoords[1]);
     }
-
+   // this.repaint();
   }
 
   /**
@@ -231,58 +242,10 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     Graphics2D g2d = (Graphics2D) g.create();
     g2d.transform(transformLogicalToPhysical());
 
+    // painting schedule grid lines
     this.paintLines(g2d, Color.GRAY, 8, 1, true);
     this.paintLines(g2d, Color.GRAY, 25, 1, false);
     this.paintLines(g2d, Color.BLACK, 7, 2, false);
-
-    /**
-    this.paintEvent(g, new Event("CS3500 Morning Lecture",
-            new Time(Time.Day.TUESDAY, 9, 50),
-            new Time(Time.Day.TUESDAY, 11, 30),
-            false,
-            "Churchill Hall 101",
-            new ArrayList<>(Arrays.asList("Prof. Lucia",
-                    "Student Anon",
-                    "Chat"))));
-
-    this.paintEvent(g, new Event("CS3500 Afternoon Lecture",
-            new Time(Time.Day.TUESDAY, 13, 35),
-            new Time(Time.Day.TUESDAY, 15, 15),
-            false,
-            "Churchill Hall 101",
-            new ArrayList<>(Arrays.asList("Prof. Lucia",
-                    "Chat"))));
-
-    this.paintEvent(g, new Event("Sleep",
-            new Time(Time.Day.WEDNESDAY, 18, 35),
-            new Time(Time.Day.MONDAY, 15, 15),
-            false,
-            "Churchill Hall 101",
-            new ArrayList<>(Arrays.asList("Prof. Lucia",
-                    "Chat"))));
-
-    this.paintEvent(g, new Event("Retreat",
-            new Time(Time.Day.SUNDAY, 5, 5),
-            new Time(Time.Day.TUESDAY, 1, 15),
-            false,
-            "Churchill Hall 101",
-            new ArrayList<>(Arrays.asList("Prof. Lucia",
-                    "Chat"))));
-
-     **/
-    /*
-        Dimension preferred = getPreferredLogicalSize();
-            Rectangle bounds = this.getBounds();
-
-    g2d.setColor(Color.RED);
-    g2d.drawLine(-1 * preferred.width, -1 * preferred.height,
-            preferred.width, preferred.height);
-
-    //g2d.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
-    g2d.setColor(Color.BLUE);
-    g2d.drawLine(preferred.width, -1 * preferred.height,
-            -1 * preferred.width, preferred.height);
-     */
   }
 
   /**
@@ -312,7 +275,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
           System.out.println("HERE");
           Event eventClicked = features.findEvent(timeOfEvent);
           if (eventClicked != null) {
-            panel.setVisible(false);
+           // panel.setVisible(false);
             features.openEventView();
             features.populateEvent(eventClicked);
           }
@@ -345,6 +308,11 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
       }
     });
+  }
+
+  @Override
+  public void addCalendarInfo() {
+
   }
 
   /**
@@ -418,7 +386,7 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     Dimension preferred = getPreferredLogicalSize();
     ret.translate(getWidth() / 2., getHeight() / 2.);
     ret.scale(0.5 * getWidth() / preferred.getWidth(),
-            0.5 * getHeight() / preferred.getHeight());
+            0.5* getHeight() / preferred.getHeight());
     ret.scale(1, -1);
     return ret;
   }

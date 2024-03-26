@@ -49,9 +49,9 @@ public interface ISchedule {
   String scheduleToXMLFormat();
 
   /**
-   * Return a list of events occurring at a given time.
+   * Return the event occurring at a given time. Schedule can only have one event at any given time
    * @param time the time to search for events occurring during
-   * @return a list of events at the given time
+   * @return the event at the given time. returns null if no event is occurring
    */
-  List<Event> eventsOccurring(Time time);
+  Event eventOccurring(Time time);
 }

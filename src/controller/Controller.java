@@ -91,19 +91,14 @@ public class Controller implements ViewFeatures {
   }
 
   public Event findEvent(Time timeOfEvent) {
-    Event clickedEvent = null;
     for (User user: this.model.getUsers()) {
-      for (Event event: user.getSchedule().getEvents()) {
-        if (((event.getStartTime().compareTimes(timeOfEvent) < 0) &&
-                (event.getEndTime().compareTimes(timeOfEvent) > 0)) ||
-                ((event.getStartTime().compareTimes(timeOfEvent) == 0) &&
-                        (event.getEndTime().compareTimes(timeOfEvent) == 0))) {
-          clickedEvent = event;
-        }
+      Event tempEvent = model.retrieveUserScheduleAtTime(user, timeOfEvent);
+      if (tempEvent != null) {
+        return tempEvent;
       }
-    }
 
-    return clickedEvent;
+    }
+    return null;
   }
 
   public void populateEvent(Event event) {
@@ -123,8 +118,16 @@ public class Controller implements ViewFeatures {
   }
 
 
-  public void removeEvent() {
-    eventView.removeEventFromSchedule(model);
+  public void removeEvent(Event eventToRemove) {
+    System.out.println(scheduleView.getCurrentUser().getName());
+
+    try {
+      model.removeEventForRelevantUsers(eventToRemove, scheduleView.getCurrentUser());
+    }
+    catch (NullPointerException ignored) {
+
+    }
+    //eventView.removeEventFromSchedule(model, eventToRemove, scheduleView.getCurrentUser());
   }
 
   @Override
@@ -152,7 +155,9 @@ public class Controller implements ViewFeatures {
   }
 
   @Override
-  public void addCalendar(String filePath) {
+  public void addCalendar() {
+   // System.out.println("file path selected: " + filePath);
+    scheduleView.addCalendarInfo();
 
   }
 

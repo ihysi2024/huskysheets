@@ -38,11 +38,11 @@ public interface ViewFeatures {
   void setCurrentUser();
 
   Event findEvent(Time timeOfEvent);
-  void removeEvent();
+  void removeEvent(Event eventToRemove);
 
   void quitEditingEvent();
 
-  void addCalendar(String filePath);
+  void addCalendar();
 
   void saveCalendars();
 
