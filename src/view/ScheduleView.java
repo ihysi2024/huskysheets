@@ -111,6 +111,7 @@ public class ScheduleView extends JFrame implements IScheduleView {
     selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
     addCalendar.addActionListener(evt -> features.addCalendar());
+    // merge
 
     // handle when a user has clicked on an event
     this.addMouseListener(new MouseListener() {
