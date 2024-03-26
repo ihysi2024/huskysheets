@@ -20,7 +20,7 @@ import static model.User.makeEvent;
 
 public class ScheduleView extends JFrame implements IScheduleView {
 
-  private User currentUser;
+  protected User currentUser;
   private final PlannerPanel panel;
 
   private final JPanel menuPanel;
@@ -111,6 +111,8 @@ public class ScheduleView extends JFrame implements IScheduleView {
     selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
     addCalendar.addActionListener(evt -> features.addCalendar());
+    saveCalendar.addActionListener(evt -> features.saveCalendars());
+
 
     // handle when a user has clicked on an event
     this.addMouseListener(new MouseListener() {
@@ -163,10 +165,27 @@ public class ScheduleView extends JFrame implements IScheduleView {
     chooser.setFileFilter(filter);
     int returnVal = chooser.showOpenDialog(addCalendar);
     if(returnVal == JFileChooser.APPROVE_OPTION) {
-      System.out.println("Selected file path: " +
+      System.out.println("Selected file path for uploading xml: " +
               chooser.getSelectedFile().getName());
     }
 
+  }
+
+  @Override
+  public void saveCalendarInfo() {
+    JFileChooser chooser = new JFileChooser();
+  //  FileNameExtensionFilter filter = new FileNameExtensionFilter(
+  //          "XML files", "xml");
+    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+    File workingDirectory = new File(System.getProperty("user.dir"));
+    chooser.setCurrentDirectory(workingDirectory);
+//    chooser.setFileFilter(filter);
+    int returnVal = chooser.showOpenDialog(saveCalendar);
+    if(returnVal == JFileChooser.APPROVE_OPTION) {
+      System.out.println("Selected folder for saving each xml: " +
+              chooser.getCurrentDirectory() +  "\\" + chooser.getSelectedFile().getName());
+    }
   }
 
   @Override
@@ -197,15 +216,15 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
     this.panel.resetPanel();
 
-    for (Event event: userToShow.getSchedule().getEvents()) {
-      this.panel.paintEvent(panel.getGraphics(), event);
-    }
+   // for (Event event: userToShow.getSchedule().getEvents()) {
+   //   this.panel.paintEvent(panel.getGraphics(), event);
+   // }
     menuPanel.revalidate();
     menuPanel.repaint();
-    fileSelectMenu.revalidate();
-    fileSelectMenu.repaint();
+    menuBar.revalidate();
+    menuBar.repaint();
     panel.add(menuPanel, BorderLayout.SOUTH);
-    panel.add(fileSelectMenu, BorderLayout.NORTH);
+    panel.add(menuBar, BorderLayout.NORTH);
     this.add(panel);
 
   }

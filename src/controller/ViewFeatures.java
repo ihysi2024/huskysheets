@@ -47,4 +47,6 @@ public interface ViewFeatures {
   void saveCalendars();
 
   void selectUser(String userName);
+
+ // void addingDummyMethod();
 }

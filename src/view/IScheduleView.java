@@ -28,4 +28,6 @@ public interface IScheduleView {
   void addClickListener(ViewFeatures features);
 
   void addCalendarInfo();
+
+  void saveCalendarInfo();
 }

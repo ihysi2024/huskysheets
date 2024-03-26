@@ -21,4 +21,12 @@ public interface ReadOnlyPlanner {
 
   Set<User> getUsers();
 
+  /**
+   * Retrieves the events in this user's schedule.
+   *
+   * @param user desired user for whom to retrieve the schedule
+   * @return a list of this user's events
+   */
+  List<Event> retrieveUserEvents(User user);
+
 }

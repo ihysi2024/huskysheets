@@ -48,11 +48,15 @@ public class Schedule implements ISchedule {
    * @throws IllegalArgumentException if event doesn't exist
    */
   public void removeEvent(Event otherEvent) {
-    int scheduleSize = this.events.size();
+
     this.events.removeIf(thisEvent -> thisEvent.equals(otherEvent));
-    if (this.events.size() == scheduleSize) {
-      throw new IllegalArgumentException("Event not in schedule");
-    }
+
+
+//    int scheduleSize = this.events.size();
+//    this.events.removeIf(thisEvent -> thisEvent.equals(otherEvent));
+//    if (this.events.size() == scheduleSize) {
+//      throw new IllegalArgumentException("Event not in schedule");
+//    }
   }
 
   /**

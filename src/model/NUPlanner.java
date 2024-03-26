@@ -46,6 +46,17 @@ public class NUPlanner implements PlannerSystem {
   }
 
   /**
+   * Retrieves the events in this user's schedule.
+   *
+   * @param user desired user for whom to retrieve the schedule
+   * @return a list of this user's events
+   */
+  @Override
+  public List<Event> retrieveUserEvents(User user) {
+    return user.getSchedule().getEvents();
+  }
+
+  /**
    * Write each user's schedule in the system to an XML file and store it.
    * @param filePathToSave where to save the XML file
    */

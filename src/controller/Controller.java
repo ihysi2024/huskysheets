@@ -154,14 +154,12 @@ public class Controller implements ViewFeatures {
 
   @Override
   public void addCalendar() {
-   // System.out.println("file path selected: " + filePath);
     scheduleView.addCalendarInfo();
-
   }
 
   @Override
   public void saveCalendars() {
-
+    scheduleView.saveCalendarInfo();
   }
 
   @Override
@@ -174,4 +172,5 @@ public class Controller implements ViewFeatures {
  QUESTIONS TO ASK:
  - methods in frame vs panel?
  - glitching with selecting user
+ - bunch of empty methods in PlannerPanel because it's implementing IScheduleView
  */

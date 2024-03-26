@@ -126,14 +126,16 @@ public class EventView extends JFrame implements IEventView {
     removeEvent.addActionListener(evt -> features.closeEventView());
     removeEvent.addActionListener(evt -> features.openScheduleView());
 
-    //saveEvent.addActionListener(evt -> features.displayUserSchedule());
-    try {
-      Event oldEvent = features.storeEvent();
-      modifyEvent.addActionListener(evt -> features.modifyEvent(oldEvent, this.storeOpenedEvent()));
-    }
-    catch (NullPointerException ignored) {
+    modifyEvent.addActionListener(evt -> features.modifyEvent(features.storeEvent(), this.storeOpenedEvent()));
 
-    }
+    //saveEvent.addActionListener(evt -> features.displayUserSchedule());
+//    try {
+//      Event oldEvent = features.storeEvent();
+//      modifyEvent.addActionListener(evt -> features.modifyEvent(oldEvent, this.storeOpenedEvent()));
+//    }
+//    catch (NullPointerException ignored) {
+//
+//    }
     //Event oldEvent = features.storeEvent();
     //System.out.println(oldEvent.getEventName());
   }

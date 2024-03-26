@@ -28,7 +28,7 @@ import static java.lang.Math.floor;
 import static model.Time.indexToTime;
 import static model.Time.stringToTime;
 
-public class PlannerPanel extends JPanel implements IScheduleView{
+public class PlannerPanel extends JPanel implements IScheduleView {
 
   /**
    * Our view will need to display a model, so it needs to get the current sequence from the model.
@@ -242,10 +242,22 @@ public class PlannerPanel extends JPanel implements IScheduleView{
     Graphics2D g2d = (Graphics2D) g.create();
     g2d.transform(transformLogicalToPhysical());
 
+    // use model field to repaint here
+
     // painting schedule grid lines
     this.paintLines(g2d, Color.GRAY, 8, 1, true);
     this.paintLines(g2d, Color.GRAY, 25, 1, false);
     this.paintLines(g2d, Color.BLACK, 7, 2, false);
+
+   // System.out.println(this.getCurrentUser() == null);
+  //  System.out.println("curr user: " + this.getCurrentUser().userToString());
+    if (this.getCurrentUser() != null) {
+      System.out.println("curr user: " + this.getCurrentUser().userToString());
+      for (Event event: model.retrieveUserEvents(this.getCurrentUser())) {
+        this.paintEvent(g, event);
+      }
+    }
+
   }
 
   /**
@@ -312,6 +324,11 @@ public class PlannerPanel extends JPanel implements IScheduleView{
 
   @Override
   public void addCalendarInfo() {
+
+  }
+
+  @Override
+  public void saveCalendarInfo() {
 
   }
 
