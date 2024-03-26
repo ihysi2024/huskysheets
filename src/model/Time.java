@@ -137,7 +137,7 @@ public class Time implements ITime {
   public static Time stringToTime(String day, String time) {
     List<String> daysofTheWeek =
             List.of("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
-    Day tempDay = Day.SUNDAY;
+    Day tempDay = Day.SATURDAY;
     int tempHours = 0;
     int tempMin = 0;
     // throw exception if given day isn't in Day Enum
@@ -151,6 +151,8 @@ public class Time implements ITime {
       }
     }
     if (time.length() != 4) {
+      System.out.println("day string: " + day);
+      System.out.println("time string: " + time);
       throw new IllegalArgumentException("invalid time input");
     }
 

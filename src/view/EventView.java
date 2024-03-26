@@ -31,7 +31,6 @@ public class EventView extends JFrame implements IEventView {
    */
   public EventView(ReadOnlyPlanner model) {
 
-    System.out.println("EVENT VIEW CREATED");
     //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.panel = new EventPanel(model);
@@ -65,9 +64,9 @@ public class EventView extends JFrame implements IEventView {
         for (String userName: this.panel.getUsersInput()) {
           if (userName.contains(user.getName())) {
             user.addEventForUser(eventMade);
-            System.out.println(user.getName());
-            System.out.println(user.getSchedule().getEvents().size());
-          }
+            System.out.println("Create event: ");
+            System.out.println(eventMade.eventToString());
+           }
         }
       }
 
@@ -78,6 +77,7 @@ public class EventView extends JFrame implements IEventView {
   }
 
   public void openEvent(ReadOnlyPlanner model) {
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setVisible(true);
   }
 
@@ -99,6 +99,9 @@ public class EventView extends JFrame implements IEventView {
     eventMap.put("time", this.panel.getTimeInput());
     eventMap.put("location", this.panel.getLocationInput());
     eventMap.put("users", this.panel.getUsersInput());
+    Event eventMade = makeEvent(eventMap);
+    return eventMade;
+    /**
     try {
       Event eventMade = makeEvent(eventMap);
       return eventMade;
@@ -107,6 +110,7 @@ public class EventView extends JFrame implements IEventView {
     catch (IllegalArgumentException ignored) {
       return null;
     }
+     **/
   }
 
 
@@ -115,7 +119,14 @@ public class EventView extends JFrame implements IEventView {
     saveEvent.addActionListener(evt -> features.createEvent());
     saveEvent.addActionListener(evt -> features.closeEventView());
     saveEvent.addActionListener(evt -> features.openScheduleView());
-      //saveEvent.addActionListener(evt -> features.displayUserSchedule());
+
+
+    removeEvent.addActionListener(evt -> features.removeEvent(features.storeEvent()));
+
+    removeEvent.addActionListener(evt -> features.closeEventView());
+    removeEvent.addActionListener(evt -> features.openScheduleView());
+
+    //saveEvent.addActionListener(evt -> features.displayUserSchedule());
     try {
       Event oldEvent = features.storeEvent();
       modifyEvent.addActionListener(evt -> features.modifyEvent(oldEvent, this.storeOpenedEvent()));
@@ -123,18 +134,8 @@ public class EventView extends JFrame implements IEventView {
     catch (NullPointerException ignored) {
 
     }
-    try {
-      Event oldEvent = features.storeEvent();
-      System.out.println(oldEvent.getEventName());
-      removeEvent.addActionListener(evt -> features.removeEvent(oldEvent));
-      System.out.println("done");
-
-      removeEvent.addActionListener(evt -> features.closeEventView());
-      removeEvent.addActionListener(evt -> features.openScheduleView());
-    }
-    catch (NullPointerException ignored) {
-
-    }
+    //Event oldEvent = features.storeEvent();
+    //System.out.println(oldEvent.getEventName());
   }
 
   public void closeEvent() {

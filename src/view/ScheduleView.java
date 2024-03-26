@@ -106,12 +106,11 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
 
   public void addFeatures(ViewFeatures features) {
-    createEventButton.addActionListener(evt -> features.closeScheduleView());
+    //createEventButton.addActionListener(evt -> features.closeScheduleView());
     createEventButton.addActionListener(evt -> features.openEventView());
     selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
     addCalendar.addActionListener(evt -> features.addCalendar());
-    // merge
 
     // handle when a user has clicked on an event
     this.addMouseListener(new MouseListener() {
@@ -184,10 +183,8 @@ public class ScheduleView extends JFrame implements IScheduleView {
   public void openScheduleView(ReadOnlyPlanner model) {
 
     String userName = selectUserButton.getSelectedItem().toString();
-    System.out.println("curr user: " + userName);
     for (User user: model.getUsers()) {
       if (user.getName().equals(currentUser.getName())) {
-        System.out.println(user.getSchedule().getEvents().size());
         this.displayUserSchedule(model, user);
       }
     }
@@ -201,7 +198,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
     this.panel.resetPanel();
 
     for (Event event: userToShow.getSchedule().getEvents()) {
-      System.out.println("got here");
       this.panel.paintEvent(panel.getGraphics(), event);
     }
     menuPanel.revalidate();

@@ -23,14 +23,14 @@ public class MainPlanner {
   public static void main(String[] args) {
     PlannerSystem model = new NUPlanner(); // Feel free to customize this as desired
     Event morningSnack = new Event("snack",
-            new Time(Time.Day.TUESDAY, 9, 30),
+            new Time(Time.Day.TUESDAY, 10, 30),
             new Time(Time.Day.TUESDAY, 11, 45),
             false,
             "Churchill Hall 101",
             List.of("Prof. Lucia"));
 
     Event officeHours = new Event("office hours",
-            new Time(Time.Day.MONDAY, 12, 01),
+            new Time(Time.Day.MONDAY, 12, 10),
             new Time(Time.Day.MONDAY, 15, 30),
             false,
             "Churchill Hall 101",

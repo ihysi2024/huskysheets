@@ -120,13 +120,11 @@ public class Controller implements ViewFeatures {
 
   public void removeEvent(Event eventToRemove) {
     System.out.println(scheduleView.getCurrentUser().getName());
+    System.out.println("Remove event: ");
+    System.out.println(scheduleView.getCurrentUser().getName());
+    System.out.println("Remove event***: " + eventToRemove.eventToString());
+    model.removeEventForRelevantUsers(eventToRemove, scheduleView.getCurrentUser());
 
-    try {
-      model.removeEventForRelevantUsers(eventToRemove, scheduleView.getCurrentUser());
-    }
-    catch (NullPointerException ignored) {
-
-    }
     //eventView.removeEventFromSchedule(model, eventToRemove, scheduleView.getCurrentUser());
   }
 
