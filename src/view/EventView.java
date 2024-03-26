@@ -62,7 +62,7 @@ public class EventView extends JFrame implements IEventView {
     try {
       Event eventMade = makeEvent(eventMap);
       for (User user : model.getUsers()) {
-        for (String userName: Arrays.stream(this.panel.getUsersInput()).toList()) {
+        for (String userName: this.panel.getUsersInput()) {
           if (userName.contains(user.getName())) {
             user.addEventForUser(eventMade);
             System.out.println(user.getName());

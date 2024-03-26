@@ -171,3 +171,9 @@ public class Controller implements ViewFeatures {
 
   }
 }
+
+/*
+ QUESTIONS TO ASK:
+ - methods in frame vs panel?
+ - glitching with selecting user
+ */
