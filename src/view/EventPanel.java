@@ -251,19 +251,30 @@ public class EventPanel extends JPanel {
 
 **/
   public String[] getEventNameInput() {
+    System.out.println("event name: " + eventName.getText());
     return new String[]{eventName.getText()};
   }
 
   public String[] getTimeInput() {
+    System.out.println("Start day: " + startDay.getSelectedItem().toString());
+    System.out.println("Start time: " + startTime.getText());
+    System.out.println("End day: " + endDay.getSelectedItem().toString());
+    System.out.println("End time: " + endTime.getText());
+
+
     return new String[]{startDay.getSelectedItem().toString(), startTime.getText(),
             endDay.getSelectedItem().toString(), endTime.getText()};
   }
 
   public String[] getLocationInput() {
+    System.out.println("online/not" + onlineMenu.getSelectedItem().toString());
+    System.out.println("location" + location.getText());
+
     return new String[]{onlineMenu.getSelectedItem().toString(), location.getText()};
   }
 
   public String[] getUsersInput() {
+    System.out.println("users list" + usersList.getSelectedValuesList().toString());
     return new String[]{usersList.getSelectedValuesList().toString()};
   }
 
