@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface ISchedule {
 
-  void addEvent(Event event);
+  void addEvent(IEvent event);
 
   /**
    * Remove event from this schedule. Only removes an event that exactly matches an event
@@ -18,21 +18,21 @@ public interface ISchedule {
    * @param otherEvent the event to be removed
    * @throws IllegalArgumentException if event doesn't exist
    */
-  void removeEvent(Event otherEvent);
+  void removeEvent(IEvent otherEvent);
 
   /**
    * Observes the events present in a given schedule. Necessary to
    * allow the user to observe the events in their schedule.
    * @return the list of the schedule's events.
    */
-  List<Event> getEvents();
+  List<IEvent> getEvents();
 
   /**
    * Creating an association between day of the week and events occurring that day.
    *
    * @return a HashMap relating each day of the week to a list of events
    */
-  HashMap<Time.Day, List<Event>> dayToEventsMappping();
+  HashMap<Time.Day, List<IEvent>> dayToEventsMappping();
 
   /**
    * Convert the schedule to a string format for XML exportation.
@@ -53,5 +53,5 @@ public interface ISchedule {
    * @param time the time to search for events occurring during
    * @return the event at the given time. returns null if no event is occurring
    */
-  Event eventOccurring(Time time);
+  IEvent eventOccurring(ITime time);
 }

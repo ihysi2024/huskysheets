@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.List;
 
 import model.Event;
+import model.IEvent;
+import model.ITime;
 import model.ReadOnlyPlanner;
 import model.Time;
 
@@ -21,13 +23,13 @@ public interface ViewFeatures {
   void openEventView();
   void createEvent();
 
-  void updatedEvent(Event updatedEvent);
+  void updatedEvent(IEvent updatedEvent);
 
-  Event storeEvent();
+  IEvent storeEvent();
 
-  void modifyEvent(Event oldEvent, Event newEvent);
+  void modifyEvent(IEvent oldEvent, IEvent newEvent);
 
-  void populateEvent(Event event);
+  void populateEvent(IEvent event);
 
   void selectUserSchedule(String userName);
 
@@ -37,8 +39,8 @@ public interface ViewFeatures {
 
   void setCurrentUser();
 
-  Event findEvent(Time timeOfEvent);
-  void removeEvent(Event eventToRemove);
+  IEvent findEvent(ITime timeOfEvent);
+  void removeEvent(IEvent eventToRemove);
 
   void quitEditingEvent();
 

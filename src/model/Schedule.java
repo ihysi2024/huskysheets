@@ -10,10 +10,10 @@ import java.util.Objects;
  * Represents a schedule in the planner system.
  */
 public class Schedule implements ISchedule {
-  private final ArrayList<Event> events;
+  private final ArrayList<IEvent> events;
 
 
-  public Schedule(ArrayList<Event> events) {
+  public Schedule(ArrayList<IEvent> events) {
     this.events = Objects.requireNonNull(events);
   }
 
@@ -25,9 +25,9 @@ public class Schedule implements ISchedule {
    * @throws IllegalArgumentException if event overlaps another event
    */
 
-  public void addEvent(Event event) {
+  public void addEvent(IEvent event) {
     int countOverlapping = 0;
-    for (Event existingEvent: this.events) {
+    for (IEvent existingEvent: this.events) {
       if (existingEvent.overlappingEvents(event)) {
         countOverlapping++;
       }
@@ -47,7 +47,7 @@ public class Schedule implements ISchedule {
    * @param otherEvent the event to be removed
    * @throws IllegalArgumentException if event doesn't exist
    */
-  public void removeEvent(Event otherEvent) {
+  public void removeEvent(IEvent otherEvent) {
     int scheduleSize = this.events.size();
     this.events.removeIf(thisEvent -> thisEvent.equals(otherEvent));
     if (this.events.size() == scheduleSize) {
@@ -60,7 +60,7 @@ public class Schedule implements ISchedule {
    * allow the user to observe the events in their schedule.
    * @return the list of the schedule's events.
    */
-  public List<Event> getEvents() {
+  public List<IEvent> getEvents() {
     return this.events;
   }
 
@@ -69,8 +69,8 @@ public class Schedule implements ISchedule {
    *
    * @return a HashMap relating each day of the week to a list of events
    */
-  public HashMap<Time.Day, List<Event>> dayToEventsMappping() {
-    HashMap<Time.Day, List<Event>> dayToEvent = new LinkedHashMap<>();
+  public HashMap<Time.Day, List<IEvent>> dayToEventsMappping() {
+    HashMap<Time.Day, List<IEvent>> dayToEvent = new LinkedHashMap<>();
     dayToEvent.put(Time.Day.SUNDAY, new ArrayList<>());
     dayToEvent.put(Time.Day.MONDAY, new ArrayList<>());
     dayToEvent.put(Time.Day.TUESDAY, new ArrayList<>());
@@ -79,7 +79,7 @@ public class Schedule implements ISchedule {
     dayToEvent.put(Time.Day.FRIDAY, new ArrayList<>());
     dayToEvent.put(Time.Day.SATURDAY, new ArrayList<>());
 
-    for (Event eventToSchedule: this.events) {
+    for (IEvent eventToSchedule: this.events) {
       dayToEvent.get(eventToSchedule.getStartTime().getDate()).add(eventToSchedule);
     }
     return dayToEvent;
@@ -92,10 +92,10 @@ public class Schedule implements ISchedule {
    */
   public String scheduleToString() {
     StringBuilder scheduleStr = new StringBuilder();
-    HashMap<Time.Day, List<Event>> eventsMap = this.dayToEventsMappping();
+    HashMap<Time.Day, List<IEvent>> eventsMap = this.dayToEventsMappping();
     for (Time.Day dayOfTheWeek: eventsMap.keySet()) {
       scheduleStr.append(dayOfTheWeek.getDayString() + ": " + "\n");
-      for (Event eventsInMap: eventsMap.get(dayOfTheWeek)) {
+      for (IEvent eventsInMap: eventsMap.get(dayOfTheWeek)) {
 
         scheduleStr.append(eventsInMap.eventToString() + " ".repeat(10) + "\n");
       }
@@ -110,7 +110,7 @@ public class Schedule implements ISchedule {
    */
   public String scheduleToXMLFormat() {
     StringBuilder scheduleXML = new StringBuilder();
-    for (Event event: this.events) {
+    for (IEvent event: this.events) {
       scheduleXML.append(event.eventToXMLFormat() + "\n");
     }
     return scheduleXML.toString();
@@ -121,8 +121,8 @@ public class Schedule implements ISchedule {
    * @param time the time to search for events occurring during
    * @return the event at the given time. returns null if no event is occurring
    */
-  public Event eventOccurring(Time time) {
-    for (Event event: this.events) {
+  public IEvent eventOccurring(ITime time) {
+    for (IEvent event: this.events) {
       if (event.getStartTime().compareTimes(time) <= 0
               && event.getEndTime().compareTimes(time) >= 0) {
         return event;

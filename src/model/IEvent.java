@@ -20,14 +20,14 @@ public interface IEvent {
    *
    * @return the event's start time
    */
-  Time getStartTime();
+  ITime getStartTime();
 
   /**
    * Getting the event's end time to be used in other event calculations.
    *
    * @return the event's end time
    */
-  Time getEndTime();
+  ITime getEndTime();
 
 
   /**
@@ -45,7 +45,7 @@ public interface IEvent {
    * @param otherEvent event to compare
    * @return true if the two events coincide and false otherwise
    */
-  boolean overlappingEvents(Event otherEvent);
+  boolean overlappingEvents(IEvent otherEvent);
 
   /**
    * Overriding default equals method to compare each field of this event with another event.
@@ -76,4 +76,12 @@ public interface IEvent {
    * @return String represenation of event with proper XML tags.
    */
   String eventToXMLFormat();
+
+  Boolean getOnline();
+
+  String getEventName();
+
+  String getLocation();
+
+
 }

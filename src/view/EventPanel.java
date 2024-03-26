@@ -16,6 +16,7 @@ import javax.swing.event.MouseInputAdapter;
 import controller.ViewFeatures;
 import model.Event;
 import model.IEvent;
+import model.IUser;
 import model.ReadOnlyPlanner;
 import model.Time;
 import model.User;
@@ -151,7 +152,7 @@ public class EventPanel extends JPanel {
 
     DefaultListModel<String> allUsers = new DefaultListModel<>();
 
-    for (User user: model.getUsers()) {
+    for (IUser user: model.getUsers()) {
       allUsers.addElement(user.getName());
     }
 
@@ -178,7 +179,7 @@ public class EventPanel extends JPanel {
     //System.out.println(this.event.getStartTime().timeToString());
   }
 
-  public void populateEventContents(Event event) {
+  public void populateEventContents(IEvent event) {
     eventName.setText(event.getEventName());
     startDay.setSelectedIndex(event.getStartTime().getDate().getDayIdx());
     startTime.setText(String.valueOf(event.getStartTime().getHours())
@@ -194,7 +195,7 @@ public class EventPanel extends JPanel {
       onlineMenu.setSelectedIndex(1);
     }
     int idx = 0;
-    for (User plannerUsers: model.getUsers()) {
+    for (IUser plannerUsers: model.getUsers()) {
       for (String eventUser: event.getUsers()) {
         if (eventUser.equals(plannerUsers.getName())) {
           usersList.setSelectedIndex(idx);

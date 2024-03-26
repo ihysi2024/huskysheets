@@ -32,7 +32,7 @@ public interface ITime {
    *        -1 if this time comes before that time
    *         1 if this time comes after that time
    */
-  int compareTimes(Time refTime);
+  int compareTimes(ITime refTime);
 
   /**
    * Creates a String representation of this time in format "DATE: HH:MM".

@@ -13,12 +13,12 @@ public interface ReadOnlyPlanner {
    * @return an event. return null if no events at that time
    * @throws IllegalArgumentException if user doesn't exist or doesn't have a schedule
    */
-  Event retrieveUserScheduleAtTime(User user, Time givenTime);
+  IEvent retrieveUserScheduleAtTime(IUser user, ITime givenTime);
 
   /**
    * User list
    */
 
-  Set<User> getUsers();
+  Set<IUser> getUsers();
 
 }

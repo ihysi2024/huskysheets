@@ -7,6 +7,8 @@ import javax.swing.*;
 
 import controller.ViewFeatures;
 import model.Event;
+import model.IEvent;
+import model.IUser;
 import model.ReadOnlyPlanner;
 import model.User;
 
@@ -59,8 +61,8 @@ public class EventView extends JFrame implements IEventView {
     eventMap.put("location", this.panel.getLocationInput());
     eventMap.put("users", this.panel.getUsersInput());
     try {
-      Event eventMade = makeEvent(eventMap);
-      for (User user : model.getUsers()) {
+      IEvent eventMade = makeEvent(eventMap);
+      for (IUser user : model.getUsers()) {
         for (String userName: Arrays.stream(this.panel.getUsersInput()).toList()) {
           if (userName.contains(user.getName())) {
             user.addEventForUser(eventMade);
@@ -82,24 +84,24 @@ public class EventView extends JFrame implements IEventView {
   }
 
 
-  public void populateEventInPanel(Event event) {
+  public void populateEventInPanel(IEvent event) {
     this.panel.populateEventContents(event);
 
   }
 
 
   @Override
-  public void removeEventFromSchedule(ReadOnlyPlanner model, Event eventToRemove, User userRemoving) {
+  public void removeEventFromSchedule(ReadOnlyPlanner model, IEvent eventToRemove, IUser userRemoving) {
 
   }
 
-  public Event storeOpenedEvent() {
+  public IEvent storeOpenedEvent() {
     HashMap<String, String[]> eventMap = new HashMap<>();
     eventMap.put("name", this.panel.getEventNameInput());
     eventMap.put("time", this.panel.getTimeInput());
     eventMap.put("location", this.panel.getLocationInput());
     eventMap.put("users", this.panel.getUsersInput());
-    Event eventMade = makeEvent(eventMap);
+    IEvent eventMade = makeEvent(eventMap);
     return eventMade;
     /**
     try {
@@ -127,13 +129,7 @@ public class EventView extends JFrame implements IEventView {
     removeEvent.addActionListener(evt -> features.openScheduleView());
 
     //saveEvent.addActionListener(evt -> features.displayUserSchedule());
-    try {
-      Event oldEvent = features.storeEvent();
-      modifyEvent.addActionListener(evt -> features.modifyEvent(oldEvent, this.storeOpenedEvent()));
-    }
-    catch (NullPointerException ignored) {
 
-    }
     //Event oldEvent = features.storeEvent();
     //System.out.println(oldEvent.getEventName());
   }

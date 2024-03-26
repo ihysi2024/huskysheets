@@ -2,6 +2,8 @@ package view;
 
 import controller.ViewFeatures;
 import model.Event;
+import model.IEvent;
+import model.IUser;
 import model.ReadOnlyPlanner;
 import model.User;
 
@@ -16,10 +18,10 @@ public interface IEventView {
   void openEvent(ReadOnlyPlanner model);
 
   void closeEvent();
-  void populateEventInPanel(Event event);
-  void removeEventFromSchedule(ReadOnlyPlanner model, Event eventToRemove, User userRemoving);
+  void populateEventInPanel(IEvent event);
+  void removeEventFromSchedule(ReadOnlyPlanner model, IEvent eventToRemove, IUser userRemoving);
 
-  Event storeOpenedEvent();
+  IEvent storeOpenedEvent();
 
   void createEvent(ReadOnlyPlanner model);
 }

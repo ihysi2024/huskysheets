@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Event;
+import model.IEvent;
+import model.ITime;
+import model.IUser;
 import model.PlannerSystem;
 import model.ReadOnlyPlanner;
 import model.Schedule;
@@ -75,7 +78,7 @@ public class Controller implements ViewFeatures {
   }
 
   public void selectUserSchedule(String userName) {
-    for (User user: model.getUsers()) {
+    for (IUser user: model.getUsers()) {
       if (user.getName().equals(userName)) {
         scheduleView.displayUserSchedule(this.model, user);
       }
@@ -90,9 +93,9 @@ public class Controller implements ViewFeatures {
     scheduleView.setCurrentUser(model);
   }
 
-  public Event findEvent(Time timeOfEvent) {
-    for (User user: this.model.getUsers()) {
-      Event tempEvent = model.retrieveUserScheduleAtTime(user, timeOfEvent);
+  public IEvent findEvent(ITime timeOfEvent) {
+    for (IUser user: this.model.getUsers()) {
+      IEvent tempEvent = model.retrieveUserScheduleAtTime(user, timeOfEvent);
       if (tempEvent != null) {
         return tempEvent;
       }
@@ -101,24 +104,24 @@ public class Controller implements ViewFeatures {
     return null;
   }
 
-  public void populateEvent(Event event) {
+  public void populateEvent(IEvent event) {
     eventView.populateEventInPanel(event);
   }
   public void openScheduleView() {
     scheduleView.openScheduleView(model);
   }
 
-  public void updatedEvent(Event oldEvent) {
+  public void updatedEvent(IEvent oldEvent) {
 
     //model.modifyEvent(eventView.storeOpenedEvent(), newEvent);
   }
 
-  public void modifyEvent(Event oldEvent, Event newEvent) {
+  public void modifyEvent(IEvent oldEvent, IEvent newEvent) {
     model.modifyEvent(oldEvent, newEvent);
   }
 
 
-  public void removeEvent(Event eventToRemove) {
+  public void removeEvent(IEvent eventToRemove) {
     System.out.println(scheduleView.getCurrentUser().getName());
     System.out.println("Remove event: ");
     System.out.println(scheduleView.getCurrentUser().getName());
@@ -134,7 +137,7 @@ public class Controller implements ViewFeatures {
     eventView.createEvent(model);
   }
 
-  public Event storeEvent() {
+  public IEvent storeEvent() {
     return eventView.storeOpenedEvent();
   }
 

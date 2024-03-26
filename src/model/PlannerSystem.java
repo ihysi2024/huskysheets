@@ -13,7 +13,7 @@ public interface PlannerSystem extends ReadOnlyPlanner {
    */
   void exportScheduleAsXML(String filePath);
 
-  Set<User> getUsers();
+  Set<IUser> getUsers();
 
   /**
    * Remove an event from planner system for relevant users.
@@ -23,7 +23,7 @@ public interface PlannerSystem extends ReadOnlyPlanner {
    * @param eventToRemove event to remove from planner system
    * @param userRemovingEvent user removing the event
    */
-  void removeEventForRelevantUsers(Event eventToRemove, User userRemovingEvent);
+  void removeEventForRelevantUsers(IEvent eventToRemove, IUser userRemovingEvent);
 
   /**
    * Events can only be modified if all users can attend the event.
@@ -31,20 +31,20 @@ public interface PlannerSystem extends ReadOnlyPlanner {
    * @param newEvent what the previous event should be modified to
    * @throws IllegalArgumentException if user listed cannot attend the modified event
    **/
-  void modifyEvent(Event prevEvent, Event newEvent);
+  void modifyEvent(IEvent prevEvent, IEvent newEvent);
 
   /**
    * Add events for the users listed in the event's invitee list.
    *
    * @param eventToAdd event to add to the relevant user schedule
    */
-  void addEventForRelevantUsers(Event eventToAdd);
+  void addEventForRelevantUsers(IEvent eventToAdd);
 
 
   // could take in a string (make a user with an empty schedule)
   // or a User (with a schedule)
   // gui is adding a user via xml
-  void addUser(User userToAdd);
+  void addUser(IUser userToAdd);
 
 
 }

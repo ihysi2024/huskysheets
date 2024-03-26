@@ -2,6 +2,7 @@ package view;
 
 import java.io.IOException;
 
+import model.IUser;
 import model.PlannerSystem;
 import model.User;
 
@@ -11,8 +12,8 @@ import model.User;
  */
 public class ScheduleTextView implements IScheduleTextView {
 
-  PlannerSystem plannerSystem;
-  Appendable appendable;
+  private PlannerSystem plannerSystem;
+  private Appendable appendable;
 
   /**
    * Produce a view for this planner system for all users' schedules to be seen.
@@ -31,7 +32,7 @@ public class ScheduleTextView implements IScheduleTextView {
    */
   public String plannerSystemString() {
     StringBuilder planner = new StringBuilder();
-    for (User user: this.plannerSystem.getUsers()) {
+    for (IUser user: this.plannerSystem.getUsers()) {
       planner.append(user.userToString() + "\n");
     }
     return planner.toString();

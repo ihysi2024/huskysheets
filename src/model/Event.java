@@ -16,8 +16,8 @@ import java.util.Objects;
  */
 public class Event implements IEvent {
   private final String eventName;
-  private final Time startTime;
-  private final Time endTime;
+  private final ITime startTime;
+  private final ITime endTime;
   private final boolean online;
   private final String location;
   private final List<String> users;
@@ -33,7 +33,7 @@ public class Event implements IEvent {
    * @param location  physical location of an event
    * @param users     users invited to the event. first user in list is the host of the event
    */
-  public Event(String eventName, Time startTime, Time endTime, boolean online, String location,
+  public Event(String eventName, ITime startTime, ITime endTime, boolean online, String location,
                List<String> users) {
     if ((users == null) || (users.isEmpty())) {
       throw new IllegalArgumentException("Null list of invitees not allowed");
@@ -72,7 +72,7 @@ public class Event implements IEvent {
    *
    * @return the event's start time
    */
-  public Time getStartTime() {
+  public ITime getStartTime() {
     return this.startTime;
   }
 
@@ -81,7 +81,7 @@ public class Event implements IEvent {
    *
    * @return the event's end time
    */
-  public Time getEndTime() {
+  public ITime getEndTime() {
     return this.endTime;
   }
 
@@ -103,17 +103,17 @@ public class Event implements IEvent {
    * @param otherEvent event to compare
    * @return true if the two events coincide and false otherwise
    */
-  public boolean overlappingEvents(Event otherEvent) {
+  public boolean overlappingEvents(IEvent otherEvent) {
 
     // do the events occur at the same time? if so, they overlap
-    if ((this.startTime.compareTimes(otherEvent.endTime) == 0)
-            || (this.endTime.compareTimes(otherEvent.startTime) == 0)) {
+    if ((this.startTime.compareTimes(otherEvent.getEndTime()) == 0)
+            || (this.endTime.compareTimes(otherEvent.getStartTime()) == 0)) {
       return false;
     }
     // do the events start and end times overlap? if so, they overlap
     else {
-      return (this.startTime.compareTimes(otherEvent.endTime) <= 0)
-            && (this.endTime.compareTimes(otherEvent.startTime) >= 0);
+      return (this.startTime.compareTimes(otherEvent.getEndTime()) <= 0)
+            && (this.endTime.compareTimes(otherEvent.getStartTime()) >= 0);
     }
   }
 
