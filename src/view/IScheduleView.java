@@ -14,6 +14,8 @@ public interface IScheduleView {
 
   void openScheduleView(ReadOnlyPlanner model);
 
+  void setCurrentUser(ReadOnlyPlanner model);
+
   void displayUserSchedule(ReadOnlyPlanner model, User userToShow);
   void closeScheduleView(ReadOnlyPlanner model);
 

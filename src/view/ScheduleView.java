@@ -3,6 +3,8 @@ package view;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -18,6 +20,7 @@ import static model.User.makeEvent;
 
 public class ScheduleView extends JFrame implements IScheduleView {
 
+  private User currentUser;
   private final PlannerPanel panel;
 
   private final JPanel menuPanel;
@@ -35,11 +38,10 @@ public class ScheduleView extends JFrame implements IScheduleView {
     //saveEventButton = new JButton("Create Event");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    System.out.println("SCHEDULEVIEW CONSTRUCTOR");
     this.panel = new PlannerPanel(model);
     this.menuPanel = new JPanel();
     this.panel.setLayout(new BorderLayout());
-    this.add(panel);
+
 
     //panel.getPreferredSize();
     createEventButton = new JButton("Create Event");
@@ -52,16 +54,26 @@ public class ScheduleView extends JFrame implements IScheduleView {
       selectUserButton.addItem(user.getName());
     }
     selectUserButton.setActionCommand("Select User");
+
     menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.X_AXIS));
     menuPanel.add(selectUserButton);
     menuPanel.add(createEventButton);
     menuPanel.add(scheduleEventButton);
+    this.add(panel);
     panel.add(menuPanel, BorderLayout.SOUTH);
     this.setVisible(true);
 
+    // add panel to bottom after schedule
     this.pack();
   }
 
+  public void setCurrentUser(ReadOnlyPlanner model) {
+    for (User user: model.getUsers()) {
+      if (user.getName().equals(selectUserButton.getSelectedItem().toString())) {
+        this.currentUser = user;
+      }
+    }
+  }
   public void closeScheduleView(ReadOnlyPlanner model) {
     this.setVisible(false);
     //newEvent.createEvent(model);
@@ -69,7 +81,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
     //createEventButton.setVisible(false);
     // make the event panel visible
     //this.panel.setVisible(false);
-    System.out.println("Event created");
 
   }
 
@@ -80,12 +91,14 @@ public class ScheduleView extends JFrame implements IScheduleView {
   public void addFeatures(ViewFeatures features) {
     createEventButton.addActionListener(evt -> features.closeScheduleView());
     createEventButton.addActionListener(evt -> features.openEventView());
-    selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
+    selectUserButton.addActionListener(evt ->
+            features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
+    selectUserButton.addActionListener(evt -> features.setCurrentUser());
+
     // handle when a user has clicked on an event
     this.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        System.out.println("ADD FEATURES IN VIEW");
         Time timeOfEvent = panel.timeAtClick(e);
         try {
           Event eventClicked = features.findEvent(timeOfEvent);
@@ -135,10 +148,11 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
   @Override
   public void openScheduleView(ReadOnlyPlanner model) {
-    String userName = selectUserButton.getSelectedItem().toString();
+    System.out.println(currentUser.getName());
+    //String userName = selectUserButton.getSelectedItem().toString();
     for (User user: model.getUsers()) {
-      if (user.getName().equals(userName)) {
-        System.out.println(user.getName());
+      if (user.getName().equals(currentUser.getName())) {
+        System.out.println(user.getSchedule().getEvents().size());
         this.displayUserSchedule(model, user);
       }
     }
@@ -148,10 +162,12 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
   @Override
   public void displayUserSchedule(ReadOnlyPlanner model, User userToShow) {
+
     this.panel.resetPanel();
-    this.add(panel);
     for (Event event: userToShow.getSchedule().getEvents()) {
-      this.panel.paintEvent(getGraphics(), event);
+      System.out.println("Event");
+      //Graphics g = new Graphics();
+      this.panel.paintEvent(panel.getGraphics(), event);
     }
     menuPanel.revalidate();
     menuPanel.repaint();

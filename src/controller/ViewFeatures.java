@@ -35,6 +35,8 @@ public interface ViewFeatures {
 
   void closeEventView();
 
+  void setCurrentUser();
+
   Event findEvent(Time timeOfEvent);
   void removeEvent();
 

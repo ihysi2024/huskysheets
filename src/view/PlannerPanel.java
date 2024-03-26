@@ -107,6 +107,11 @@ public class PlannerPanel extends JPanel implements IScheduleView{
   }
 
   @Override
+  public void setCurrentUser(ReadOnlyPlanner model) {
+
+  }
+
+  @Override
   public void displayUserSchedule(ReadOnlyPlanner model, User userToShow) {
 
   }

@@ -30,7 +30,6 @@ public class EventView extends JFrame implements IEventView {
    * @param model desired model to represent Simon game
    */
   public EventView(ReadOnlyPlanner model) {
-    System.out.println("EVENT VIEW CREATED");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.panel = new EventPanel(model);
     JPanel buttonPanel = new JPanel();
@@ -52,7 +51,6 @@ public class EventView extends JFrame implements IEventView {
   }
 
   public void createEvent(ReadOnlyPlanner model) {
-    this.setVisible(true);
     HashMap<String, String[]> eventMap = new HashMap<>();
     eventMap.put("name", this.panel.getEventNameInput());
     eventMap.put("time", this.panel.getTimeInput());
@@ -61,22 +59,22 @@ public class EventView extends JFrame implements IEventView {
     try {
       Event eventMade = makeEvent(eventMap);
       for (User user : model.getUsers()) {
-        if (Arrays.stream(this.panel.getUsersInput()).toList().contains(user.getName())) {
-          user.addEventForUser(eventMade);
+        for (String userName: Arrays.stream(this.panel.getUsersInput()).toList()) {
+          if (userName.contains(user.getName())) {
+            user.addEventForUser(eventMade);
+            System.out.println(user.getName());
+            System.out.println(user.getSchedule().getEvents().size());
+          }
         }
       }
-      System.out.println("STORED EVENT");
-      System.out.println(eventMade.getStartTime());
-      this.setVisible(false);
 
     }
     catch (IllegalArgumentException ignored) {
-
+      System.out.println("CREATE EVENT" + ignored);
     }
   }
 
   public void openEvent(ReadOnlyPlanner model) {
-    System.out.println("event is opened");
     this.setVisible(true);
   }
 
@@ -111,16 +109,12 @@ public class EventView extends JFrame implements IEventView {
 
   @Override
   public void addFeatures(ViewFeatures features) {
-    System.out.println("IN Event view ADD FEATURES");
     saveEvent.addActionListener(evt -> features.createEvent());
-    if (!this.isVisible()) {
-      saveEvent.addActionListener(evt -> features.openScheduleView());
-      saveEvent.addActionListener(evt -> features.closeEventView());
+    saveEvent.addActionListener(evt -> features.closeEventView());
+    saveEvent.addActionListener(evt -> features.openScheduleView());
       //saveEvent.addActionListener(evt -> features.displayUserSchedule());
-    }
     try {
       Event oldEvent = features.storeEvent();
-      System.out.println(oldEvent.getEventName());
       modifyEvent.addActionListener(evt -> features.modifyEvent(oldEvent, this.storeOpenedEvent()));
     }
     catch (NullPointerException ignored) {

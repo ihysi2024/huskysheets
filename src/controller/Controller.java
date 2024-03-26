@@ -65,12 +65,12 @@ public class Controller implements ViewFeatures {
 
 
   public void closeScheduleView() {
-    System.out.println("Close schedule");
+
     scheduleView.closeScheduleView(model);
   }
   @Override
   public void openEventView() {
-    System.out.println("Open event");
+
     eventView.openEvent(model);
   }
 
@@ -86,6 +86,10 @@ public class Controller implements ViewFeatures {
     eventView.closeEvent();
   }
 
+  public void setCurrentUser() {
+    scheduleView.setCurrentUser(model);
+  }
+
   public Event findEvent(Time timeOfEvent) {
     Event clickedEvent = null;
     for (User user: this.model.getUsers()) {
@@ -98,7 +102,7 @@ public class Controller implements ViewFeatures {
         }
       }
     }
-    System.out.println(clickedEvent == null);
+
     return clickedEvent;
   }
 
@@ -125,7 +129,7 @@ public class Controller implements ViewFeatures {
 
   @Override
   public void createEvent() {
-    System.out.println("got to controller for event");
+
     eventView.createEvent(model);
   }
 

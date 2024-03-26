@@ -196,15 +196,13 @@ public class EventPanel extends JPanel {
     int idx = 0;
     for (User plannerUsers: model.getUsers()) {
       for (String eventUser: event.getUsers()) {
-        System.out.println(eventUser);
         if (eventUser.equals(plannerUsers.getName())) {
           usersList.setSelectedIndex(idx);
         }
       }
       idx++;
     }
-    System.out.println("SELECTED" + usersList.getSelectedIndex());
-    //for (String user: event.getUsers()) {
+   //for (String user: event.getUsers()) {
     //  usersList.setSelectedIndex(usersList.getSelectedIndex());
     //}
 
