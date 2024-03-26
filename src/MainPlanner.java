@@ -37,7 +37,7 @@ public class MainPlanner {
             List.of("Prof. Lucia"));
 
     model.addUser(new User("Prof. Lucia",
-            new Schedule(new ArrayList<Event>(List.of(morningSnack, officeHours)))));
+            new Schedule(new ArrayList<>(List.of(morningSnack, officeHours)))));
     model.addUser(new User("Me", new Schedule(new ArrayList<>())));
 
     //  IScheduleView view = new ScheduleView(model);

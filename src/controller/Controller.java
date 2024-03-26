@@ -87,19 +87,14 @@ public class Controller implements ViewFeatures {
   }
 
   public Event findEvent(Time timeOfEvent) {
-    Event clickedEvent = null;
     for (User user: this.model.getUsers()) {
-      for (Event event: user.getSchedule().getEvents()) {
-        if (((event.getStartTime().compareTimes(timeOfEvent) < 0) &&
-                (event.getEndTime().compareTimes(timeOfEvent) > 0)) ||
-                ((event.getStartTime().compareTimes(timeOfEvent) == 0) &&
-                        (event.getEndTime().compareTimes(timeOfEvent) == 0))) {
-          clickedEvent = event;
-        }
+      Event tempEvent = model.retrieveUserScheduleAtTime(user, timeOfEvent);
+      if (tempEvent != null) {
+        return tempEvent;
       }
+
     }
-    System.out.println(clickedEvent == null);
-    return clickedEvent;
+    return null;
   }
 
   public void populateEvent(Event event) {
@@ -148,7 +143,9 @@ public class Controller implements ViewFeatures {
   }
 
   @Override
-  public void addCalendar(String filePath) {
+  public void addCalendar() {
+   // System.out.println("file path selected: " + filePath);
+    scheduleView.addCalendarInfo();
 
   }
 

@@ -31,7 +31,8 @@ public class EventView extends JFrame implements IEventView {
    */
   public EventView(ReadOnlyPlanner model) {
     System.out.println("EVENT VIEW CREATED");
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.panel = new EventPanel(model);
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -61,7 +62,11 @@ public class EventView extends JFrame implements IEventView {
     try {
       Event eventMade = makeEvent(eventMap);
       for (User user : model.getUsers()) {
-        if (Arrays.stream(this.panel.getUsersInput()).toList().contains(user.getName())) {
+     //   if (Arrays.stream(this.panel.getUsersInput()).toList().contains(user.getName())) {
+    //      user.addEventForUser(eventMade);
+     //   }
+        if (Arrays.asList(this.panel.getUsersInput()).contains(user.getName())) {
+
           user.addEventForUser(eventMade);
         }
       }

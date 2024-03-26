@@ -332,23 +332,23 @@ public class TestSchedule {
     emptySchedule.addEvent(this.sleep);
 
     // event starting at the given time
-    Assert.assertEquals(List.of(this.morningLec),
-            emptySchedule.eventsOccurring(
+    Assert.assertEquals(this.morningLec,
+            emptySchedule.eventOccurring(
                     new Time(Time.Day.TUESDAY, 9, 50)));
 
     // event starting before the given time but ending after
-    Assert.assertEquals(List.of(this.morningLec),
-            emptySchedule.eventsOccurring(
+    Assert.assertEquals(this.morningLec,
+            emptySchedule.eventOccurring(
                     new Time(Time.Day.TUESDAY, 10, 15)));
 
     // no event occurring at the time
-    Assert.assertEquals(List.of(),
-            emptySchedule.eventsOccurring(
+    Assert.assertEquals(null,
+            emptySchedule.eventOccurring(
                     new Time(Time.Day.WEDNESDAY, 14, 15)));
 
-    // an event starting at that time and ending at that time
-    Assert.assertEquals(List.of(this.morningLec, this.morningLecEndTime),
-            emptySchedule.eventsOccurring(
+    // an event starting at that time and ending at that time, returning first event found
+    Assert.assertEquals(this.morningLec,
+            emptySchedule.eventOccurring(
                     new Time(Time.Day.TUESDAY, 11, 30)));
 
   }

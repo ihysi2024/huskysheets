@@ -40,7 +40,7 @@ public interface ViewFeatures {
 
   void quitEditingEvent();
 
-  void addCalendar(String filePath);
+  void addCalendar();
 
   void saveCalendars();
 

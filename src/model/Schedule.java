@@ -117,19 +117,18 @@ public class Schedule implements ISchedule {
   }
 
   /**
-   * Return a list of events occurring at a given time.
+   * Return the event occurring at a given time. Schedule can only have one event at any given time
    * @param time the time to search for events occurring during
-   * @return a list of events at the given time
+   * @return the event at the given time. returns null if no event is occurring
    */
-  public List<Event> eventsOccurring(Time time) {
-    List<Event> occurringNow = new ArrayList<>();
+  public Event eventOccurring(Time time) {
     for (Event event: this.events) {
       if (event.getStartTime().compareTimes(time) <= 0
               && event.getEndTime().compareTimes(time) >= 0) {
-        occurringNow.add(event);
+        return event;
       }
     }
-    return occurringNow;
+    return null;
   }
 
 }

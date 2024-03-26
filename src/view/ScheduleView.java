@@ -3,9 +3,13 @@ package view;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Controller;
 import controller.ViewFeatures;
@@ -25,7 +29,12 @@ public class ScheduleView extends JFrame implements IScheduleView {
   protected JButton scheduleEventButton;
   protected JComboBox selectUserButton;
 
-  //private JButton saveEventButton;
+  protected final JMenuBar menuBar;
+  protected final JMenu fileSelectMenu;
+
+  protected final JMenuItem addCalendar;
+  protected final JMenuItem saveCalendar;
+
 
   /**
    * Creates a view of the Simon game.
@@ -41,12 +50,23 @@ public class ScheduleView extends JFrame implements IScheduleView {
     this.panel.setLayout(new BorderLayout());
     this.add(panel);
 
+    menuBar = new JMenuBar();
+
+    fileSelectMenu = new JMenu("File");
+    addCalendar = new JMenuItem("Add calendar");
+    saveCalendar = new JMenuItem("Save calendar");
+    fileSelectMenu.add(addCalendar);
+    fileSelectMenu.add(saveCalendar);
+
+    menuBar.add(fileSelectMenu);
+
+    panel.add(menuBar, BorderLayout.NORTH);
+
     //panel.getPreferredSize();
     createEventButton = new JButton("Create Event");
     createEventButton.setActionCommand("Create Event");
     scheduleEventButton = new JButton("Schedule Event");
-    scheduleEventButton.setActionCommand("Schedule Event")
-    ;
+    scheduleEventButton.setActionCommand("Schedule Event");
     this.selectUserButton = new JComboBox();
     for (User user: model.getUsers()) {
       selectUserButton.addItem(user.getName());
@@ -81,6 +101,7 @@ public class ScheduleView extends JFrame implements IScheduleView {
     createEventButton.addActionListener(evt -> features.closeScheduleView());
     createEventButton.addActionListener(evt -> features.openEventView());
     selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
+    addCalendar.addActionListener(evt -> features.addCalendar());
     // handle when a user has clicked on an event
     this.addMouseListener(new MouseListener() {
       @Override
@@ -124,6 +145,22 @@ public class ScheduleView extends JFrame implements IScheduleView {
   }
 
   @Override
+  public void addCalendarInfo() {
+    JFileChooser chooser = new JFileChooser();
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+            "XML files", "xml");
+    File workingDirectory = new File(System.getProperty("user.dir"));
+    chooser.setCurrentDirectory(workingDirectory);
+    chooser.setFileFilter(filter);
+    int returnVal = chooser.showOpenDialog(addCalendar);
+    if(returnVal == JFileChooser.APPROVE_OPTION) {
+      System.out.println("Selected file path: " +
+              chooser.getSelectedFile().getName());
+    }
+
+  }
+
+  @Override
   public void addFeatureListener(ViewFeatures features) {
     this.panel.addFeaturesListener(features);
   }
@@ -136,6 +173,7 @@ public class ScheduleView extends JFrame implements IScheduleView {
   @Override
   public void openScheduleView(ReadOnlyPlanner model) {
     String userName = selectUserButton.getSelectedItem().toString();
+    System.out.println("curr user: " + userName);
     for (User user: model.getUsers()) {
       if (user.getName().equals(userName)) {
         System.out.println(user.getName());
@@ -150,8 +188,10 @@ public class ScheduleView extends JFrame implements IScheduleView {
   public void displayUserSchedule(ReadOnlyPlanner model, User userToShow) {
     this.panel.resetPanel();
     this.add(panel);
+
     for (Event event: userToShow.getSchedule().getEvents()) {
-      this.panel.paintEvent(getGraphics(), event);
+      System.out.println("got here");
+      this.panel.paintEvent(panel.getGraphics(), event);
     }
     menuPanel.revalidate();
     menuPanel.repaint();

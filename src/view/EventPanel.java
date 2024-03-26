@@ -296,7 +296,7 @@ public class EventPanel extends JPanel {
    * @return Our preferred *logical* size.
    */
   private Dimension getPreferredLogicalSize() {
-    return new Dimension(40, 40);
+    return new Dimension(100, 100);
   }
 
 
@@ -310,7 +310,7 @@ public class EventPanel extends JPanel {
 
     Dimension preferred = getPreferredLogicalSize();
 
-    g2d.transform(transformLogicalToPhysical());
+  //  g2d.transform(transformLogicalToPhysical());
 
     //ORIGINALLY:
     // x & y should be (0, 0) --> coordinates start in top left
