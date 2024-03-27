@@ -1,127 +1,169 @@
 package view;
-import java.util.Arrays;
+
 import java.util.HashMap;
 import javax.swing.*;
 import controller.ViewFeatures;
-import model.Event;
+
 import model.IEvent;
-import model.IUser;
+
 import model.ReadOnlyPlanner;
-import model.User;
-import static model.User.makeEvent;
+
 /**
  * Frame for the event pop-out window, where users will be able to see the functionality
  * related to creating new events, modifying existing events, and removing events.
  */
+
 public class EventView extends JFrame implements IEventView {
   private final EventPanel panel;
-  private JButton modifyEvent;
-  private JButton removeEvent;
-  private JButton saveEvent;
+
   /**
    * Creates a view of the Simon game.
    *
    * @param model desired model to represent Simon game
    */
   public EventView(ReadOnlyPlanner model) {
-    //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.panel = new EventPanel(model);
-    JPanel buttonPanel = new JPanel();
-    buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-    modifyEvent = new JButton("Modify Event");
-    modifyEvent.setVisible(true);
-    removeEvent = new JButton("Remove Event");
-    removeEvent.setVisible(true);
-    saveEvent = new JButton("Create Event");
-    saveEvent.setVisible(true);
-    buttonPanel.add(saveEvent);
-    buttonPanel.add(modifyEvent);
-    buttonPanel.add(removeEvent);
-    buttonPanel.setVisible(true);
-    panel.add(buttonPanel);
     this.add(panel);
     this.setVisible(false);
     this.pack();
   }
+
+  /**
+   * Store the user's input as an event that is added to their schedule.
+   * Delegate to the panel.
+   * @param model observational planner interface
+   */
+
   public void createEvent(ReadOnlyPlanner model) {
-    HashMap<String, String[]> eventMap = new HashMap<>();
-    eventMap.put("name", this.panel.getEventNameInput());
-    eventMap.put("time", this.panel.getTimeInput());
-    eventMap.put("location", this.panel.getLocationInput());
-    eventMap.put("users", this.panel.getUsersInput());
-    try {
-      IEvent eventMade = makeEvent(eventMap);
-      for (IUser user : model.getUsers()) {
-        //for (String userName: Arrays.stream(this.panel.getUsersInput()).toList()) {
-        for (String userName : this.panel.getUsersInput()) {
-          if (userName.contains(user.getName())) {
-            user.addEventForUser(eventMade);
-            System.out.println("Create event: ");
-            System.out.println(eventMade.eventToString());
-          }
-        }
-      }
-    }
-    catch (IllegalArgumentException ignored) {
-      System.out.println("CREATE EVENT" + ignored);
-    }
+    panel.createEvent(model);
   }
+
+  /**
+   * Set the event fields on the panel to the given event's fields.
+   * Visualizes a user's entry for an event in the event panel text fields.
+   * Delegate to the panel.
+   * @param event event to visualize in the event panel.
+   */
+
+  public void populateEventContents(IEvent event) {
+    this.panel.populateEventContents(event);
+  }
+
+  /**
+   * Get the user's input for the event name.
+   * Delegate to the panel.
+   * @return a String[] of the event name
+   */
+
+  @Override
+  public String[] getEventNameInput() {
+    return panel.getEventNameInput();
+  }
+
+  /**
+   * Get the user's input for the event time.
+   * Delegate to the panel.
+   * @return a String[] of the event time
+   */
+
+  @Override
+  public String[] getTimeInput() {
+    return panel.getTimeInput();
+  }
+
+  /**
+   * Get the user's input for the event location.
+   * Delegate to the panel.
+   * @return a String[] of the location
+   */
+
+  @Override
+  public String[] getLocationInput() {
+    return panel.getLocationInput();
+  }
+
+  /**
+   * Resets the panel to its originally empty fields. Useful for trying to create a new event
+   * Delegate to the panel.
+   * after an event has already been created.
+   */
+
+  public void resetPanel() {
+    panel.resetPanel();
+  }
+
+  /**
+   * Get the user's input for the event list of users.
+   * Delegate to the panel.
+   * @return a String[] of the location
+   */
+
+  @Override
+  public String[] getUsersInput() {
+    return panel.getUsersInput();
+  }
+
+  /**
+   * Store the current event's inputs as a map of String -> String[]
+   * Useful for modifying an event with the current panel inputs.
+   * Delegate to the panel.
+   * @return a map of strings to string[]
+   */
+
+  @Override
+  public HashMap<String, String[]> storeOpenedEventMap() {
+    return panel.storeOpenedEventMap();
+  }
+
+  /**
+   * Modify an event with the user's new input to the event panel.
+   * Delegate to the panel.
+   * @param event represents the updated event
+   * @param model observational planner system to use.
+   */
+
+  public void modifyEvent(IEvent event, ReadOnlyPlanner model) {
+    panel.modifyEvent(event, model);
+  }
+
+  /**
+   * Allow the user to interact with the calendar through the features present
+   * in the event view.
+   * Delegate to the panel.
+   * @param features functionality that the user has access to through the event view.
+   */
+
+  @Override
+  public void addFeatures(ViewFeatures features) {
+    panel.addFeatures(features);
+  }
+
+  /**
+   * Close the event view so it stops being visible.
+   */
+
+  public void closeEvent() {
+    this.setVisible(false);
+  }
+
+  /**
+   * Display the view.
+   * @param show whether to the display or not
+   */
+
+  @Override
+  public void display(boolean show) {
+  }
+
+  /**
+   * Open the event view for the user to see.
+   * Delegate to the panel.
+   * @param model observational planner interface.
+   */
+
   public void openEvent(ReadOnlyPlanner model) {
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setVisible(true);
   }
-
-  public void populateEventInPanel(IEvent event) {
-    this.panel.populateEventContents(event);
-  }
-
-  @Override
-  public void removeEventFromSchedule(ReadOnlyPlanner model, IEvent eventToRemove, IUser userRemoving) {
-  }
-  public IEvent storeOpenedEvent() {
-    HashMap<String, String[]> eventMap = new HashMap<>();
-    eventMap.put("name", this.panel.getEventNameInput());
-    eventMap.put("time", this.panel.getTimeInput());
-    eventMap.put("location", this.panel.getLocationInput());
-    eventMap.put("users", this.panel.getUsersInput());
-    IEvent eventMade = makeEvent(eventMap);
-    return eventMade;
-    /**
-     try {
-     Event eventMade = makeEvent(eventMap);
-     return eventMade;
-     }
-     catch (IllegalArgumentException ignored) {
-     return null;
-     }
-     **/
-  }
-
-  @Override
-  public void addFeatures(ViewFeatures features) {
-    saveEvent.addActionListener(evt -> features.createEvent());
-    saveEvent.addActionListener(evt -> features.closeEventView());
-    saveEvent.addActionListener(evt -> features.openScheduleView());
-
-    // if you edit any of the fields of the event, that's what gets printed out to remove...
-    removeEvent.addActionListener(evt -> features.removeEvent(features.storeEvent()));
-    removeEvent.addActionListener(evt -> features.closeEventView());
-    removeEvent.addActionListener(evt -> features.openScheduleView());
-    //saveEvent.addActionListener(evt -> features.displayUserSchedule());
-    //Event oldEvent = features.storeEvent();
-    //System.out.println(oldEvent.getEventName());
-  }
-  public void closeEvent() {
-    this.setVisible(false);
-  }
-  @Override
-  public void display(boolean show) {
-  }
-  /**
-   @Override
-   public void display(boolean show) {
-   this.setVisible(show);
-   }
-   **/
 }

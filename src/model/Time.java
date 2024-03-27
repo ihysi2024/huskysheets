@@ -151,8 +151,6 @@ public class Time implements ITime {
       }
     }
     if (time.length() != 4) {
-      System.out.println("day string: " + day);
-      System.out.println("time string: " + time);
       throw new IllegalArgumentException("invalid time input");
     }
 

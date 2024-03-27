@@ -134,6 +134,7 @@ public class Event implements IEvent {
             && (this.endTime.compareTimes(that.endTime) == 0)
             && (this.startTime.compareTimes(that.startTime) == 0)
             && this.location.equals(that.location)
+           // && this.users.equals(that.users);
             && new HashSet<>(this.users).containsAll(that.users)
             && new HashSet<>(that.users).containsAll(this.users);
   }

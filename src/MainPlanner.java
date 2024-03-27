@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import controller.Controller;
@@ -22,26 +23,26 @@ public class MainPlanner {
    */
   public static void main(String[] args) {
     PlannerSystem model = new NUPlanner(); // Feel free to customize this as desired
-    Event morningSnack = new Event("snack",
+    IEvent morningSnack = new Event("snack",
             new Time(Time.Day.TUESDAY, 10, 30),
             new Time(Time.Day.TUESDAY, 11, 45),
             false,
             "Churchill Hall 101",
-            List.of("Prof. Lucia"));
+            Arrays.asList("Prof. Lucia"));
 
-    Event officeHours = new Event("office hours",
+    IEvent officeHours = new Event("office hours",
             new Time(Time.Day.MONDAY, 12, 10),
             new Time(Time.Day.MONDAY, 15, 30),
             false,
             "Churchill Hall 101",
-            List.of("Prof. Lucia", "Me"));
+            Arrays.asList("Prof. Lucia", "Me"));
 
-    Event sleep = new Event("sleep",
+    IEvent sleep = new Event("sleep",
             new Time(Time.Day.FRIDAY, 12, 10),
             new Time(Time.Day.SUNDAY, 15, 30),
             false,
             "home",
-            List.of("Prof. Lucia"));
+            Arrays.asList("Prof. Lucia"));
 
     model.addUser(new User("Prof. Lucia",
             new Schedule(new ArrayList<>(List.of(morningSnack, officeHours, sleep)))));

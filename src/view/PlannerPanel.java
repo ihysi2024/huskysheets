@@ -38,17 +38,13 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * Our view will need to display a model, so it needs to get the current sequence from the model.
    */
   private final ReadOnlyPlanner model;
-  /**
-   * We'll allow an arbitrary number of listeners for our events...even if
-   * we happen right now to only expect a single listener.
-   */
+
   private final List<ViewFeatures> featuresListeners;
 
   private JButton scheduleEventButton;
 
   private JButton createEventButton;
 
-//  private JMenuItem addCalendar;
   private final JPanel menuPanel;
   protected JComboBox selectUserButton;
 
@@ -83,7 +79,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     menuBar.add(fileSelectMenu);
     this.add(menuBar, BorderLayout.NORTH);
 
-    //panel.getPreferredSize();
     createEventButton = new JButton("Create Event");
     createEventButton.setActionCommand("Create Event");
     scheduleEventButton = new JButton("Schedule Event");
@@ -104,6 +99,11 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     this.setVisible(true);
   }
 
+  /**
+   * Sets the current user to what is selected in the appropriate button in the schedule view.
+   *
+   * @param model model to use
+   */
   public void setCurrentUser(ReadOnlyPlanner model) {
     for (IUser user: model.getUsers()) {
       if (user.getName().equals(Objects.requireNonNull(selectUserButton.getSelectedItem()).toString())) {
@@ -112,14 +112,19 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     }
   }
 
+  /**
+   * Repaints the planner and the user's schedule.
+   */
   public void resetPanel() {
     this.paintComponent(getGraphics());
-  //  this.repaint();
-   // this.revalidate();
   }
 
 
-
+  /**
+   * Retrieves the currently selected user.
+   *
+   * @return the currently selected user
+   */
   public IUser getCurrentUser() {
     return this.currentUser;
 
@@ -154,19 +159,36 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   @Override
   public void display(boolean show) {
-
   }
 
+
+  /**
+   * Opens up the current user's schedule.
+   *
+   * @param model model to be used
+   */
   @Override
   public void openScheduleView(ReadOnlyPlanner model) {
-    for (IUser user: model.getUsers()) {
-      if (user.getName().equals(currentUser.getName())) {
-        this.displayUserSchedule(model, user);
+    try {
+      for (IUser user: model.getUsers()) {
+        if (user.getName().equals(currentUser.getName())) {
+          this.displayUserSchedule(model, user);
+        }
       }
+      this.setVisible(true);
     }
-    this.setVisible(true);
+    catch (NullPointerException ignored){
+      System.out.println("No user selected");
+    }
+
   }
 
+  /**
+   * Displays the desired user's schedule.
+   *
+   * @param model model to be used
+   * @param userToShow desired user schedule to show
+   */
   @Override
   public void displayUserSchedule(ReadOnlyPlanner model, IUser userToShow) {
     this.resetPanel();
@@ -180,30 +202,49 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   }
 
 
+  /**
+   * Closes the current schedule view.
+   *
+   * @param model model to be used
+   */
   @Override
   public void closeScheduleView(ReadOnlyPlanner model) {
     this.setVisible(false);
   }
 
+  /**
+   * Adds feature listeners available on this panel, including the button clicks for
+   * creating and scheduling events, adding/saving calendars, and selecting a user.
+   *
+   * @param features available features
+   */
   public void addFeatures(ViewFeatures features) {
     createEventButton.addActionListener(evt -> features.openEventView());
-    selectUserButton.addActionListener(evt ->
-            features.selectUserSchedule(
-                    Objects.requireNonNull(selectUserButton.getSelectedItem()).toString()));
+    createEventButton.addActionListener(evt -> features.resetPanelView());
+    selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
-
-
+    scheduleEventButton.addActionListener(evt -> features.openEventView());
+    scheduleEventButton.addActionListener(evt -> features.resetPanelView());
   }
 
-
-
-
+  /**
+   * Adds features listeners available on this panel.
+   *
+   * @param features available features
+   */
   public void addFeaturesListener(ViewFeatures features) {
     this.featuresListeners.add(Objects.requireNonNull(features));
   }
 
+  /**
+   * Paints given event onto panel. If event goes in to following week, ends painting at
+   * Saturday @23:59.
+   *
+   * @param g Graphics to use
+   * @param event IEvent to be painted
+   */
   public void paintEvent(Graphics g, IEvent event) {
     Color color = new Color(255, 100, 200, 100);
     Graphics2D g2d = (Graphics2D) g.create();
@@ -242,14 +283,21 @@ public class PlannerPanel extends JPanel implements IScheduleView {
       this.paintFullDay(g, color, dayWidth, startTime, endTime);
 
       // draw the last day. starts at 00:00, ends at actual end of the event
-     // int[] endDayCoords = this.timeToPaintLoc(endTime.indexToTime(endDayIndex));
       int[] endDayCoords = this.timeToPaintLoc(indexToTime(endDayIndex,0));
 
       g2d.fillRect(endDayCoords[0], endDayCoords[1], dayWidth, eventEndCoords[1]);
     }
-   // this.repaint();
   }
 
+  /**
+   * Paints an entire day on the schedule starting from 00:00 to 23:59
+   *
+   * @param g Graphics
+   * @param color color of event to be painted
+   * @param dayWidth width of day, constant
+   * @param startDay start day to be painted
+   * @param endDay end day to be painted
+   */
   public void paintFullDay(Graphics g, Color color, int dayWidth, ITime startDay, ITime endDay) {
     Graphics2D g2d = (Graphics2D) g.create();
     g2d.setColor(color);
@@ -296,21 +344,24 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     return timePos / (60.0*24.0);
   }
 
+  /**
+   * Painting the schedule grid and the schedule's events on to the panel.
+   *
+   * @param g the <code>Graphics</code> object to protect
+   */
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     Graphics2D g2d = (Graphics2D) g.create();
     g2d.transform(transformLogicalToPhysical());
 
-    // use model field to repaint here
-
     // painting schedule grid lines
     this.paintLines(g2d, Color.GRAY, 8, 1, true);
     this.paintLines(g2d, Color.GRAY, 25, 1, false);
     this.paintLines(g2d, Color.BLACK, 7, 2, false);
 
+    // painting all events on to schedule
     if (this.getCurrentUser() != null) {
-      System.out.println("curr user: " + this.getCurrentUser().userToString());
       for (IEvent event: model.retrieveUserEvents(this.getCurrentUser())) {
         this.paintEvent(g, event);
       }
@@ -341,7 +392,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
         PlannerPanel panel = PlannerPanel.this;
         ITime timeOfEvent = panel.timeAtClick(e);
         try {
-          System.out.println("HERE");
           IEvent eventClicked = features.findEvent(timeOfEvent);
           System.out.println(eventClicked.eventToString());
           features.openEventView();
@@ -375,6 +425,10 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     });
   }
 
+  /**
+   * Allowing user to select an .xml file that contains the desired calendar.
+   * Automatically starts in current directory.
+   */
   @Override
   public void addCalendarInfo() {
     JFileChooser chooser = new JFileChooser();
@@ -390,6 +444,11 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     }
   }
 
+  /**
+   * Allowing user to select a folder where they will export the user schedules.
+   * Automatically starts in current directory.
+   *
+   */
   @Override
   public void saveCalendarInfo() {
     JFileChooser chooser = new JFileChooser();
@@ -403,21 +462,16 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     }
   }
 
+  /**
+   * Finds the event that is occurring at the specified time. If two events start and end at the
+   * same time, returns the earlier event.
+   *
+   * @param timeOfEvent desired time to search at
+   * @return Event occuring at that time, null otherwise
+   */
   @Override
   public IEvent findEventAtTime(ITime timeOfEvent) {
     return model.retrieveUserScheduleAtTime(this.currentUser, timeOfEvent);
-
-    /*
-    for (IUser user: this.model.getUsers()) {
-      IEvent tempEvent = model.retrieveUserScheduleAtTime(user, timeOfEvent);
-      if (tempEvent != null) {
-        return tempEvent;
-      }
-
-    }
-    return null;
-     */
-
   }
 
   /**
@@ -476,7 +530,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     }
     return d;
   }
-
 
   /**
    * Computes the transformation that converts board coordinates

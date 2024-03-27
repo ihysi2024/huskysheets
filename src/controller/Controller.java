@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import model.Event;
@@ -27,13 +28,12 @@ public class Controller implements ViewFeatures {
   private IScheduleView scheduleView;
 
   private IEventView eventView;
-   // private final IEventView view;
-
 
   /**
    * Creates an instance of a Simon game controller to control user input (mouse clicks).
    * @param model Simon model
    */
+
   public Controller(PlannerSystem model) {
     this.model = model;
   }
@@ -73,7 +73,6 @@ public class Controller implements ViewFeatures {
   }
   @Override
   public void openEventView() {
-
     eventView.openEvent(model);
   }
 
@@ -97,8 +96,12 @@ public class Controller implements ViewFeatures {
     return scheduleView.findEventAtTime(timeOfEvent);
   }
 
+  public void resetPanelView() {
+    eventView.resetPanel();
+  }
+
   public void populateEvent(IEvent event) {
-    eventView.populateEventInPanel(event);
+    eventView.populateEventContents(event);
   }
   public void openScheduleView() {
     scheduleView.openScheduleView(model);
@@ -106,42 +109,57 @@ public class Controller implements ViewFeatures {
 
   public void updatedEvent(IEvent oldEvent) {
 
-    //model.modifyEvent(eventView.storeOpenedEvent(), newEvent);
   }
 
-  public void modifyEvent(IEvent oldEvent, IEvent newEvent) {
-    model.modifyEvent(oldEvent, newEvent);
+  public void modifyEvent(IEvent event, ReadOnlyPlanner model) {
+    try {
+      eventView.modifyEvent(event, model);
+    }
+    catch (IllegalArgumentException | NullPointerException exc) {
+      throw new IllegalArgumentException("Error in modifying event: given event not part of system.");
+    }
   }
+
+
+//   System.out.println("Remove event: ");
+///      System.out.println("User from which event is being removed: " +
+//              scheduleView.getCurrentUser().getName());
+ //     System.out.println(eventToRemove.eventToString());
+ //       System.out.println("Error in removing event: Given event not part of system, check inputs");
+
 
 
   public void removeEvent(IEvent eventToRemove) {
-    System.out.println(scheduleView.getCurrentUser().getName());
-    System.out.println("Remove event: ");
-    System.out.println(scheduleView.getCurrentUser().getName());
-    System.out.println("Remove event***: " + eventToRemove.eventToString());
-    model.removeEventForRelevantUsers(eventToRemove, scheduleView.getCurrentUser());
+    try {
+      ITime startTime = eventToRemove.getStartTime();
+      IEvent userEventAtStartTime = scheduleView.getCurrentUser().getSchedule().eventOccurring(startTime);
+      System.out.println("user event at time: " + userEventAtStartTime.eventToString());
+      System.out.println("event to remove: " + eventToRemove.eventToString());
+      if (eventToRemove.equals(userEventAtStartTime)) {
+        System.out.println("Remove event: ");
+        System.out.println("User from which event is being removed: " +
+                scheduleView.getCurrentUser().getName());
+        System.out.println(eventToRemove.eventToString());
+        //model.removeEventForRelevantUsers(eventToRemove, scheduleView.getCurrentUser());
+      }
+      else {
+        System.out.println("Error in removing event: Given event not part of system, check inputs");
+      }
+    }
+    catch (NullPointerException | IllegalArgumentException ignored) {
+      System.out.println("Error in removing event: Given event not part of system, check inputs");
 
-    //eventView.removeEventFromSchedule(model, eventToRemove, scheduleView.getCurrentUser());
+    }
   }
 
   @Override
   public void createEvent() {
-
     eventView.createEvent(model);
   }
 
-  public IEvent storeEvent() {
-    return eventView.storeOpenedEvent();
+  public HashMap<String, String[]> storeEvent() {
+    return eventView.storeOpenedEventMap();
   }
-
-  /**
-  @Override
-  public void modifyEvent(String eventName, String startDay, String startTime,
-                          String endDate, String endTime, String location, List<String> users) {
-
-  }
-
-   **/
 
   @Override
   public void quitEditingEvent() {
@@ -163,10 +181,3 @@ public class Controller implements ViewFeatures {
 
   }
 }
-
-/*
- QUESTIONS TO ASK:
- - methods in frame vs panel?
- - glitching with selecting user
- - bunch of empty methods in PlannerPanel because it's implementing IScheduleView
- */

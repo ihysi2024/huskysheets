@@ -18,7 +18,6 @@ public interface ReadOnlyPlanner {
   /**
    * User list
    */
-
   Set<IUser> getUsers();
 
   /**

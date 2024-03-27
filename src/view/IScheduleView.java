@@ -24,8 +24,6 @@ public interface IScheduleView {
   void displayUserSchedule(ReadOnlyPlanner model, IUser userToShow);
   void closeScheduleView(ReadOnlyPlanner model);
 
-  //void createEventView(ReadOnlyPlanner model);
-
   void addFeatures(ViewFeatures features);
 
   void addClickListener(ViewFeatures features);

@@ -199,7 +199,11 @@ public class User implements IUser {
         location = eventToMake.get(key)[1];
       }
       if (key.equals("users")) {
-        userList.addAll(Arrays.asList(eventToMake.get(key)));
+        for (String userName : eventToMake.get(key)) {
+          userList.add(userName);
+        }
+
+      //  userList.addAll(Arrays.asList(eventToMake.get(key)));
       }
     }
     // input these variables to a new event and return it
