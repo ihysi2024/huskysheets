@@ -415,14 +415,12 @@ public class PlannerPanel extends JPanel implements IScheduleView {
         ITime timeOfEvent = panel.timeAtClick(e);
         try {
           IEvent eventClicked = features.findEvent(timeOfEvent);
-          System.out.println(eventClicked.eventToString());
           features.openEventView();
           features.populateEvent(eventClicked);
         }
         catch (NullPointerException ignored) {
           // click where no event is present
         }
-        System.out.println(timeAtClick(e).timeToString());
       }
 
       @Override

@@ -89,7 +89,7 @@ public class EventPanel extends JPanel implements IEventView {
 
     MouseListener listener = new MouseEventsListener();
     this.addMouseListener(listener);
-    this.addMouseMotionListener(listener);
+   // this.addMouseMotionListener(listener);
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
     /**
@@ -201,6 +201,7 @@ public class EventPanel extends JPanel implements IEventView {
     endTime.setText(String.valueOf(event.getEndTime().getHours())
             + String.valueOf(event.getEndTime().getMinutes()));
     location.setText(event.getLocation());
+
     if (event.getOnline()) {
       onlineMenu.setSelectedIndex(0);
     }
@@ -208,74 +209,15 @@ public class EventPanel extends JPanel implements IEventView {
       onlineMenu.setSelectedIndex(1);
     }
 
-
-
-    Set<IUser> setUsers = model.getUsers();
-
-    for (IUser users : setUsers) {
-   //   System.out.println("curr user in set: " + users.getName());
-    }
-
-    // Create String[] of size of setOfString
- //   String[] arrayOfUsersString = new String[setUsers.size()];
-
-    IUser[] arrayOfUsers2 = setUsers.toArray(IUser[]::new);
-
-    for (IUser users : arrayOfUsers2) {
-    //  System.out.println("curr user in IUser[]: " + users.getName());
-    }
-
-    String[] arrayOfUsersString = new String[setUsers.size()];
-
-    for (int i = 0; i < arrayOfUsersString.length; i++) {
-      arrayOfUsersString[i] = arrayOfUsers2[i].getName();
-    }
-
-    // Copy elements from set to string array
-    // using advanced for loop
-    int index = 0;
-    for (String userName : arrayOfUsersString) {
-   //   arrayOfUsersString[index++] = user.getName();
-      //arrayOfUsers.
-    //  System.out.println("curr user added: " + userName);
-    }
-
-
-   // String [] testArray = {"a","b","c"};
-
-   // String[] usersStringArr = event.getUsers().toArray(new String[0]);
-  //  usersList.setListData(usersStringArr);
-
-   // usersList.addSelectionInterval(0, usersList.getModel().getSize() - 1);
-
-   // for (int i = 0; i < usersList.getModel().getSize(); i++) {
-   //   usersList.setSelectedIndex(i);
-    //  System.out.println("userrr: " + usersList.getModel().getElementAt(i));
-
-   // }
-
-   // usersList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-  //  int idx = 0;
-    System.out.println("event name: " + event.getEventName());
     usersList.clearSelection();
     for (IUser plannerUsers: model.getUsers()) {
-   //   for (String eventUser: event.getUsers()) {
         for (int currIndex = 0; currIndex < event.getUsers().size(); currIndex++) {
           String currUserName = event.getUsers().get(currIndex);
         if (currUserName.equals(plannerUsers.getName())) {
-          System.out.println("curr user in system: " + currUserName);
-          System.out.println("curr user in event: " + plannerUsers.getName());
-         // usersList.setSelectedIndex(idx);
           usersList.addSelectionInterval(currIndex, currIndex);
         }
       }
-    //  idx++;
     }
-
-
-
-
   }
 
   /**
@@ -300,7 +242,6 @@ public class EventPanel extends JPanel implements IEventView {
    * Get the user's input for the event location.
    * @return a String[] of the location
    */
-
   public String[] getLocationInput() {
     return new String[]{onlineMenu.getSelectedItem().toString(), location.getText()};
   }
@@ -309,7 +250,6 @@ public class EventPanel extends JPanel implements IEventView {
    * Get the user's input for the event list of users.
    * @return a String[] of the user list
    */
-
   public String[] getUsersInput() {
     return usersList.getSelectedValuesList().toArray(new String[0]);
   }
@@ -319,7 +259,6 @@ public class EventPanel extends JPanel implements IEventView {
    * for this panel.  Here, we set it to 400x400 pixels.
    * @return  Our preferred *physical* size.
    */
-
   @Override
   public Dimension getPreferredSize() {
     return new Dimension(350, 350);
@@ -346,11 +285,13 @@ public class EventPanel extends JPanel implements IEventView {
     startTime.setText("");
     endTime.setText("");
     location.setText("");
+    usersList.getAnchorSelectionIndex();
+
+   // usersList.addSelectionInterval();
   }
 
   /**
    * Open the event view for the user to see.
-   * @param model observational planner interface.
    */
   public void openEvent() {
     // implemented by the IEventView interface for the EventView. Panel shouldn't
@@ -385,33 +326,13 @@ public class EventPanel extends JPanel implements IEventView {
     saveEvent.addActionListener(evt -> features.closeEventView());
     saveEvent.addActionListener(evt -> features.openScheduleView());
 
-    try {
-      removeEvent.addActionListener(evt -> features.removeEvent(makeEvent(features.storeEvent())));
-    }
-    catch (IllegalArgumentException ignored) {
-      System.out.println("check inputs to remove event");
-    }
-  //  removeEvent.addActionListener(evt -> features.removeEvent(new Event("office hours",
-   //         new Time(Time.Day.MONDAY, 12, 10),
-   //         new Time(Time.Day.MONDAY, 15, 30),
-   //         false,
-   //         "Churchill Hall 101",
-    //        List.of("Prof. Lucia", "Me"))));
+    removeEvent.addActionListener(evt -> features.removeEvent(makeEvent(features.storeEvent())));
     removeEvent.addActionListener(evt -> features.closeEventView());
     removeEvent.addActionListener(evt -> features.openScheduleView());
 
-    modifyEvent.addActionListener(evt -> features.modifyEvent(makeEvent(features.storeEvent()), model));
+    modifyEvent.addActionListener(evt -> features.modifyEvent(makeEvent(features.storeEvent())));
     modifyEvent.addActionListener(evt -> features.closeEventView());
     modifyEvent.addActionListener(evt -> features.openScheduleView());
-  }
-
-  /**
-   * Display the view.
-   * @param show whether to the display or not
-   */
-  @Override
-  public void display(boolean show) {
-
   }
 
   /**
@@ -445,18 +366,20 @@ public class EventPanel extends JPanel implements IEventView {
     HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
     try {
       IEvent eventMade = makeEvent(eventMap);
+      System.out.println("Create event: ");
+      System.out.println(eventMade.eventToString());
+      /*
       for (IUser user : model.getUsers()) {
         for (String userName : this.getUsersInput()) {
           if (userName.contains(user.getName())) {
             user.addEventForUser(eventMade);
-            System.out.println("Create event: ");
-            System.out.println(eventMade.eventToString());
           }
         }
       }
+       */
     }
     catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Could not create event: " +
+        System.out.println("Could not create event: " +
               "Event info not fully entered, error in given values, " +
               "or event already exists at that time");
     }
@@ -464,17 +387,9 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Modify an event with the user's new input to the event panel.
-<<<<<<< HEAD
    * @param event represents the updated event
-   * @param model observational planner system to use.
    */
-  public void modifyEvent(IEvent event, ReadOnlyPlanner model) {
-=======
-   * @param eventMap represents the updated event
-   */
-  public void modifyEvent(HashMap<String, String[]> eventMap) {
-    IEvent event = makeEvent(eventMap);
->>>>>>> 289f5df607135534ad10f636899cc4e866068cd9
+  public void modifyEvent(IEvent event) {
     System.out.println("Modify event: ");
     System.out.println(event.eventToString());
   }

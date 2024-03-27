@@ -1,23 +1,12 @@
 package controller;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import model.Event;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
 import model.PlannerSystem;
-import model.ReadOnlyPlanner;
-import model.Schedule;
-import model.Time;
-import model.User;
-import view.EventPanel;
 import view.IEventView;
 import view.IScheduleView;
-
 
 /**
  * Controller to control the functions of the Simon Game.
@@ -34,7 +23,6 @@ public class Controller implements ViewFeatures {
    * or button presses.
    * @param model model of calendar implementations reflected by controller
    */
-
   public Controller(PlannerSystem model) {
     this.model = model;
   }
@@ -43,7 +31,6 @@ public class Controller implements ViewFeatures {
    * Initialize the view of the Schedule.
    * @param v the view to visualize.
    */
-
   public void setScheduleView(IScheduleView v) {
     scheduleView = v;
     scheduleView.addFeatures(this);
@@ -53,7 +40,6 @@ public class Controller implements ViewFeatures {
    * Initialize the view of the event.
    * @param v view to visualize
    */
-
   public void setEventView(IEventView v) {
     eventView = v;
     eventView.addFeatures(this);
@@ -63,30 +49,23 @@ public class Controller implements ViewFeatures {
    * Listen to user input and visualize the game.
    */
   public void goPlayGame() {
-
     this.scheduleView.addClickListener(this);
     this.scheduleView.display(true);
-
   }
 
   /**
    * Delegate to the view of the schedule to close the view.
    */
   public void closeScheduleView() {
-
     scheduleView.closeScheduleView();
-
   }
 
   /**
    * Delegate to the view of the event to open the view.
    */
-
   @Override
   public void openEventView() {
-
     eventView.openEvent();
-
   }
 
   /**
@@ -94,7 +73,6 @@ public class Controller implements ViewFeatures {
    * with the same given name.
    * @param userName name to cross-reference with set of users in the system.
    */
-
   public void selectUserSchedule(String userName) {
     for (IUser user: model.getUsers()) {
       if (user.getName().equals(userName)) {
@@ -106,7 +84,6 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the event to close the event view.
    */
-
   public void closeEventView() {
     eventView.closeEvent();
   }
@@ -124,7 +101,6 @@ public class Controller implements ViewFeatures {
    * @param timeOfEvent time of event the controller is searching for
    * @return an event at the given time.
    */
-
   public IEvent findEvent(ITime timeOfEvent) {
     return scheduleView.findEventAtTime(timeOfEvent);
   }
@@ -132,7 +108,6 @@ public class Controller implements ViewFeatures {
   /**
    * Delegates to the view of the event to create empty fields in the panel.
    */
-
   public void resetPanelView() {
     eventView.resetPanel();
   }
@@ -142,7 +117,6 @@ public class Controller implements ViewFeatures {
    * with the event information given.
    * @param event event that should be contained in the panel.
    */
-
   public void populateEvent(IEvent event) {
     eventView.populateEventContents(event);
   }
@@ -151,46 +125,30 @@ public class Controller implements ViewFeatures {
    * Delegate to the view of the schedule to open the view.
    */
   public void openScheduleView() {
-    scheduleView.openScheduleView(model);
+    scheduleView.openScheduleView();
   }
 
   /**
    * Delegate to the view of the event to take in a current event as a map of its contents
    * and modify it.
-   * @param eventMap a String of content tags to a String[] of content values
+   * @param event a String of content tags to a String[] of content values
    */
-
-  public void modifyEvent(HashMap<String, String[]> eventMap) {
-    eventView.modifyEvent(eventMap);
-  }
-
-<<<<<<< HEAD
-  public void modifyEvent(IEvent event, ReadOnlyPlanner model) {
+  public void modifyEvent(IEvent event) {
     try {
-      eventView.modifyEvent(event, model);
+      eventView.modifyEvent(event);
     }
     catch (IllegalArgumentException | NullPointerException exc) {
       throw new IllegalArgumentException("Error in modifying event: given event not part of system.");
     }
   }
-=======
->>>>>>> 289f5df607135534ad10f636899cc4e866068cd9
 
   /**
    * Delegates to the model to remove the given event from the relevant schedules
    * depending on the current user.
    * @param eventToRemove event that the model should remove.
    */
-
-//   System.out.println("Remove event: ");
-///      System.out.println("User from which event is being removed: " +
-//              scheduleView.getCurrentUser().getName());
- //     System.out.println(eventToRemove.eventToString());
- //       System.out.println("Error in removing event: Given event not part of system, check inputs");
-
-
-
   public void removeEvent(IEvent eventToRemove) {
+
     try {
       ITime startTime = eventToRemove.getStartTime();
       IEvent userEventAtStartTime = scheduleView.getCurrentUser().getSchedule().eventOccurring(startTime);
@@ -201,7 +159,6 @@ public class Controller implements ViewFeatures {
         System.out.println("User from which event is being removed: " +
                 scheduleView.getCurrentUser().getName());
         System.out.println(eventToRemove.eventToString());
-        //model.removeEventForRelevantUsers(eventToRemove, scheduleView.getCurrentUser());
       }
       else {
         System.out.println("Error in removing event: Given event not part of system, check inputs");
@@ -218,11 +175,7 @@ public class Controller implements ViewFeatures {
    */
   @Override
   public void createEvent() {
-<<<<<<< HEAD
-    eventView.createEvent(model);
-=======
     eventView.createEvent();
->>>>>>> 289f5df607135534ad10f636899cc4e866068cd9
   }
 
   /**

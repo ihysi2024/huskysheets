@@ -20,17 +20,10 @@ public interface IEventView {
    */
   void addFeatures(ViewFeatures features);
 
-  /**
-   * Display the view.
-   * @param show whether to the display or not
-   */
-
-  void display(boolean show);
 
   /**
    * Close the event view so it stops being visible.
    */
-
   void closeEvent();
 
   /**

@@ -206,15 +206,16 @@ public class User implements IUser {
 
         //  userList.addAll(Arrays.asList(eventToMake.get(key)));
       }
-      return new Event(tempEventName, tempStartTime, tempEndTime, online, location, userList);
+
     }
+      return new Event(tempEventName, tempStartTime, tempEndTime, online, location, userList);
   }
     // input these variables to a new event and return it
 
     catch (IllegalArgumentException e) {
       return null;
     }
-    return null;
+    //return null;
   }
 
   /**

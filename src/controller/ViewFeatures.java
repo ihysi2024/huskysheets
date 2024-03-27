@@ -43,19 +43,13 @@ public interface ViewFeatures {
 
   HashMap<String, String[]> storeEvent();
 
-<<<<<<< HEAD
-  void modifyEvent(IEvent event, ReadOnlyPlanner model);
-=======
   /**
    * Delegate to the view of the event to take in a current event as a map of its contents
    * and modify it.
-   * @param eventMap a String of content tags to a String[] of content values
-   * @param model observational planner system the controller reflects.
+   * @param event a String of content tags to a String[] of content values
    */
+  void modifyEvent(IEvent event);
 
-
-  void modifyEvent(HashMap<String, String[]> eventMap, ReadOnlyPlanner model);
->>>>>>> 289f5df607135534ad10f636899cc4e866068cd9
 
   /**
    * Delegates to the view fo the even to populate the fields in the panel
