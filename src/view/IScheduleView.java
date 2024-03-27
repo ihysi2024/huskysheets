@@ -15,14 +15,14 @@ public interface IScheduleView {
 
   void display(boolean show);
 
-  void openScheduleView(ReadOnlyPlanner model);
+  void openScheduleView();
 
-  void setCurrentUser(ReadOnlyPlanner model);
+  void setCurrentUser();
 
   IUser getCurrentUser();
 
-  void displayUserSchedule(ReadOnlyPlanner model, IUser userToShow);
-  void closeScheduleView(ReadOnlyPlanner model);
+  void displayUserSchedule(IUser userToShow);
+  void closeScheduleView();
 
   void addFeatures(ViewFeatures features);
 

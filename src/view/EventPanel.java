@@ -2,6 +2,7 @@ package view;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -86,8 +87,7 @@ public class EventPanel extends JPanel implements IEventView {
     this.model = Objects.requireNonNull(model);
     this.featuresListeners = new ArrayList<>();
 
-    // Mouse Events Listener
-    MouseEventsListener listener = new MouseEventsListener();
+    MouseListener listener = new MouseEventsListener();
     this.addMouseListener(listener);
     this.addMouseMotionListener(listener);
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -168,6 +168,7 @@ public class EventPanel extends JPanel implements IEventView {
      * Add buttons to extend the ability for a user to create, modify or remove
      * an event.
      */
+
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
     modifyEvent = new JButton("Modify Event");
@@ -351,7 +352,7 @@ public class EventPanel extends JPanel implements IEventView {
    * Open the event view for the user to see.
    * @param model observational planner interface.
    */
-  public void openEvent(ReadOnlyPlanner model) {
+  public void openEvent() {
     // implemented by the IEventView interface for the EventView. Panel shouldn't
     // be implemented, entire view should be.
   }
@@ -439,10 +440,8 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Store the user's input as an event that is added to their schedule.
-   * @param model observational planner interface
    */
-  @Override
-  public void createEvent(ReadOnlyPlanner model) {
+  public void createEvent() {
     HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
     try {
       IEvent eventMade = makeEvent(eventMap);
@@ -465,10 +464,17 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Modify an event with the user's new input to the event panel.
+<<<<<<< HEAD
    * @param event represents the updated event
    * @param model observational planner system to use.
    */
   public void modifyEvent(IEvent event, ReadOnlyPlanner model) {
+=======
+   * @param eventMap represents the updated event
+   */
+  public void modifyEvent(HashMap<String, String[]> eventMap) {
+    IEvent event = makeEvent(eventMap);
+>>>>>>> 289f5df607135534ad10f636899cc4e866068cd9
     System.out.println("Modify event: ");
     System.out.println(event.eventToString());
   }

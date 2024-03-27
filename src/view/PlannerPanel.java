@@ -64,9 +64,34 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   public PlannerPanel(ReadOnlyPlanner model) {
     this.model = Objects.requireNonNull(model);
     this.featuresListeners = new ArrayList<>();
-    MouseEventsListener listener = new MouseEventsListener();
+    MouseListener listener = new MouseListener() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseEntered(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+
+      }
+    };
     this.addMouseListener(listener);
-    this.addMouseMotionListener(listener);
+  //  this.addMouseMotionListener(listener);
 
     this.setLayout(new BorderLayout());
 
@@ -101,10 +126,8 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   /**
    * Sets the current user to what is selected in the appropriate button in the schedule view.
-   *
-   * @param model model to use
    */
-  public void setCurrentUser(ReadOnlyPlanner model) {
+  public void setCurrentUser() {
     for (IUser user: model.getUsers()) {
       if (user.getName().equals(Objects.requireNonNull(selectUserButton.getSelectedItem()).toString())) {
         this.currentUser = user;
@@ -165,17 +188,15 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   /**
    * Opens up the current user's schedule.
    *
-   * @param model model to be used
    */
   @Override
-  public void openScheduleView(ReadOnlyPlanner model) {
+  public void openScheduleView() {
     try {
-      for (IUser user: model.getUsers()) {
+      for (IUser user : model.getUsers()) {
         if (user.getName().equals(currentUser.getName())) {
-          this.displayUserSchedule(model, user);
+          this.displayUserSchedule(user);
         }
       }
-      this.setVisible(true);
     }
     catch (NullPointerException ignored){
       System.out.println("No user selected");
@@ -183,14 +204,16 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   }
 
+
+
   /**
    * Displays the desired user's schedule.
    *
-   * @param model model to be used
    * @param userToShow desired user schedule to show
    */
   @Override
-  public void displayUserSchedule(ReadOnlyPlanner model, IUser userToShow) {
+
+  public void displayUserSchedule(IUser userToShow) {
     this.resetPanel();
 
     menuPanel.revalidate();
@@ -205,10 +228,9 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   /**
    * Closes the current schedule view.
    *
-   * @param model model to be used
    */
   @Override
-  public void closeScheduleView(ReadOnlyPlanner model) {
+  public void closeScheduleView() {
     this.setVisible(false);
   }
 

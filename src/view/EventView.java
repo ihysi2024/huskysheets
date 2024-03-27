@@ -32,11 +32,10 @@ public class EventView extends JFrame implements IEventView {
   /**
    * Store the user's input as an event that is added to their schedule.
    * Delegate to the panel.
-   * @param model observational planner interface
    */
 
-  public void createEvent(ReadOnlyPlanner model) {
-    panel.createEvent(model);
+  public void createEvent() {
+    panel.createEvent();
   }
 
   /**
@@ -119,12 +118,12 @@ public class EventView extends JFrame implements IEventView {
   /**
    * Modify an event with the user's new input to the event panel.
    * Delegate to the panel.
+<<<<<<< HEAD
    * @param event represents the updated event
-   * @param model observational planner system to use.
    */
 
-  public void modifyEvent(IEvent event, ReadOnlyPlanner model) {
-    panel.modifyEvent(event, model);
+  public void modifyEvent(IEvent event) {
+    panel.modifyEvent(event);
   }
 
   /**
@@ -159,10 +158,9 @@ public class EventView extends JFrame implements IEventView {
   /**
    * Open the event view for the user to see.
    * Delegate to the panel.
-   * @param model observational planner interface.
    */
 
-  public void openEvent(ReadOnlyPlanner model) {
+  public void openEvent() {
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setVisible(true);
   }
