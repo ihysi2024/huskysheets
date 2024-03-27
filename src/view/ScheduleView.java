@@ -67,16 +67,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
   }
 
   @Override
-  public void addFeatureListener(ViewFeatures features) {
-    this.panel.addFeaturesListener(features);
-  }
-
-  @Override
-  public void display(boolean show) {
-    this.setVisible(show);
-  }
-
-  @Override
   public void openScheduleView() {
     panel.openScheduleView();
   }

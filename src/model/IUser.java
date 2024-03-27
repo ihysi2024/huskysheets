@@ -22,11 +22,6 @@ public interface IUser {
    */
   ISchedule getSchedule();
 
-  /**
-   * Show the user's schedule in a text format.
-   * @return String representing the user's schedule
-   */
-  String userToString();
 
   /**
    * Writes the user's schedule to an XML file that is unique to them and a given filepath.

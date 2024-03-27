@@ -53,14 +53,7 @@ public class User implements IUser {
     return this.schedule;
   }
 
-  /**
-   * Show the user's schedule in a text format.
-   * @return String representing the user's schedule
-   */
 
-  public String userToString() {
-    return "User: " + this.name + "\n" + this.schedule.scheduleToString();
-  }
 
   /**
    * Writes the user's schedule to an XML file that is unique to them and a given filepath.

@@ -167,22 +167,6 @@ public class Time implements ITime {
     }
   }
 
-  /**
-   * Creates a String representation of this time in format "DATE: HH:MM".
-   *
-   * @return String rep of time in readable format
-   */
-  public String timeToString() {
-    String hoursStr = "" + this.hours;
-    String minutesStr = "" + this.minutes;
-    if (this.hours < 10) {
-      hoursStr = "0" + hoursStr;
-    }
-    if (this.minutes < 10) {
-      minutesStr = "0" + minutesStr;
-    }
-    return this.date.dayString + ": " + hoursStr + ":" + minutesStr;
-  }
 
   /**
    * Creates a time from the given day index and time

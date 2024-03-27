@@ -91,24 +91,6 @@ public class Schedule implements ISchedule {
   }
 
   /**
-   * Convert the schedule to a string format for XML exportation.
-   *
-   * @return a string representing the schedule
-   */
-  public String scheduleToString() {
-    StringBuilder scheduleStr = new StringBuilder();
-    HashMap<Time.Day, List<IEvent>> eventsMap = this.dayToEventsMappping();
-    for (Time.Day dayOfTheWeek: eventsMap.keySet()) {
-      scheduleStr.append(dayOfTheWeek.getDayString() + ": " + "\n");
-      for (IEvent eventsInMap: eventsMap.get(dayOfTheWeek)) {
-
-        scheduleStr.append(eventsInMap.eventToString() + " ".repeat(10) + "\n");
-      }
-    }
-    return scheduleStr.toString();
-  }
-
-  /**
    * Convert the schedule to proper XML format for exportation.
    *
    * @return a string compatible with XML formats
