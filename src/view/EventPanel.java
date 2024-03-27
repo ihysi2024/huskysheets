@@ -1,26 +1,31 @@
 package view;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JList;
+import javax.swing.JTextField;
+import javax.swing.DefaultListModel;
+import javax.swing.BoxLayout;
+
 import javax.swing.event.MouseInputAdapter;
 
 import controller.ViewFeatures;
-import model.Event;
 import model.IEvent;
 import model.IUser;
 import model.ReadOnlyPlanner;
 import model.Time;
+
 import static model.User.makeEvent;
 
 /**
@@ -31,144 +36,114 @@ public class EventPanel extends JPanel implements IEventView {
 
   private final ReadOnlyPlanner model;
 
-  private final List<ViewFeatures> featuresListeners;
-
   /**
-   * LABEL FIELDS
+   * BUTTON FIELDS.
    */
-  private JLabel eventNameLabel;
+  private final JComboBox<String> onlineMenu;
 
-  private JLabel locationLabel;
+  private final JComboBox<Time.Day> startDay;
+  private final JComboBox<Time.Day> endDay;
 
-  private JLabel startTimeLabel;
-
-  private JLabel endTimeLabel;
-
-  private JLabel usersListLabel;
-
-  private JLabel onlineLabel;
-  private JLabel endDayLabel;
-  private JLabel startDayLabel;
+  private final JButton modifyEvent;
+  private final JButton removeEvent;
+  private final JButton saveEvent;
 
   /**
-   * BUTTON FIELDS
+   * TEXT FIELDS.
    */
-  private JComboBox onlineMenu;
+  private final JTextField eventName;
 
-  private JComboBox startDay;
-  private JComboBox endDay;
+  private final JTextField location;
 
-  private JButton modifyEvent;
-  private JButton removeEvent;
-  private JButton saveEvent;
+  private final JTextField startTime;
 
-
-  /**
-   * TEXT FIELDS
-   */
-
-  private JTextField eventName;
-
-  private JTextField location;
-
-  private JTextField startTime;
-
-  private JTextField endTime;
-  private JList<String> usersList;
-
+  private final JTextField endTime;
+  private final JList<String> usersList;
 
   /**
-   * Creates a panel that will house the view representation of the Simon game
-   * with clicking capabilities.
+   * Creates a panel that will house the input labels, buttons, and text fields for the user to
+   * * create/modify/remove an event.
+   *
    * @param model desired model to represent Simon game
    */
-
   public EventPanel(ReadOnlyPlanner model) {
     this.model = Objects.requireNonNull(model);
-    this.featuresListeners = new ArrayList<>();
+    List<ViewFeatures> featuresListeners = new ArrayList<>();
 
     MouseListener listener = new MouseEventsListener();
     this.addMouseListener(listener);
-   // this.addMouseMotionListener(listener);
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-    /**
-     * Add input labels, buttons, and text fields for the user to
-     * create/modify/remove an event.
-     */
-
-    eventNameLabel = new JLabel("Event Name:");
+    JLabel eventNameLabel = new JLabel("Event Name:");
     this.add(eventNameLabel);
 
     eventName = new JTextField(5);
     this.add(eventName);
 
-    onlineLabel = new JLabel("Online:");
+    JLabel onlineLabel = new JLabel("Online:");
     this.add(onlineLabel);
 
     onlineMenu = new JComboBox<>();
-
     onlineMenu.addItem("True");
     onlineMenu.addItem("False");
 
     this.add(onlineMenu);
 
-    locationLabel = new JLabel("Location:");
+    JLabel locationLabel = new JLabel("Location:");
     this.add(locationLabel);
 
     location = new JTextField(5);
     this.add(location);
 
-    startDayLabel = new JLabel("Start Day:");
+    JLabel startDayLabel = new JLabel("Start Day:");
     this.add(startDayLabel);
 
-    startDay = new JComboBox();
+    startDay = new JComboBox<>();
 
-    for (Time.Day day: Time.Day.values()) {
+    for (Time.Day day : Time.Day.values()) {
       startDay.addItem(day);
     }
 
     this.add(startDay);
 
-    startTimeLabel = new JLabel("Start Time:");
+    JLabel startTimeLabel = new JLabel("Start Time:");
     this.add(startTimeLabel);
 
     startTime = new JTextField(5);
     this.add(startTime);
 
-    endDayLabel = new JLabel("End Day:");
+    JLabel endDayLabel = new JLabel("End Day:");
     this.add(endDayLabel);
 
     endDay = new JComboBox();
 
-    for (Time.Day day: Time.Day.values()) {
+    for (Time.Day day : Time.Day.values()) {
       endDay.addItem(day);
     }
 
     this.add(endDay);
 
-    endTimeLabel = new JLabel("End Time:");
+    JLabel endTimeLabel = new JLabel("End Time:");
     this.add(endTimeLabel);
 
     endTime = new JTextField(5);
     this.add(endTime);
 
-    usersListLabel = new JLabel("User List:");
+    JLabel usersListLabel = new JLabel("User List:");
     this.add(usersListLabel);
 
     DefaultListModel<String> allUsers = new DefaultListModel<>();
 
-    for (IUser user: model.getUsers()) {
+    for (IUser user : model.getUsers()) {
       allUsers.addElement(user.getName());
     }
     usersList = new JList<>(allUsers);
     this.add(usersList);
 
-    /**
+    /*
      * Add buttons to extend the ability for a user to create, modify or remove
      * an event.
      */
-
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
     modifyEvent = new JButton("Modify Event");
@@ -190,6 +165,7 @@ public class EventPanel extends JPanel implements IEventView {
   /**
    * Set the event fields on the panel to the given event's fields.
    * Visualizes a user's entry for an event in the event panel text fields.
+   *
    * @param event event to visualize in the event panel.
    */
   public void populateEventContents(IEvent event) {
@@ -204,15 +180,14 @@ public class EventPanel extends JPanel implements IEventView {
 
     if (event.getOnline()) {
       onlineMenu.setSelectedIndex(0);
-    }
-    else {
+    } else {
       onlineMenu.setSelectedIndex(1);
     }
 
     usersList.clearSelection();
-    for (IUser plannerUsers: model.getUsers()) {
-        for (int currIndex = 0; currIndex < event.getUsers().size(); currIndex++) {
-          String currUserName = event.getUsers().get(currIndex);
+    for (IUser plannerUsers : model.getUsers()) {
+      for (int currIndex = 0; currIndex < event.getUsers().size(); currIndex++) {
+        String currUserName = event.getUsers().get(currIndex);
         if (currUserName.equals(plannerUsers.getName())) {
           usersList.addSelectionInterval(currIndex, currIndex);
         }
@@ -222,6 +197,7 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Get the user's input for the event name.
+   *
    * @return a String[] of the event name
    */
   public String[] getEventNameInput() {
@@ -230,6 +206,7 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Get the user's input for the event time.
+   *
    * @return a String[] of the event time
    */
 
@@ -240,6 +217,7 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Get the user's input for the event location.
+   *
    * @return a String[] of the location
    */
   public String[] getLocationInput() {
@@ -248,6 +226,7 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Get the user's input for the event list of users.
+   *
    * @return a String[] of the user list
    */
   public String[] getUsersInput() {
@@ -257,7 +236,8 @@ public class EventPanel extends JPanel implements IEventView {
   /**
    * This method tells Swing what the "natural" size should be
    * for this panel.  Here, we set it to 400x400 pixels.
-   * @return  Our preferred *physical* size.
+   *
+   * @return Our preferred *physical* size.
    */
   @Override
   public Dimension getPreferredSize() {
@@ -270,6 +250,7 @@ public class EventPanel extends JPanel implements IEventView {
    * any dimension you want here, including the same as your physical
    * size (in which case each logical pixel will be the same size as a physical
    * pixel, but perhaps your calculations to position things might be trickier)
+   *
    * @return Our preferred *logical* size.
    */
   private Dimension getPreferredLogicalSize() {
@@ -286,8 +267,7 @@ public class EventPanel extends JPanel implements IEventView {
     endTime.setText("");
     location.setText("");
     usersList.getAnchorSelectionIndex();
-
-   // usersList.addSelectionInterval();
+    // usersList.addSelectionInterval();
   }
 
   /**
@@ -318,6 +298,7 @@ public class EventPanel extends JPanel implements IEventView {
   /**
    * Allow the user to interact with the calendar through the features present
    * in the event view.
+   *
    * @param features functionality that the user has access to through the event view.
    */
   @Override
@@ -347,6 +328,7 @@ public class EventPanel extends JPanel implements IEventView {
   /**
    * Store the current event's inputs as a map of String -> String[]
    * Useful for modifying an event with the current panel inputs.
+   *
    * @return a map of strings to string[]
    */
 
@@ -377,9 +359,8 @@ public class EventPanel extends JPanel implements IEventView {
         }
       }
        */
-    }
-    catch (NullPointerException | IllegalArgumentException ignored) {
-        System.out.println("Could not create event: " +
+    } catch (NullPointerException | IllegalArgumentException ignored) {
+      System.out.println("Could not create event: " +
               "Event info not fully entered, error in given values, " +
               "or event already exists at that time");
     }
@@ -387,6 +368,7 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Modify an event with the user's new input to the event panel.
+   *
    * @param event represents the updated event
    */
   public void modifyEvent(IEvent event) {
@@ -400,17 +382,17 @@ public class EventPanel extends JPanel implements IEventView {
   private class MouseEventsListener extends MouseInputAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
+      // not implemented because not needed for this program
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+      // not implemented because not needed for this program
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-      Point physicalP = e.getPoint();
-      Point2D logicalP = transformPhysicalToLogical().transform(physicalP, null);
+      // not implemented because not needed for this program
     }
   }
 
