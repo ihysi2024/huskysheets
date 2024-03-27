@@ -10,6 +10,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import model.Event;
+import model.IEvent;
+import model.ISchedule;
+import model.IUser;
 import model.NUPlanner;
 import model.Schedule;
 import model.Time;
@@ -23,16 +26,16 @@ import static model.User.makeEvent;
  * Class to test functionality of User class.
  */
 public class TestUser {
-  private Event morningLec;
-  private Event morningSnack;
-  private Event afternoonLec;
-  private Event officeHours;
-  private Event sleep;
-  private Schedule luciaSchedule;
-  private Schedule studentAnonSchedule;
-  private User profLuciaUser;
-  private User studentAnonUser;
-  private User chatUser;
+  private IEvent morningLec;
+  private IEvent morningSnack;
+  private IEvent afternoonLec;
+  private IEvent officeHours;
+  private IEvent sleep;
+  private ISchedule luciaSchedule;
+  private ISchedule studentAnonSchedule;
+  private IUser profLuciaUser;
+  private IUser studentAnonUser;
+  private IUser chatUser;
 
   @Before
   public void setUp() {
@@ -161,7 +164,7 @@ public class TestUser {
             List.of("Student Anon",
                     "Prof. Lucia"));
 
-    LinkedHashSet<User> users = new LinkedHashSet<>();
+    LinkedHashSet<IUser> users = new LinkedHashSet<>();
     users.add(this.profLuciaUser);
     users.add(this.studentAnonUser);
     users.add(this.chatUser);
@@ -256,7 +259,7 @@ public class TestUser {
     this.profLuciaUser.userSchedToXML("src/controller/");
     // try grabbing the events
     Document xmlDoc1 = readXML("src/controller/Prof. Lucia_schedule.xml");
-    List<Event> luciaEvents = interpretXML(xmlDoc1);
+    List<IEvent> luciaEvents = interpretXML(xmlDoc1);
     // ensure the correct events are included in the right order and nothing else
     Assert.assertEquals(this.morningLec.eventToString(), luciaEvents.get(0).eventToString());
     Assert.assertEquals(this.afternoonLec.eventToString(), luciaEvents.get(1).eventToString());
@@ -267,7 +270,7 @@ public class TestUser {
     this.chatUser.userSchedToXML("src/controller/");
     Document xmlDoc2 = readXML("src/controller/Chat_schedule.xml");
     // try grabbing the events
-    List<Event> chatEvents = interpretXML(xmlDoc2);
+    List<IEvent> chatEvents = interpretXML(xmlDoc2);
     // ensure the correct events are included in the right order and nothing else
     Assert.assertEquals(this.morningLec.eventToString(), chatEvents.get(0).eventToString());
     Assert.assertEquals(this.afternoonLec.eventToString(), chatEvents.get(1).eventToString());

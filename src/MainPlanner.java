@@ -34,11 +34,18 @@ public class MainPlanner {
             new Time(Time.Day.MONDAY, 15, 30),
             false,
             "Churchill Hall 101",
+            List.of("Prof. Lucia", "Me"));
+
+    Event sleep = new Event("sleep",
+            new Time(Time.Day.FRIDAY, 12, 10),
+            new Time(Time.Day.SUNDAY, 15, 30),
+            false,
+            "home",
             List.of("Prof. Lucia"));
 
     model.addUser(new User("Prof. Lucia",
-            new Schedule(new ArrayList<>(List.of(morningSnack, officeHours)))));
-    model.addUser(new User("Me", new Schedule(new ArrayList<>())));
+            new Schedule(new ArrayList<>(List.of(morningSnack, officeHours, sleep)))));
+    model.addUser(new User("Me", new Schedule(new ArrayList<>(List.of(officeHours)))));
 
     //  IScheduleView view = new ScheduleView(model);
     IScheduleView schedView = new ScheduleView(model); // (michelle) currently working on event view so changed this here + in controller.

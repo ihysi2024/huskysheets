@@ -9,7 +9,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import model.Event;
+import model.IEvent;
+import model.ISchedule;
+import model.IUser;
 import model.NUPlanner;
+import model.PlannerSystem;
 import model.Schedule;
 import model.Time;
 import model.User;
@@ -21,11 +25,11 @@ import view.IScheduleTextView;
  * Class to test functionality of TextView.
  */
 public class TestTextView {
-  private Event morningLec;
-  private Event afternoonLec;
-  private Event sleep;
-  private Schedule emptySchedule;
-  private NUPlanner plannerSystem;
+  private IEvent morningLec;
+  private IEvent afternoonLec;
+  private IEvent sleep;
+  private ISchedule emptySchedule;
+  private PlannerSystem plannerSystem;
   private IScheduleTextView view;
 
 
@@ -67,7 +71,7 @@ public class TestTextView {
     User studentAnonUser = new User("Student Anon", studentAnonSchedule);
     User chatUser = new User("Chat", chatSchedule);
 
-    Set<User> users = new LinkedHashSet<>();
+    Set<IUser> users = new LinkedHashSet<>();
     users.add(profLuciaUser);
     users.add(studentAnonUser);
     users.add(chatUser);

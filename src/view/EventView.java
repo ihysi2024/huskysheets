@@ -104,6 +104,7 @@ public class EventView extends JFrame implements IEventView {
     saveEvent.addActionListener(evt -> features.closeEventView());
     saveEvent.addActionListener(evt -> features.openScheduleView());
 
+    // if you edit any of the fields of the event, that's what gets printed out to remove...
     removeEvent.addActionListener(evt -> features.removeEvent(features.storeEvent()));
     removeEvent.addActionListener(evt -> features.closeEventView());
     removeEvent.addActionListener(evt -> features.openScheduleView());

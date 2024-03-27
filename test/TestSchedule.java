@@ -8,6 +8,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import model.Event;
+import model.IEvent;
+import model.ISchedule;
+import model.IUser;
 import model.NUPlanner;
 import model.Schedule;
 import model.Time;
@@ -17,27 +20,27 @@ import model.User;
  * Class to test functionality of Schedule class.
  */
 public class TestSchedule {
-  private Event newMorningLec;
-  private Event morningLec;
-  private Event morningLecOverlapping;
-  private Event morningLecSameTime;
-  private Event morningLecEndTime;
+  private IEvent newMorningLec;
+  private IEvent morningLec;
+  private IEvent morningLecOverlapping;
+  private IEvent morningLecSameTime;
+  private IEvent morningLecEndTime;
 
-  private Event afternoonLec;
-  private Event officeHours;
+  private IEvent afternoonLec;
+  private IEvent officeHours;
 
-  private Event sleep;
+  private IEvent sleep;
 
-  private Schedule emptySchedule;
+  private ISchedule emptySchedule;
 
   @Before
   public void setUp() {
 
     this.emptySchedule = new Schedule(new ArrayList<>());
 
-    User profLuciaUser = new User("Prof Lucia", emptySchedule);
-    User studentAnonUser = new User("Student Anon", emptySchedule);
-    User chatUser = new User("Chat", emptySchedule);
+    IUser profLuciaUser = new User("Prof Lucia", emptySchedule);
+    IUser studentAnonUser = new User("Student Anon", emptySchedule);
+    IUser chatUser = new User("Chat", emptySchedule);
 
     this.newMorningLec = new Event("CS3500 Morning Lecture",
             new Time( Time.Day.TUESDAY, 13, 35),
@@ -126,7 +129,7 @@ public class TestSchedule {
             List.of("Student Anon",
                     "Prof. Lucia"));
 
-    LinkedHashSet<User> users = new LinkedHashSet<>();
+    LinkedHashSet<IUser> users = new LinkedHashSet<>();
     users.add(profLuciaUser);
     users.add(studentAnonUser);
     users.add(chatUser);
@@ -342,14 +345,17 @@ public class TestSchedule {
                     new Time(Time.Day.TUESDAY, 10, 15)));
 
     // no event occurring at the time
-    Assert.assertEquals(null,
-            emptySchedule.eventOccurring(
-                    new Time(Time.Day.WEDNESDAY, 14, 15)));
+    Assert.assertNull(emptySchedule.eventOccurring(
+            new Time(Time.Day.WEDNESDAY, 14, 15)));
 
     // an event starting at that time and ending at that time, returning first event found
     Assert.assertEquals(this.morningLec,
             emptySchedule.eventOccurring(
                     new Time(Time.Day.TUESDAY, 11, 30)));
+
+    Assert.assertEquals(this.sleep,
+            emptySchedule.eventOccurring(
+                    new Time(Time.Day.SATURDAY, 9, 50)));
 
   }
 }

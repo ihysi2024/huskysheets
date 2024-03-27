@@ -94,14 +94,7 @@ public class Controller implements ViewFeatures {
   }
 
   public IEvent findEvent(ITime timeOfEvent) {
-    for (IUser user: this.model.getUsers()) {
-      IEvent tempEvent = model.retrieveUserScheduleAtTime(user, timeOfEvent);
-      if (tempEvent != null) {
-        return tempEvent;
-      }
-
-    }
-    return null;
+    return scheduleView.findEventAtTime(timeOfEvent);
   }
 
   public void populateEvent(IEvent event) {

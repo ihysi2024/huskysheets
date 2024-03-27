@@ -5,8 +5,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,14 +12,10 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
 import controller.ViewFeatures;
-import model.Event;
 import model.IEvent;
 import model.IUser;
 import model.ReadOnlyPlanner;
 import model.Time;
-import model.User;
-
-import static model.User.makeEvent;
 
 public class EventPanel extends JPanel {
 

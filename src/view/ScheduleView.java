@@ -13,6 +13,7 @@ import controller.Controller;
 import controller.ViewFeatures;
 import model.Event;
 import model.IEvent;
+import model.ITime;
 import model.IUser;
 import model.ReadOnlyPlanner;
 import model.Time;
@@ -24,19 +25,14 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
   private final PlannerPanel panel;
 
-
-
-
   /**
    * Creates a view of the Simon game.
    * @param model desired model to represent Simon game
    */
   public ScheduleView(ReadOnlyPlanner model) {
-    //saveEventButton = new JButton("Create Event");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     this.panel = new PlannerPanel(model);
-
     this.add(panel);
     this.setVisible(true);
     this.pack();
@@ -47,12 +43,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
   }
   public void closeScheduleView(ReadOnlyPlanner model) {
     panel.closeScheduleView(model);
-    //newEvent.createEvent(model);
-    // remove the create button
-    //createEventButton.setVisible(false);
-    // make the event panel visible
-    //this.panel.setVisible(false);
-
   }
 
   public IUser getCurrentUser() {
@@ -78,6 +68,11 @@ public class ScheduleView extends JFrame implements IScheduleView {
   public void saveCalendarInfo() {
     panel.saveCalendarInfo();
 
+  }
+
+  @Override
+  public IEvent findEventAtTime(ITime timeOfEvent) {
+    return this.panel.findEventAtTime(timeOfEvent);
   }
 
   @Override

@@ -127,9 +127,15 @@ public class Schedule implements ISchedule {
    * @return the event at the given time. returns null if no event is occurring
    */
   public IEvent eventOccurring(ITime time) {
+
     for (IEvent event: this.events) {
-      if (event.getStartTime().compareTimes(time) <= 0
-              && event.getEndTime().compareTimes(time) >= 0) {
+      ITime tempEndTime = event.getEndTime();
+      // event goes to following week, so artificially ending at end of this week
+      if (event.getStartTime().compareTimes(event.getEndTime()) >= 0) {
+        tempEndTime = new Time(Time.Day.SATURDAY, 23, 59);
+      }
+        if (event.getStartTime().compareTimes(time) <= 0
+              && tempEndTime.compareTimes(time) >= 0) {
         return event;
       }
     }
