@@ -167,7 +167,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   @Override
   public void openScheduleView(ReadOnlyPlanner model) {
-    String userName = selectUserButton.getSelectedItem().toString();
     for (IUser user: model.getUsers()) {
       if (user.getName().equals(currentUser.getName())) {
         this.displayUserSchedule(model, user);
@@ -200,9 +199,12 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   public void addFeatures(ViewFeatures features) {
 
     createEventButton.addActionListener(evt -> features.openEventView());
+    createEventButton.addActionListener(evt -> features.resetPanelView());
     selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
     addCalendar.addActionListener(evt -> features.addCalendar());
+    scheduleEventButton.addActionListener(evt -> features.openEventView());
+    scheduleEventButton.addActionListener(evt -> features.resetPanelView());
 
     // handle when a user has clicked on an event
   }
@@ -313,7 +315,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    // System.out.println(this.getCurrentUser() == null);
   //  System.out.println("curr user: " + this.getCurrentUser().userToString());
     if (this.getCurrentUser() != null) {
-      System.out.println("curr user: " + this.getCurrentUser().userToString());
       for (IEvent event: model.retrieveUserEvents(this.getCurrentUser())) {
         this.paintEvent(g, event);
       }

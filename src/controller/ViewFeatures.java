@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 
 import model.Event;
@@ -25,9 +26,9 @@ public interface ViewFeatures {
 
   void updatedEvent(IEvent updatedEvent);
 
-  IEvent storeEvent();
+  HashMap<String, String[]> storeEvent();
 
-  void modifyEvent(IEvent oldEvent, IEvent newEvent);
+  void modifyEvent(HashMap<String, String[]> eventMap, ReadOnlyPlanner model);
 
   void populateEvent(IEvent event);
 
@@ -41,6 +42,8 @@ public interface ViewFeatures {
 
   IEvent findEvent(ITime timeOfEvent);
   void removeEvent(IEvent eventToRemove);
+
+  void resetPanelView();
 
   void quitEditingEvent();
 

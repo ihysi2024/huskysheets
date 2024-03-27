@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import model.Event;
@@ -27,13 +28,12 @@ public class Controller implements ViewFeatures {
   private IScheduleView scheduleView;
 
   private IEventView eventView;
-   // private final IEventView view;
-
 
   /**
    * Creates an instance of a Simon game controller to control user input (mouse clicks).
    * @param model Simon model
    */
+
   public Controller(PlannerSystem model) {
     this.model = model;
   }
@@ -73,7 +73,6 @@ public class Controller implements ViewFeatures {
   }
   @Override
   public void openEventView() {
-
     eventView.openEvent(model);
   }
 
@@ -104,8 +103,12 @@ public class Controller implements ViewFeatures {
     return null;
   }
 
+  public void resetPanelView() {
+    eventView.resetPanel();
+  }
+
   public void populateEvent(IEvent event) {
-    eventView.populateEventInPanel(event);
+    eventView.populateEventContents(event);
   }
   public void openScheduleView() {
     scheduleView.openScheduleView(model);
@@ -113,11 +116,10 @@ public class Controller implements ViewFeatures {
 
   public void updatedEvent(IEvent oldEvent) {
 
-    //model.modifyEvent(eventView.storeOpenedEvent(), newEvent);
   }
 
-  public void modifyEvent(IEvent oldEvent, IEvent newEvent) {
-    model.modifyEvent(oldEvent, newEvent);
+  public void modifyEvent(HashMap<String, String[]> eventMap, ReadOnlyPlanner model) {
+    eventView.modifyEvent(eventMap, model);
   }
 
 
@@ -128,7 +130,6 @@ public class Controller implements ViewFeatures {
     System.out.println("Remove event***: " + eventToRemove.eventToString());
     model.removeEventForRelevantUsers(eventToRemove, scheduleView.getCurrentUser());
 
-    //eventView.removeEventFromSchedule(model, eventToRemove, scheduleView.getCurrentUser());
   }
 
   @Override
@@ -137,18 +138,9 @@ public class Controller implements ViewFeatures {
     eventView.createEvent(model);
   }
 
-  public IEvent storeEvent() {
-    return eventView.storeOpenedEvent();
+  public HashMap<String, String[]> storeEvent() {
+    return eventView.storeOpenedEventMap();
   }
-
-  /**
-  @Override
-  public void modifyEvent(String eventName, String startDay, String startTime,
-                          String endDate, String endTime, String location, List<String> users) {
-
-  }
-
-   **/
 
   @Override
   public void quitEditingEvent() {
@@ -170,10 +162,3 @@ public class Controller implements ViewFeatures {
 
   }
 }
-
-/*
- QUESTIONS TO ASK:
- - methods in frame vs panel?
- - glitching with selecting user
- - bunch of empty methods in PlannerPanel because it's implementing IScheduleView
- */
