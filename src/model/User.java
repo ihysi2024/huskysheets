@@ -172,10 +172,11 @@ public class User implements IUser {
    * @return the event corresponding to the HashMap
    */
   public static IEvent makeEvent(HashMap<String, String[]> eventToMake) {
+    try {
     // generate temporary values for the event
     String tempEventName = "";
     Time tempStartTime = null;
-    Time tempEndTime = null ;
+    Time tempEndTime = null;
     boolean online = true;
     String location = "";
     List<String> userList = new ArrayList<>();
@@ -186,7 +187,7 @@ public class User implements IUser {
     // 2. a time has 4 elements (start day, start time, end day, end time) - indexed 0 - 3
     // 3. a location has 2 elements (online, location) - indexed from 0-1
     // 4. users has n elements that can be added to the temp users list variable
-    for (String key: eventToMake.keySet()) {
+    for (String key : eventToMake.keySet()) {
       if (key.equals("name")) {
         tempEventName = eventToMake.get(key)[0];
       }
@@ -203,16 +204,17 @@ public class User implements IUser {
           userList.add(userName);
         }
 
-      //  userList.addAll(Arrays.asList(eventToMake.get(key)));
+        //  userList.addAll(Arrays.asList(eventToMake.get(key)));
       }
-    }
-    // input these variables to a new event and return it
-    try {
       return new Event(tempEventName, tempStartTime, tempEndTime, online, location, userList);
     }
+  }
+    // input these variables to a new event and return it
+
     catch (IllegalArgumentException e) {
       return null;
     }
+    return null;
   }
 
   /**
