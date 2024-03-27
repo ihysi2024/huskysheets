@@ -264,12 +264,18 @@ public class EventPanel extends JPanel implements IEventView {
    * @param host host of the event
    */
   public void resetPanel(String host) {
+    System.out.println("got here");
     eventName.setText("");
     startTime.setText("");
     endTime.setText("");
     location.setText("");
     usersList.getAnchorSelectionIndex();
-    // usersList.addSelectionInterval();
+    usersList.getSelectedValuesList();
+    for (String user : usersList.getSelectedValuesList()) {
+      System.out.println("usersss: " + user);
+    }
+   // System.out.println("index: " + index);
+   // usersList.addSelectionInterval(index, index);
   }
 
   /**

@@ -238,9 +238,10 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * @param features available features
    */
   public void addFeatures(ViewFeatures features) {
-    createEventButton.addActionListener(evt ->
-            features.openEventView());
+
     createEventButton.addActionListener(evt -> features.resetPanelView(this.currentUser.getName()));
+    createEventButton.addActionListener(evt -> features.openEventView());
+
     selectUserButton.addActionListener(evt ->
             features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
