@@ -75,7 +75,7 @@ public interface IEventView {
    * @param model observational planner system to use.
    */
 
-  void modifyEvent(HashMap<String, String[]> eventMap, ReadOnlyPlanner model);
+  void modifyEvent(HashMap<String, String[]> eventMap);
 
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
@@ -89,7 +89,7 @@ public interface IEventView {
    * after an event has already been created.
    */
 
-  void openEvent(ReadOnlyPlanner model);
+  void openEvent();
 
   /**
    * Store the current event's inputs as a map of String -> String[]
@@ -101,8 +101,7 @@ public interface IEventView {
 
   /**
    * Store the user's input as an event that is added to their schedule.
-   * @param model observational planner interface
    */
 
-  void createEvent(ReadOnlyPlanner model);
+  void createEvent();
 }

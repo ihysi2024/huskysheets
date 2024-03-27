@@ -115,7 +115,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   }
 
-  public void setCurrentUser(ReadOnlyPlanner model) {
+  public void setCurrentUser() {
     for (IUser user: model.getUsers()) {
       if (user.getName().equals(selectUserButton.getSelectedItem().toString())) {
         this.currentUser = user;
@@ -166,17 +166,17 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   }
 
   @Override
-  public void openScheduleView(ReadOnlyPlanner model) {
+  public void openScheduleView() {
     for (IUser user: model.getUsers()) {
       if (user.getName().equals(currentUser.getName())) {
-        this.displayUserSchedule(model, user);
+        this.displayUserSchedule(user);
       }
     }
     this.setVisible(true);
   }
 
-  @Override
-  public void displayUserSchedule(ReadOnlyPlanner model, IUser userToShow) {
+
+  public void displayUserSchedule(IUser userToShow) {
     this.resetPanel();
 
     for (IEvent event : userToShow.getSchedule().getEvents()) {
@@ -192,7 +192,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
 
   @Override
-  public void closeScheduleView(ReadOnlyPlanner model) {
+  public void closeScheduleView() {
     this.setVisible(false);
   }
 

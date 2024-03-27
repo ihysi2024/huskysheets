@@ -84,7 +84,6 @@ public class EventPanel extends JPanel implements IEventView {
     this.model = Objects.requireNonNull(model);
     this.featuresListeners = new ArrayList<>();
 
-    // Mouse Events Listener
     MouseEventsListener listener = new MouseEventsListener();
     this.addMouseListener(listener);
     this.addMouseMotionListener(listener);
@@ -167,6 +166,7 @@ public class EventPanel extends JPanel implements IEventView {
      * Add buttons to extend the ability for a user to create, modify or remove
      * an event.
      */
+
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
     modifyEvent = new JButton("Modify Event");
@@ -334,7 +334,7 @@ public class EventPanel extends JPanel implements IEventView {
    * Open the event view for the user to see.
    * @param model observational planner interface.
    */
-  public void openEvent(ReadOnlyPlanner model) {
+  public void openEvent() {
     // implemented by the IEventView interface for the EventView. Panel shouldn't
     // be implemented, entire view should be.
   }
@@ -414,10 +414,8 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Store the user's input as an event that is added to their schedule.
-   * @param model observational planner interface
    */
-  @Override
-  public void createEvent(ReadOnlyPlanner model) {
+  public void createEvent() {
     HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
     try {
       IEvent eventMade = makeEvent(eventMap);
@@ -439,9 +437,8 @@ public class EventPanel extends JPanel implements IEventView {
   /**
    * Modify an event with the user's new input to the event panel.
    * @param eventMap represents the updated event
-   * @param model observational planner system to use.
    */
-  public void modifyEvent(HashMap<String, String[]> eventMap, ReadOnlyPlanner model) {
+  public void modifyEvent(HashMap<String, String[]> eventMap) {
     IEvent event = makeEvent(eventMap);
     System.out.println("Modify event: ");
     System.out.println(event.eventToString());
