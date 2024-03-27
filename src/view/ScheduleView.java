@@ -32,12 +32,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
 
   public void closeScheduleView() {
     panel.closeScheduleView();
-    //newEvent.createEvent(model);
-    // remove the create button
-    //createEventButton.setVisible(false);
-    // make the event panel visible
-    //this.panel.setVisible(false);
-
   }
 
   public IUser getCurrentUser() {
@@ -68,11 +62,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
   @Override
   public IEvent findEventAtTime(ITime timeOfEvent) {
     return this.panel.findEventAtTime(timeOfEvent);
-  }
-
-  @Override
-  public void addFeatureListener(ViewFeatures features) {
-    this.panel.addFeaturesListener(features);
   }
 
   @Override

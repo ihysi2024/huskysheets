@@ -260,8 +260,10 @@ public class EventPanel extends JPanel implements IEventView {
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
+   *
+   * @param host host of the event
    */
-  public void resetPanel() {
+  public void resetPanel(String host) {
     eventName.setText("");
     startTime.setText("");
     endTime.setText("");

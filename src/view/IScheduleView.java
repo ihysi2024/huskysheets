@@ -11,8 +11,6 @@ import model.ReadOnlyPlanner;
 import model.User;
 
 public interface IScheduleView {
-  void addFeatureListener(ViewFeatures features);
-
   void display(boolean show);
 
   void openScheduleView();

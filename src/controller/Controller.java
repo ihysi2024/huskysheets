@@ -107,9 +107,11 @@ public class Controller implements ViewFeatures {
 
   /**
    * Delegates to the view of the event to create empty fields in the panel.
+   *
+   * @param host of the event
    */
-  public void resetPanelView() {
-    eventView.resetPanel();
+  public void resetPanelView(String host) {
+    eventView.resetPanel(host);
   }
 
   /**

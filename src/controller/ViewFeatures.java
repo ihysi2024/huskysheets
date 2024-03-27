@@ -98,9 +98,11 @@ public interface ViewFeatures {
 
   /**
    * Delegates to the view of the event to create empty fields in the panel.
+   *
+   * @param host host of the event
    */
 
-  void resetPanelView();
+  void resetPanelView(String host);
 
   /**
    * Delegate to the view of the schedule to add the calendar info to the planner system.

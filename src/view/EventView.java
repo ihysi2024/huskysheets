@@ -81,9 +81,11 @@ public class EventView extends JFrame implements IEventView {
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * Delegate to the panel.
    * after an event has already been created.
+   *
+   * @param host host of the event
    */
-  public void resetPanel() {
-    panel.resetPanel();
+  public void resetPanel(String host) {
+    panel.resetPanel(host);
   }
 
   /**

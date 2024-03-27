@@ -1,36 +1,42 @@
 package view;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.BasicStroke;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.font.TextAttribute;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.image.ImageObserver;
 import java.io.File;
-import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
+
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import controller.Controller;
 import controller.ViewFeatures;
-import model.Event;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
 import model.ReadOnlyPlanner;
 import model.Time;
-import model.User;
 
-import static java.lang.Math.floor;
 import static model.Time.indexToTime;
-import static model.Time.stringToTime;
 
 public class PlannerPanel extends JPanel implements IScheduleView {
 
@@ -41,12 +47,12 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   private final List<ViewFeatures> featuresListeners;
 
-  private JButton scheduleEventButton;
+  private final JButton scheduleEventButton;
 
-  private JButton createEventButton;
+  private final JButton createEventButton;
 
   private final JPanel menuPanel;
-  protected JComboBox selectUserButton;
+  protected JComboBox<String> selectUserButton;
 
   protected final JMenuBar menuBar;
   protected final JMenu fileSelectMenu;
@@ -67,32 +73,30 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     MouseListener listener = new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
-
+        // not implemented because not needed for this program
       }
 
       @Override
       public void mousePressed(MouseEvent e) {
-
+        // not implemented because not needed for this program
       }
 
       @Override
       public void mouseReleased(MouseEvent e) {
-
+        // not implemented because not needed for this program
       }
 
       @Override
       public void mouseEntered(MouseEvent e) {
-
+        // not implemented because not needed for this program
       }
 
       @Override
       public void mouseExited(MouseEvent e) {
-
+        // not implemented because not needed for this program
       }
     };
     this.addMouseListener(listener);
-  //  this.addMouseMotionListener(listener);
-
     this.setLayout(new BorderLayout());
 
     menuBar = new JMenuBar();
@@ -129,7 +133,8 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    */
   public void setCurrentUser() {
     for (IUser user: model.getUsers()) {
-      if (user.getName().equals(Objects.requireNonNull(selectUserButton.getSelectedItem()).toString())) {
+      if (user.getName().equals(
+              Objects.requireNonNull(selectUserButton.getSelectedItem()).toString())) {
         this.currentUser = user;
       }
     }
@@ -152,6 +157,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     return this.currentUser;
 
   }
+
   /**
    * This method tells Swing what the "natural" size should be
    * for this panel.  Here, we set it to 500x500 pixels.
@@ -174,16 +180,10 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     return new Dimension(100, 100);
   }
 
-
-  @Override
-  public void addFeatureListener(ViewFeatures features) {
-
-  }
-
   @Override
   public void display(boolean show) {
+    // handled in frame, not implemented here
   }
-
 
   /**
    * Opens up the current user's schedule.
@@ -198,7 +198,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
         }
       }
     }
-    catch (NullPointerException ignored){
+    catch (NullPointerException ignored) {
       System.out.println("No user selected");
     }
 
@@ -241,14 +241,18 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * @param features available features
    */
   public void addFeatures(ViewFeatures features) {
-    createEventButton.addActionListener(evt -> features.openEventView());
-    createEventButton.addActionListener(evt -> features.resetPanelView());
-    selectUserButton.addActionListener(evt -> features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
+    createEventButton.addActionListener(evt ->
+            features.openEventView());
+    createEventButton.addActionListener(evt -> features.resetPanelView(this.currentUser.getName()));
+    selectUserButton.addActionListener(evt ->
+            features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
-    scheduleEventButton.addActionListener(evt -> features.openEventView());
-    scheduleEventButton.addActionListener(evt -> features.resetPanelView());
+    scheduleEventButton.addActionListener(evt ->
+            features.openEventView());
+    scheduleEventButton.addActionListener(evt ->
+            features.resetPanelView(this.currentUser.getName()));
   }
 
   /**
@@ -312,7 +316,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   }
 
   /**
-   * Paints an entire day on the schedule starting from 00:00 to 23:59
+   * Paints an entire day on the schedule starting from 00:00 to 23:59.
    *
    * @param g Graphics
    * @param color color of event to be painted
@@ -363,7 +367,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    */
   private double minLoc(ITime time) {
     int timePos = time.minutesSinceMidnight();
-    return timePos / (60.0*24.0);
+    return timePos / (60.0 * 24.0);
   }
 
   /**
@@ -399,14 +403,16 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    */
   public ITime timeAtClick(MouseEvent e) {
     int dayIndex = e.getX() / (this.getWidth() / 7);
-    int totMinutes = (int) Math.round(e.getY() / (this.getHeight() / (60.0*24)));
+    int totMinutes = (int) Math.round(e.getY() / (this.getHeight() / (60.0 * 24)));
     return indexToTime(dayIndex, totMinutes);
   }
 
-  public void closePanelView() {
-    this.setVisible(false);
-  }
-
+  /**
+   * Handles the clicks in schedule panel. Specifically handles clicking on an event in the
+   * schedule and opening up the corresponding view.
+   *
+   * @param features features available
+   */
   public void addClickListener(ViewFeatures features) {
     this.addMouseListener(new MouseListener() {
       @Override

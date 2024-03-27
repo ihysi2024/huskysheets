@@ -72,15 +72,16 @@ public interface IEventView {
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
+   *
+   * @param host host of the event
    */
 
-  void resetPanel();
+  void resetPanel(String host);
 
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
    */
-
   void openEvent();
 
   /**
