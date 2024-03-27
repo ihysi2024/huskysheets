@@ -187,7 +187,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   /**
    * Opens up the current user's schedule.
-   *
    */
   @Override
   public void openScheduleView() {
@@ -212,7 +211,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * @param userToShow desired user schedule to show
    */
   @Override
-
   public void displayUserSchedule(IUser userToShow) {
     this.resetPanel();
 
@@ -227,7 +225,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   /**
    * Closes the current schedule view.
-   *
    */
   @Override
   public void closeScheduleView() {
@@ -473,7 +470,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   /**
    * Allowing user to select a folder where they will export the user schedules.
    * Automatically starts in current directory.
-   *
    */
   @Override
   public void saveCalendarInfo() {
@@ -537,7 +533,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     catch (IllegalArgumentException ex) {
      // throw new IllegalArgumentException("number of lines must be >= 2");
     }
-
   }
 
   /**
@@ -551,7 +546,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
       throw new IllegalArgumentException("num lines must be > 1");
     }
     double[] d = new double[numLines];
-    for (int i = 0; i < numLines; i++){
+    for (int i = 0; i < numLines; i++) {
       d[i] = -1 + (double) (2 * i) / (numLines - 1);
     }
     return d;
@@ -570,47 +565,9 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     Dimension preferred = getPreferredLogicalSize();
     ret.translate(getWidth() / 2., getHeight() / 2.);
     ret.scale(0.5 * getWidth() / preferred.getWidth(),
-            0.5* getHeight() / preferred.getHeight());
+            0.5 * getHeight() / preferred.getHeight());
     ret.scale(1, -1);
     return ret;
-  }
-
-  /**
-   * Computes the transformation that converts screen coordinates
-   * (with (0,0) in upper-left, width and height in pixels)
-   * into board coordinates (with (0,0) in center, width and height
-   * our logical size).
-   *
-   * @return The necessary transformation
-   */
-  private AffineTransform transformPhysicalToLogical() {
-    AffineTransform ret = new AffineTransform();
-    Dimension preferred = getPreferredLogicalSize();
-    ret.scale(1, -1);
-    ret.scale(preferred.getWidth() / getWidth(), preferred.getHeight() / getHeight());
-    ret.translate(-getWidth() / 2., -getHeight() / 2.);
-    return ret;
-  }
-
-  private class MouseEventsListener extends MouseInputAdapter {
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-      // This point is measured in actual physical pixels
-      Point physicalP = e.getPoint();
-      // For us to figure out which circle it belongs to, we need to transform it
-      // into logical coordinates
-      Point2D logicalP = transformPhysicalToLogical().transform(physicalP, null);
-      // TODO: Figure out whether this location is inside a circle, and if so, which one
-    }
   }
 
 }

@@ -3,23 +3,19 @@ package view;
 import java.util.HashMap;
 
 import controller.ViewFeatures;
-import model.Event;
 import model.IEvent;
-import model.IUser;
-import model.ReadOnlyPlanner;
-import model.User;
 
 /**
  * Frame for the event window.
  */
 public interface IEventView {
+
   /**
    * Allow the user to interact with the calendar through the features present
    * in the event view.
    * @param features functionality that the user has access to through the event view.
    */
   void addFeatures(ViewFeatures features);
-
 
   /**
    * Close the event view so it stops being visible.
@@ -31,42 +27,36 @@ public interface IEventView {
    * Visualizes a user's entry for an event in the event panel text fields.
    * @param event event to visualize in the event panel.
    */
-
   void populateEventContents(IEvent event);
 
   /**
    * Get the user's input for the event name.
    * @return a String[] of the event name
    */
-
   String[] getEventNameInput();
 
   /**
    * Get the user's input for the event time.
    * @return a String[] of the event time
    */
-
   String[] getTimeInput();
 
   /**
    * Get the user's input for the event location.
    * @return a String[] of the location
    */
-
   String[] getLocationInput();
 
   /**
    * Get the user's input for the event list of users.
    * @return a String[] of the location
    */
-
   String[] getUsersInput();
 
   /**
    * Modify an event with the user's new input to the event panel.
    * @param event represents the updated event
    */
-
   void modifyEvent(IEvent event);
 
   /**
@@ -75,7 +65,6 @@ public interface IEventView {
    *
    * @param host host of the event
    */
-
   void resetPanel(String host);
 
   /**
@@ -89,12 +78,10 @@ public interface IEventView {
    * Useful for modifying an event with the current panel inputs.
    * @return a map of strings to string[]
    */
-
   HashMap<String, String[]> storeOpenedEventMap();
 
   /**
    * Store the user's input as an event that is added to their schedule.
    */
-
   void createEvent();
 }
