@@ -150,19 +150,7 @@ public class Event implements IEvent {
             + Objects.hashCode(this.location) + Objects.hashCode(this.users);
   }
 
-  /**
-   * Formats this event as a String to easily interpret this event's contents and aid in testing.
-   *
-   * @return user-friendly representation of this event
-   */
-  public String eventToString() {
-    return "name: " + eventName + "\n"
-            + "time: " + startTime.timeToString() + "->"
-            + endTime.timeToString() + "\n"
-            + "location: " + location + "\n"
-            + "online: " + online + "\n"
-            + "users: " + String.join("\n", users);
-  }
+
 
   /**
    * Parses through each field of this event and adds the proper XML tags around each field.

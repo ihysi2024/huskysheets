@@ -125,3 +125,66 @@ interface for ScheduleView and its class implementation ScheduleTextView.
 4. Tests for the model have been written in code/test where Event, NUPlannerSystem, Schedule, 
 ScheduleTextView, Time, and User have been tested in individual test files. 
 
+
+*******HW8 CHANGES*******
+
+Changes to the model:
+1. All toString() methods implemented in model classes (i.e. Time, Event, Schedule)
+are moved to the ScheduleTextView class. This allows distinction betweee the view
+and model functionalities. 
+2. Two different interfaces were integrated
+
+   a. ReadOnlyPlanner is an immutable observational interface used only 
+    to observe aspects of the planner system.
+    
+   b. PlannerSystem is a mutable interface that gives the planner system 
+    full functionality. This interface also extends the ReadOnlyPlanner 
+    interface
+
+   c. The NUPlanner class implements the Planner System class. 
+
+Changes to the view:
+1. Two interfaces were added to represent the GUI view of an event
+and a GUI view of a schedule (IEventView and IScheduleView)
+2. Each interface is implemented twice - once by a panel and once by a view
+3. The panel contains all the GUI components that allow the user to interact with
+the system (i.e. buttons, lists, drop-down menus etc.). The view that
+corresponds to the panel delegates back to the panel for all model implementations
+4. Event Panel/View Functionality
+
+   a. When a user presses Create Event, the event panel closes and the fields that the user
+   has completed will be stored to an IEvent object if it is valid. The event details will
+   be consequently printed in the console. The current user is automatically selected when 
+   creating an event.
+
+   b. When a user presses Modify Event, the event panel closes and the fields that the user
+   has changed will be stored to an IEvent object if it is valid. The event details will 
+   be consequently printed in the console. 
+
+   c. When a user preses Remove Event, the event panel (which should already be populated)
+   stores the event as an IEvent object and prints that it has been removed along with
+   the event details to the console.
+
+6. Schedule Panel/View Functionality
+   
+    a. When a user presses Create Event button, the event view is made visible with
+    empty event panel fields. The host of the event (current user viewing their schedule)
+    should automatically be selected in the list of possible users that can be invited)
+   
+    b. When a user presses Schedule Event button, the same course of action is taken as 
+    in Create Event. 
+
+    c. When a user presses Add Calendar, it allows the user to upload an XML file from a 
+    file explorer. When a user presses Save Calendar, it allows the user to save the current
+    schedules to a specified folder.
+
+    d. The schedule automatically opens to "None" selected. This is not an actual user, so
+   they do not have any events in their system.
+
+Changes to the controller:
+1. ViewFeatures interface implemented that reflects the range of user capability
+in the planner system. This includes creating an event, modifying an event, and uploading
+an XML file.
+2. The controller takes in a ReadOnlyPlanner model and the two view interfaces to 
+easily delegate functionality between them. For example, a schedule view cannot modify
+an event but an event view can.

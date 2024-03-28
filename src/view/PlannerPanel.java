@@ -5,16 +5,13 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.BasicStroke;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JPanel;
@@ -26,7 +23,6 @@ import javax.swing.JMenuBar;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 
-import javax.swing.event.MouseInputAdapter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.ViewFeatures;
@@ -34,18 +30,20 @@ import model.IEvent;
 import model.ITime;
 import model.IUser;
 import model.ReadOnlyPlanner;
+import model.Schedule;
 import model.Time;
+import model.User;
 
 import static model.Time.indexToTime;
 
+/**
+ * Represents the panel of the planner system that will be displayed on the view.
+ */
+
 public class PlannerPanel extends JPanel implements IScheduleView {
 
-  /**
-   * Our view will need to display a model, so it needs to get the current sequence from the model.
-   */
   private final ReadOnlyPlanner model;
-
-  private final List<ViewFeatures> featuresListeners;
+  private IUser currentUser;
 
   private final JButton scheduleEventButton;
 
@@ -59,17 +57,16 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
   protected final JMenuItem addCalendar;
   protected final JMenuItem saveCalendar;
-  private IUser currentUser;
 
 
   /**
    * Creates a panel that will house the view representation of the Simon game
    * with clicking capabilities.
+   *
    * @param model desired model to represent Simon game
    */
   public PlannerPanel(ReadOnlyPlanner model) {
     this.model = Objects.requireNonNull(model);
-    this.featuresListeners = new ArrayList<>();
     MouseListener listener = new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -97,6 +94,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
       }
     };
     this.addMouseListener(listener);
+
     this.setLayout(new BorderLayout());
 
     menuBar = new JMenuBar();
@@ -114,7 +112,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     scheduleEventButton.setActionCommand("Schedule Event");
     this.selectUserButton = new JComboBox<String>();
     selectUserButton.addItem("None");
-    for (IUser user: model.getUsers()) {
+    for (IUser user : model.getUsers()) {
       selectUserButton.addItem(user.getName());
     }
     selectUserButton.setActionCommand("Select User");
@@ -128,11 +126,13 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     this.setVisible(true);
   }
 
+
   /**
    * Sets the current user to what is selected in the appropriate button in the schedule view.
    */
   public void setCurrentUser() {
-    for (IUser user: model.getUsers()) {
+    this.currentUser = null;
+    for (IUser user : model.getUsers()) {
       if (user.getName().equals(
               Objects.requireNonNull(selectUserButton.getSelectedItem()).toString())) {
         this.currentUser = user;
@@ -141,28 +141,30 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   }
 
   /**
-   * Repaints the planner and the user's schedule.
+   * Reset/repaint the panel to display the user's schedule.
    */
   public void resetPanel() {
     this.paintComponent(getGraphics());
   }
 
-
   /**
-   * Retrieves the currently selected user.
+   * Observational method to retrieve the user whose schedule is being displayed.
    *
-   * @return the currently selected user
+   * @return the user being interacted with.
    */
-  public IUser getCurrentUser() {
-    return this.currentUser;
 
+  public IUser getCurrentUser() {
+    return Objects.requireNonNullElseGet(this.currentUser, () ->
+            new User("None", new Schedule(new ArrayList<>())));
   }
 
   /**
    * This method tells Swing what the "natural" size should be
    * for this panel.  Here, we set it to 500x500 pixels.
-   * @return  Our preferred *physical* size.
+   *
+   * @return Our preferred *physical* size.
    */
+
   @Override
   public Dimension getPreferredSize() {
     return new Dimension(500, 500);
@@ -174,36 +176,36 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * any dimension you want here, including the same as your physical
    * size (in which case each logical pixel will be the same size as a physical
    * pixel, but perhaps your calculations to position things might be trickier)
+   *
    * @return Our preferred *logical* size.
    */
+
   private Dimension getPreferredLogicalSize() {
     return new Dimension(100, 100);
   }
 
   @Override
   public void display(boolean show) {
-    // handled in frame, not implemented here
+    // only the view should be displayed with this method.
   }
 
   /**
    * Opens up the current user's schedule.
    */
+
   @Override
   public void openScheduleView() {
     try {
       for (IUser user : model.getUsers()) {
         if (user.getName().equals(currentUser.getName())) {
-          this.displayUserSchedule(user);
+          this.displayUserSchedule(user.getName());
         }
       }
-    }
-    catch (NullPointerException ignored) {
+    } catch (NullPointerException ignored) {
+      this.paintGridLines(this.getGraphics());
       System.out.println("No user selected");
     }
-
   }
-
-
 
   /**
    * Displays the desired user's schedule.
@@ -211,8 +213,15 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * @param userToShow desired user schedule to show
    */
   @Override
-  public void displayUserSchedule(IUser userToShow) {
-    this.resetPanel();
+  public void displayUserSchedule(String userToShow) {
+    if (userToShow.equals("None")) {
+      this.removeAll();
+      this.revalidate();
+      this.updateUI();
+      this.paintGridLines(this.getGraphics());
+    } else {
+      this.resetPanel();
+    }
 
     menuPanel.revalidate();
     menuPanel.repaint();
@@ -220,8 +229,8 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     menuBar.repaint();
     this.add(menuPanel, BorderLayout.SOUTH);
     this.add(menuBar, BorderLayout.NORTH);
-  }
 
+  }
 
   /**
    * Closes the current schedule view.
@@ -236,37 +245,34 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * creating and scheduling events, adding/saving calendars, and selecting a user.
    *
    * @param features available features
-   */
+   **/
+
   public void addFeatures(ViewFeatures features) {
 
-    createEventButton.addActionListener(evt -> features.resetPanelView(this.currentUser.getName()));
+    selectUserButton.addActionListener(evt ->
+            features.selectUserSchedule(
+                    Objects.requireNonNull(selectUserButton.getSelectedItem()).toString()));
+    selectUserButton.addActionListener(evt -> features.setCurrentUser());
+
+    createEventButton.addActionListener(evt ->
+            features.resetPanelView(this.getCurrentUser().getName()));
     createEventButton.addActionListener(evt -> features.openEventView());
 
-    selectUserButton.addActionListener(evt ->
-            features.selectUserSchedule(selectUserButton.getSelectedItem().toString()));
-    selectUserButton.addActionListener(evt -> features.setCurrentUser());
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
-    scheduleEventButton.addActionListener(evt ->
-            features.openEventView());
-    scheduleEventButton.addActionListener(evt ->
-            features.resetPanelView(this.currentUser.getName()));
-  }
 
-  /**
-   * Adds features listeners available on this panel.
-   *
-   * @param features available features
-   */
-  public void addFeaturesListener(ViewFeatures features) {
-    this.featuresListeners.add(Objects.requireNonNull(features));
+    scheduleEventButton.addActionListener(evt -> features.openEventView());
+    scheduleEventButton.addActionListener(evt ->
+            features.resetPanelView(this.getCurrentUser().getName()));
+
+
   }
 
   /**
    * Paints given event onto panel. If event goes in to following week, ends painting at
    * Saturday @23:59.
    *
-   * @param g Graphics to use
+   * @param g     Graphics to use
    * @param event IEvent to be painted
    */
   public void paintEvent(Graphics g, IEvent event) {
@@ -286,8 +292,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
     if (eventStartCoords[0] == eventEndCoords[0]) { // event starts + ends on same day
       g2d.fillRect(eventStartCoords[0], eventStartCoords[1], dayWidth, rectHeight);
-    }
-    else {
+    } else {
       // event goes to next week, changing end time to Sunday @23:59
       if (eventEndCoords[0] < eventStartCoords[0]) {
         endTime = new Time(Time.Day.SATURDAY, 23, 59);
@@ -307,7 +312,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
       this.paintFullDay(g, color, dayWidth, startTime, endTime);
 
       // draw the last day. starts at 00:00, ends at actual end of the event
-      int[] endDayCoords = this.timeToPaintLoc(indexToTime(endDayIndex,0));
+      int[] endDayCoords = this.timeToPaintLoc(indexToTime(endDayIndex, 0));
 
       g2d.fillRect(endDayCoords[0], endDayCoords[1], dayWidth, eventEndCoords[1]);
     }
@@ -316,11 +321,11 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   /**
    * Paints an entire day on the schedule starting from 00:00 to 23:59.
    *
-   * @param g Graphics
-   * @param color color of event to be painted
+   * @param g        Graphics
+   * @param color    color of event to be painted
    * @param dayWidth width of day, constant
    * @param startDay start day to be painted
-   * @param endDay end day to be painted
+   * @param endDay   end day to be painted
    */
   public void paintFullDay(Graphics g, Color color, int dayWidth, ITime startDay, ITime endDay) {
     Graphics2D g2d = (Graphics2D) g.create();
@@ -330,7 +335,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     // drawing each full day
     for (int indexFullDay = startDayIndex + 1; indexFullDay < endDayIndex; indexFullDay++) {
       // full day starts at time 00:00
-      int[] currDayCoords = this.timeToPaintLoc(indexToTime(indexFullDay,0));
+      int[] currDayCoords = this.timeToPaintLoc(indexToTime(indexFullDay, 0));
 
       g2d.fillRect(currDayCoords[0], currDayCoords[1], dayWidth, this.getHeight());
     }
@@ -369,7 +374,8 @@ public class PlannerPanel extends JPanel implements IScheduleView {
   }
 
   /**
-   * Painting the schedule grid and the schedule's events on to the panel.
+   * Paint the schedule frame background grid and the events of the corresponding
+   * schedule on top.
    *
    * @param g the <code>Graphics</code> object to protect
    */
@@ -379,18 +385,25 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     Graphics2D g2d = (Graphics2D) g.create();
     g2d.transform(transformLogicalToPhysical());
 
-    // painting schedule grid lines
-    this.paintLines(g2d, Color.GRAY, 8, 1, true);
-    this.paintLines(g2d, Color.GRAY, 25, 1, false);
-    this.paintLines(g2d, Color.BLACK, 7, 2, false);
+    this.paintGridLines(g);
 
     // painting all events on to schedule
     if (this.getCurrentUser() != null) {
-      for (IEvent event: model.retrieveUserEvents(this.getCurrentUser())) {
+      for (IEvent event : model.retrieveUserEvents(this.getCurrentUser())) {
         this.paintEvent(g, event);
       }
     }
 
+  }
+
+  protected void paintGridLines(Graphics g) {
+    Graphics2D g2d = (Graphics2D) g.create();
+    g2d.transform(transformLogicalToPhysical());
+
+    // painting schedule grid lines
+    this.paintLines(g2d, Color.GRAY, 8, 1, true);
+    this.paintLines(g2d, Color.GRAY, 25, 1, false);
+    this.paintLines(g2d, Color.BLACK, 7, 2, false);
   }
 
   /**
@@ -421,30 +434,29 @@ public class PlannerPanel extends JPanel implements IScheduleView {
           IEvent eventClicked = features.findEvent(timeOfEvent);
           features.openEventView();
           features.populateEvent(eventClicked);
-        }
-        catch (NullPointerException ignored) {
-          // click where no event is present
+        } catch (NullPointerException ignored) {
+          // click where no event is present, ignoring
         }
       }
 
       @Override
       public void mousePressed(MouseEvent e) {
-
+        // this is not used
       }
 
       @Override
       public void mouseReleased(MouseEvent e) {
-
+        // this is not used
       }
 
       @Override
       public void mouseEntered(MouseEvent e) {
-
+        // this is not used
       }
 
       @Override
       public void mouseExited(MouseEvent e) {
-
+        // this is not used
       }
     });
   }
@@ -453,7 +465,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * Allowing user to select an .xml file that contains the desired calendar.
    * Automatically starts in current directory.
    */
-  @Override
   public void addCalendarInfo() {
     JFileChooser chooser = new JFileChooser();
     FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -462,9 +473,9 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     chooser.setCurrentDirectory(workingDirectory);
     chooser.setFileFilter(filter);
     int returnVal = chooser.showOpenDialog(addCalendar);
-    if(returnVal == JFileChooser.APPROVE_OPTION) {
-      System.out.println("Selected file path: " +
-              chooser.getSelectedFile().getName());
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+      System.out.println("Selected file path: "
+              + chooser.getSelectedFile().getName());
     }
   }
 
@@ -479,9 +490,9 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     File workingDirectory = new File(System.getProperty("user.dir"));
     chooser.setCurrentDirectory(workingDirectory);
     int returnVal = chooser.showOpenDialog(saveCalendar);
-    if(returnVal == JFileChooser.APPROVE_OPTION) {
-      System.out.println("Selected folder for saving each xml: " +
-              chooser.getCurrentDirectory() +  "\\" + chooser.getSelectedFile().getName());
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+      System.out.println("Selected folder for saving each xml: "
+              + chooser.getCurrentDirectory() + "\\" + chooser.getSelectedFile().getName());
     }
   }
 
@@ -490,7 +501,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * same time, returns the earlier event.
    *
    * @param timeOfEvent desired time to search at
-   * @return Event occuring at that time, null otherwise
+   * @return Event occurring at that time, null otherwise
    */
   @Override
   public IEvent findEventAtTime(ITime timeOfEvent) {
@@ -501,11 +512,12 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * Paints desired number of equally spaced lines. Number of lines will include lines drawn on
    * the left and right sides of the bounds.
    * Can specify the color, width, and orientation of the lines.
-   * @param g instance of Graphics
-   * @param color desired color for lines
-   * @param numLines number of equally spaced lines desired. must be >= 2 to work
+   *
+   * @param g           instance of Graphics
+   * @param color       desired color for lines
+   * @param numLines    number of equally spaced lines desired. must be >= 2 to work
    * @param strokeWidth desired stroke width for lines
-   * @param vert true if vertical lines desired, false if horizontal
+   * @param vert        true if vertical lines desired, false if horizontal
    */
   private void paintLines(Graphics g, Color color, int numLines, int strokeWidth, boolean vert) {
     try {
@@ -522,22 +534,21 @@ public class PlannerPanel extends JPanel implements IScheduleView {
                   -1 * preferred.height,
                   (int) Math.round(lineSpacings[index] * preferred.width),
                   preferred.height);
-        }
-        else {
+        } else {
           g2d.drawLine(-1 * preferred.width,
                   (int) Math.round(lineSpacings[index] * preferred.height),
                   preferred.width,
                   (int) Math.round(lineSpacings[index] * preferred.height));
         }
       }
-    }
-    catch (IllegalArgumentException ex) {
-     // throw new IllegalArgumentException("number of lines must be >= 2");
+    } catch (IllegalArgumentException ex) {
+      // number of lines must be >= 2
     }
   }
 
   /**
    * Creates an array of given length consisting of equally spaced values from -1 to 1.
+   *
    * @param numLines number of lines desired in array. must be > 1
    * @return array of equally spaced values from -1 to 1
    * @throws IllegalArgumentException if the # of lines is <= 1
@@ -570,5 +581,4 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     ret.scale(1, -1);
     return ret;
   }
-
 }

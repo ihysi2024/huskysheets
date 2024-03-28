@@ -34,13 +34,6 @@ public interface ITime {
    */
   int compareTimes(ITime refTime);
 
-  /**
-   * Creates a String representation of this time in format "DATE: HH:MM".
-   *
-   * @return String rep of time in readable format
-   */
-  String timeToString();
-
 
   /**
    * Calculates the # of minutes since midnight that have passed prior to event beginning.

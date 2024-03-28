@@ -5,12 +5,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import static controller.UtilsXML.readXML;
 import static controller.UtilsXML.writeToFile;
 
 /**
@@ -53,14 +50,7 @@ public class User implements IUser {
     return this.schedule;
   }
 
-  /**
-   * Show the user's schedule in a text format.
-   * @return String representing the user's schedule
-   */
 
-  public String userToString() {
-    return "User: " + this.name + "\n" + this.schedule.scheduleToString();
-  }
 
   /**
    * Writes the user's schedule to an XML file that is unique to them and a given filepath.
@@ -85,8 +75,7 @@ public class User implements IUser {
     List<HashMap<String, String[]>> listEventsMap = new ArrayList<>();
     // create an empty list of events represented as events
     List<IEvent> listEvents = new ArrayList<>();
-    // open the XML as a document
- //   Document xmlDoc = readXML(filePath);
+
     // grab the schedule node and a list of its children nodes representing events
     Node scheduleNode = xmlDoc.getElementsByTagName("schedule").item(0);
     NodeList nodeList = scheduleNode.getChildNodes();
@@ -173,45 +162,44 @@ public class User implements IUser {
    */
   public static IEvent makeEvent(HashMap<String, String[]> eventToMake) {
     try {
-    // generate temporary values for the event
-    String tempEventName = "";
-    Time tempStartTime = null;
-    Time tempEndTime = null;
-    boolean online = true;
-    String location = "";
-    List<String> userList = new ArrayList<>();
+      // generate temporary values for the event
+      String tempEventName = "";
+      Time tempStartTime = null;
+      Time tempEndTime = null;
+      boolean online = true;
+      String location = "";
+      List<String> userList = new ArrayList<>();
 
-    // parse through each event attribute in the map
-    // the following array indexing is made with the assumption that
-    // 1. a name has only one element - indexed at 0
-    // 2. a time has 4 elements (start day, start time, end day, end time) - indexed 0 - 3
-    // 3. a location has 2 elements (online, location) - indexed from 0-1
-    // 4. users has n elements that can be added to the temp users list variable
-    for (String key : eventToMake.keySet()) {
-      if (key.equals("name")) {
-        tempEventName = eventToMake.get(key)[0];
-      }
-      if (key.equals("time")) {
-        tempStartTime = Time.stringToTime(eventToMake.get(key)[0], eventToMake.get(key)[1]);
-        tempEndTime = Time.stringToTime(eventToMake.get(key)[2], eventToMake.get(key)[3]);
-      }
-      if (key.equals("location")) {
-        online = (eventToMake.get(key)[0].equals("true"));
-        location = eventToMake.get(key)[1];
-      }
-      if (key.equals("users")) {
-        for (String userName : eventToMake.get(key)) {
-          userList.add(userName);
+      // parse through each event attribute in the map
+      // the following array indexing is made with the assumption that
+      // 1. a name has only one element - indexed at 0
+      // 2. a time has 4 elements (start day, start time, end day, end time) - indexed 0 - 3
+      // 3. a location has 2 elements (online, location) - indexed from 0-1
+      // 4. users has n elements that can be added to the temp users list variable
+      for (String key : eventToMake.keySet()) {
+        if (key.equals("name")) {
+          tempEventName = eventToMake.get(key)[0];
+        }
+        if (key.equals("time")) {
+          tempStartTime = Time.stringToTime(eventToMake.get(key)[0], eventToMake.get(key)[1]);
+          tempEndTime = Time.stringToTime(eventToMake.get(key)[2], eventToMake.get(key)[3]);
+        }
+        if (key.equals("location")) {
+          online = (eventToMake.get(key)[0].equals("true"));
+          location = eventToMake.get(key)[1];
+        }
+        if (key.equals("users")) {
+          for (String userName : eventToMake.get(key)) {
+            userList.add(userName);
+          }
+
+          //  userList.addAll(Arrays.asList(eventToMake.get(key)));
         }
 
-        //  userList.addAll(Arrays.asList(eventToMake.get(key)));
       }
-
-    }
       return new Event(tempEventName, tempStartTime, tempEndTime, online, location, userList);
-  }
+    }
     // input these variables to a new event and return it
-
     catch (IllegalArgumentException e) {
       return null;
     }

@@ -1,11 +1,15 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
 import model.PlannerSystem;
+import model.Schedule;
+import model.User;
 import view.IEventView;
+import view.IScheduleTextView;
 import view.IScheduleView;
 
 /**
@@ -17,6 +21,8 @@ public class Controller implements ViewFeatures {
   private IScheduleView scheduleView;
 
   private IEventView eventView;
+
+  private IScheduleTextView scheduleTextView;
 
   /**
    * Creates an instance of a Calendar Controller that responds to user input via mouse clicks
@@ -45,10 +51,14 @@ public class Controller implements ViewFeatures {
     eventView.addFeatures(this);
   }
 
+  public void setTextView(IScheduleTextView v) {
+    scheduleTextView = v;
+  }
+
   /**
    * Listen to user input and visualize the game.
    */
-  public void goPlayGame() {
+  public void goLaunchPlanner() {
     this.scheduleView.addClickListener(this);
     this.scheduleView.display(true);
   }
@@ -74,11 +84,17 @@ public class Controller implements ViewFeatures {
    * @param userName name to cross-reference with set of users in the system.
    */
   public void selectUserSchedule(String userName) {
+
+    scheduleView.displayUserSchedule(userName);
+
+    /*
     for (IUser user: model.getUsers()) {
       if (user.getName().equals(userName)) {
         scheduleView.displayUserSchedule(user);
       }
     }
+     */
+
   }
 
   /**
@@ -140,7 +156,8 @@ public class Controller implements ViewFeatures {
       eventView.modifyEvent(event);
     }
     catch (IllegalArgumentException | NullPointerException exc) {
-      throw new IllegalArgumentException("Error in modifying event: given event not part of system.");
+      throw new IllegalArgumentException("Error in modifying event: " +
+              "given event not part of system.");
     }
   }
 
@@ -150,17 +167,19 @@ public class Controller implements ViewFeatures {
    * @param eventToRemove event that the model should remove.
    */
   public void removeEvent(IEvent eventToRemove) {
-
     try {
       ITime startTime = eventToRemove.getStartTime();
-      IEvent userEventAtStartTime = scheduleView.getCurrentUser().getSchedule().eventOccurring(startTime);
-      System.out.println("user event at time: " + userEventAtStartTime.eventToString());
-      System.out.println("event to remove: " + eventToRemove.eventToString());
+      IEvent userEventAtStartTime =
+              scheduleView.getCurrentUser().getSchedule().eventOccurring(startTime);
+      System.out.println("user event at time: "
+              + scheduleTextView.eventToString(userEventAtStartTime));
+      System.out.println("event to remove: "
+              + scheduleTextView.eventToString(eventToRemove));
       if (eventToRemove.equals(userEventAtStartTime)) {
         System.out.println("Remove event: ");
-        System.out.println("User from which event is being removed: " +
-                scheduleView.getCurrentUser().getName());
-        System.out.println(eventToRemove.eventToString());
+        System.out.println("User from which event is being removed: "
+                + scheduleView.getCurrentUser().getName());
+        System.out.println(scheduleTextView.eventToString(eventToRemove));
       }
       else {
         System.out.println("Error in removing event: Given event not part of system, check inputs");

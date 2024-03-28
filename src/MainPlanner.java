@@ -14,8 +14,13 @@ import view.EventView;
 import view.IEventView;
 import view.IScheduleTextView;
 import view.IScheduleView;
+import view.ScheduleTextView;
 import view.ScheduleView;
 
+/**
+ * Represents the class that allows the user to run the calendar system end to end
+ * through the graphical user interface.
+ */
 public class MainPlanner {
   /**
    * Main method to play an instance of Simon Game.
@@ -48,14 +53,15 @@ public class MainPlanner {
             new Schedule(new ArrayList<>(List.of(morningSnack, officeHours, sleep)))));
     model.addUser(new User("Me", new Schedule(new ArrayList<>(List.of(officeHours)))));
 
-    //  IScheduleView view = new ScheduleView(model);
-    IScheduleView schedView = new ScheduleView(model); // (michelle) currently working on event view so changed this here + in controller.
+    IScheduleView schedView = new ScheduleView(model);
     IEventView eView = new EventView(model);
+    IScheduleTextView tView = new ScheduleTextView(model, new StringBuilder());
     Controller controller = new Controller(model);
 
     controller.setScheduleView(schedView);
     controller.setEventView(eView);
-    controller.goPlayGame();
+    controller.setTextView(tView);
+    controller.goLaunchPlanner();
   }
 
 }

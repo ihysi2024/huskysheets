@@ -1,14 +1,14 @@
 package controller;
 
-import java.awt.*;
 import java.util.HashMap;
-import java.util.List;
 
-import model.Event;
 import model.IEvent;
 import model.ITime;
-import model.ReadOnlyPlanner;
-import model.Time;
+
+/**
+ * Represents the features that the user is allowed to use to interact
+ * with the calendar system.
+ */
 
 public interface ViewFeatures {
 

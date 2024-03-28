@@ -1,7 +1,9 @@
 package view;
 
 import java.util.HashMap;
-import javax.swing.*;
+
+import javax.swing.JFrame;
+
 import controller.ViewFeatures;
 
 import model.IEvent;

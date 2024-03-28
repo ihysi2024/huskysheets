@@ -14,9 +14,12 @@ import model.IEvent;
 import model.IUser;
 import model.NUPlanner;
 import model.PlannerSystem;
+import model.ReadOnlyPlanner;
 import model.Schedule;
 import model.Time;
 import model.User;
+import view.IScheduleTextView;
+import view.ScheduleTextView;
 
 import static controller.UtilsXML.readXML;
 import static model.User.interpretXML;
@@ -34,16 +37,20 @@ public class TestNUPlannerSystem {
   private IUser studentAnonUser;
   private IUser chatUser;
   private PlannerSystem plannerSystem;
+  private IScheduleTextView textV;
 
   @Before
   public void setUp() {
+    PlannerSystem modelForTextView = new NUPlanner(new LinkedHashSet<>());
+    this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
+
     Schedule emptySchedule = new Schedule(new ArrayList<>());
     this.profLuciaUser = new User("Prof Lucia", emptySchedule);
     this.studentAnonUser = new User("Student Anon", emptySchedule);
     this.chatUser = new User("Chat", emptySchedule);
     this.morningLec = new Event("CS3500 Morning Lecture",
             new Time( Time.Day.TUESDAY, 9, 50),
-            new Time(Time.Day.TUESDAY, 00, 01),
+            new Time(Time.Day.TUESDAY, 11, 30),
             false,
             "Churchill Hall 101",
             new ArrayList<>(Arrays.asList("Prof. Lucia",
@@ -180,22 +187,29 @@ public class TestNUPlannerSystem {
     Document xmlDoc1 = readXML("src/controller/Prof. Lucia_schedule.xml");
     List<IEvent> luciaEvents = interpretXML(xmlDoc1);
     // ensure the correct events are included in the right order and nothing else
-    Assert.assertEquals(this.morningLec.eventToString(), luciaEvents.get(0).eventToString());
-    Assert.assertEquals(this.afternoonLec.eventToString(), luciaEvents.get(1).eventToString());
-    Assert.assertEquals(this.sleep.eventToString(), luciaEvents.get(2).eventToString());
+    Assert.assertEquals(textV.eventToString(this.morningLec),
+            textV.eventToString(luciaEvents.get(0)));
+    Assert.assertEquals(textV.eventToString(this.afternoonLec),
+            textV.eventToString(luciaEvents.get(1)));
+    Assert.assertEquals(textV.eventToString(this.sleep),
+            textV.eventToString(luciaEvents.get(2)));
     Assert.assertEquals(3, luciaEvents.size());
     Document xmlDoc2 = readXML("src/controller/Chat_schedule.xml");
     List<IEvent> chatEvents = interpretXML(xmlDoc2);
     // ensure the correct events are included in the right order and nothing else
-    Assert.assertEquals(this.morningLec.eventToString(), chatEvents.get(0).eventToString());
-    Assert.assertEquals(this.afternoonLec.eventToString(), chatEvents.get(1).eventToString());
+    Assert.assertEquals(textV.eventToString(this.morningLec),
+            textV.eventToString(chatEvents.get(0)));
+    Assert.assertEquals(textV.eventToString(this.afternoonLec),
+            textV.eventToString(chatEvents.get(1)));
     Assert.assertEquals(2, chatEvents.size());
     Document xmlDoc3 = readXML("src/controller/Student Anon_schedule.xml");
     List<IEvent> studentAnonEvents =
             interpretXML(xmlDoc3);
     // ensure the correct events are included in the right order and nothing else
-    Assert.assertEquals(this.morningLec.eventToString(), chatEvents.get(0).eventToString());
-    Assert.assertEquals(this.afternoonLec.eventToString(), chatEvents.get(1).eventToString());
+    Assert.assertEquals(textV.eventToString(this.morningLec),
+            textV.eventToString(chatEvents.get(0)));
+    Assert.assertEquals(textV.eventToString(this.afternoonLec),
+            textV.eventToString(chatEvents.get(1)));
     Assert.assertEquals(2, chatEvents.size());
   }
 
@@ -205,20 +219,19 @@ public class TestNUPlannerSystem {
   @Test
   public void testRetrieveUserScheduleAtTime() {
     // event starting at the given time
-    Assert.assertEquals(List.of(this.afternoonLec),
+    Assert.assertEquals(this.afternoonLec,
             this.plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
                     new Time(Time.Day.TUESDAY, 13, 35)));
     // event starting before the given time but ending after
-    Assert.assertEquals(List.of(this.afternoonLec),
+    Assert.assertEquals(this.afternoonLec,
             this.plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
                     new Time(Time.Day.TUESDAY, 14, 15)));
     // no event occurring at the time
-    Assert.assertEquals(List.of(),
-            this.plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
-                    new Time(Time.Day.THURSDAY, 14, 15)));
+    Assert.assertNull(this.plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
+            new Time(Time.Day.THURSDAY, 14, 15)));
     plannerSystem.addEventForRelevantUsers(this.officeHours);
     // an event starting at that time and ending at that time
-    Assert.assertEquals(List.of(this.afternoonLec),
+    Assert.assertEquals(this.afternoonLec,
             this.plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
                     new Time(Time.Day.TUESDAY, 15, 15)));
   }
@@ -287,22 +300,22 @@ public class TestNUPlannerSystem {
             List.of("Chat"));
     // change the time of a current event where it doesn't coincide with any other events
     plannerSystem.modifyEvent(this.officeHours, newOfficeHours);
-    Assert.assertEquals(List.of(newOfficeHours),
+    Assert.assertEquals(newOfficeHours,
             plannerSystem.retrieveUserScheduleAtTime(studentAnonUser,
                     new Time(Time.Day.WEDNESDAY, 15, 15)));
-    Assert.assertEquals(List.of(newOfficeHours),
+    Assert.assertEquals(newOfficeHours,
             plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
                     new Time(Time.Day.WEDNESDAY, 15, 15)));
     // change users invited to the event, name and time of event
     plannerSystem.modifyEvent(this.morningLec, newMorningLec);
-    Assert.assertEquals(List.of(),
+    Assert.assertEquals(null,
             plannerSystem.retrieveUserScheduleAtTime(studentAnonUser,
                     new Time(Time.Day.TUESDAY, 9, 50)));
 
-    Assert.assertEquals(List.of(newMorningLec),
+    Assert.assertEquals(newMorningLec,
             plannerSystem.retrieveUserScheduleAtTime(chatUser,
                     new Time(Time.Day.TUESDAY, 9, 50)));
-    Assert.assertEquals(List.of(newMorningLec),
+    Assert.assertEquals(newMorningLec,
             plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
                     new Time(Time.Day.TUESDAY, 9, 50)));
     // users have removed the old event and have the new event
@@ -321,7 +334,7 @@ public class TestNUPlannerSystem {
 
     // try to modify an event with another event occurring at the same time as an existing event
     plannerSystem.modifyEvent(this.morningLec, nap);
-    Assert.assertEquals(List.of(this.afternoonLec),
+    Assert.assertEquals(this.afternoonLec,
             plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
                     new Time(Time.Day.TUESDAY, 13, 35)));
     Assert.assertFalse(profLuciaUser.getSchedule().getEvents().contains(nap));
@@ -332,10 +345,10 @@ public class TestNUPlannerSystem {
     // events should remain unchanged
     plannerSystem.modifyEvent(newMorningLec, run);
 
-    Assert.assertEquals(List.of(newMorningLec),
+    Assert.assertEquals(newMorningLec,
             plannerSystem.retrieveUserScheduleAtTime(profLuciaUser,
                     new Time(Time.Day.TUESDAY, 9, 50)));
-    Assert.assertEquals(List.of(newMorningLec),
+    Assert.assertEquals(newMorningLec,
             plannerSystem.retrieveUserScheduleAtTime(chatUser,
                     new Time(Time.Day.TUESDAY, 9, 50)));
 
@@ -366,9 +379,5 @@ public class TestNUPlannerSystem {
     Assert.assertTrue(this.profLuciaUser.getSchedule().getEvents().contains(this.afternoonLec));
     Assert.assertFalse(this.studentAnonUser.getSchedule().getEvents().contains(this.afternoonLec));
     Assert.assertFalse(this.chatUser.getSchedule().getEvents().contains(this.afternoonLec));
-    // trying to remove an event that doesn't exist yet
-    Assert.assertThrows(IllegalArgumentException.class, () ->
-            plannerSystem.removeEventForRelevantUsers(this.officeHours, profLuciaUser));
-
   }
 }

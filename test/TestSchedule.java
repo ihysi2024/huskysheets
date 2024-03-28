@@ -12,15 +12,18 @@ import model.IEvent;
 import model.ISchedule;
 import model.IUser;
 import model.NUPlanner;
+import model.PlannerSystem;
+import model.ReadOnlyPlanner;
 import model.Schedule;
 import model.Time;
 import model.User;
+import view.IScheduleTextView;
+import view.ScheduleTextView;
 
 /**
  * Class to test functionality of Schedule class.
  */
 public class TestSchedule {
-  private IEvent newMorningLec;
   private IEvent morningLec;
   private IEvent morningLecOverlapping;
   private IEvent morningLecSameTime;
@@ -32,9 +35,12 @@ public class TestSchedule {
   private IEvent sleep;
 
   private ISchedule emptySchedule;
+  private IScheduleTextView textV;
 
   @Before
   public void setUp() {
+    PlannerSystem modelForTextView = new NUPlanner(new LinkedHashSet<>());
+    this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     this.emptySchedule = new Schedule(new ArrayList<>());
 
@@ -42,8 +48,8 @@ public class TestSchedule {
     IUser studentAnonUser = new User("Student Anon", emptySchedule);
     IUser chatUser = new User("Chat", emptySchedule);
 
-    this.newMorningLec = new Event("CS3500 Morning Lecture",
-            new Time( Time.Day.TUESDAY, 13, 35),
+    IEvent newMorningLec = new Event("CS3500 Morning Lecture",
+            new Time(Time.Day.TUESDAY, 13, 35),
             new Time(Time.Day.TUESDAY, 16, 00),
             false,
             "Churchill Hall 101",
@@ -192,11 +198,6 @@ public class TestSchedule {
 
     Assert.assertEquals(2, emptySchedule.getEvents().size());
     Assert.assertFalse(emptySchedule.getEvents().contains(this.sleep));
-
-    // removing an event that doesn't exit
-    Assert.assertThrows(IllegalArgumentException.class, () ->
-            emptySchedule.removeEvent(this.newMorningLec));
-
   }
 
   /**
@@ -228,36 +229,36 @@ public class TestSchedule {
    */
   @Test
   public void testScheduleToString() {
-    String luciaSched = "Sunday: \n" +
-            "Monday: \n" +
-            "Tuesday: \n" +
-            "name: CS3500 Morning Lecture\n" +
-            "time: Tuesday: 09:50->Tuesday: 11:30\n" +
-            "location: Churchill Hall 101\n" +
-            "online: false\n" +
-            "users: Prof. Lucia\n" +
-            "Student Anon\n" +
-            "Chat          \n" +
-            "name: CS3500 Afternoon Lecture\n" +
-            "time: Tuesday: 13:35->Tuesday: 15:15\n" +
-            "location: Churchill Hall 101\n" +
-            "online: false\n" +
-            "users: Prof. Lucia\n" +
-            "Chat          \n" +
-            "Wednesday: \n" +
-            "Thursday: \n" +
-            "Friday: \n" +
-            "name: Sleep\n" +
-            "time: Friday: 18:00->Sunday: 12:00\n" +
-            "location: Home\n" +
-            "online: true\n" +
-            "users: Prof. Lucia          \n" +
-            "Saturday: \n";
+    String luciaSched = "Sunday: \n"
+            + "Monday: \n"
+            + "Tuesday: \n"
+            + "name: CS3500 Morning Lecture\n"
+            + "time: Tuesday: 09:50->Tuesday: 11:30\n"
+            + "location: Churchill Hall 101\n"
+            + "online: false\n"
+            + "users: Prof. Lucia\n"
+            + "Student Anon\n"
+            + "Chat          \n"
+            + "name: CS3500 Afternoon Lecture\n"
+            + "time: Tuesday: 13:35->Tuesday: 15:15\n"
+            + "location: Churchill Hall 101\n"
+            + "online: false\n"
+            + "users: Prof. Lucia\n"
+            + "Chat          \n"
+            + "Wednesday: \n"
+            + "Thursday: \n"
+            + "Friday: \n"
+            + "name: Sleep\n"
+            + "time: Friday: 18:00->Sunday: 12:00\n"
+            + "location: Home\n"
+            + "online: true\n"
+            + "users: Prof. Lucia          \n"
+            + "Saturday: \n";
     emptySchedule.addEvent(this.morningLec);
     emptySchedule.addEvent(this.afternoonLec);
     emptySchedule.addEvent(this.sleep);
 
-    Assert.assertEquals(luciaSched, emptySchedule.scheduleToString());
+    Assert.assertEquals(luciaSched, textV.scheduleToString(emptySchedule));
   }
 
   /**

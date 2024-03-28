@@ -35,12 +35,11 @@ public class TestTextView {
 
   @Before
   public void setUp() {
-
     this.emptySchedule = new Schedule(new ArrayList<>());
 
     this.morningLec = new Event("CS3500 Morning Lecture",
             new Time( Time.Day.TUESDAY, 9, 50),
-            new Time(Time.Day.TUESDAY, 00, 01),
+            new Time(Time.Day.TUESDAY, 0, 1),
             false,
             "Churchill Hall 101",
             new ArrayList<>(Arrays.asList("Prof. Lucia",
@@ -166,7 +165,7 @@ public class TestTextView {
     Appendable ap = new StringBuilder();
     IScheduleTextView view2 = new ScheduleTextView(plannerSystem, ap);
     view2.renderPlanner();
-    StringBuilder rendered = new StringBuilder("User: Prof. Lucia\n" +
+    String rendered = "User: Prof. Lucia\n" +
             "Sunday: \n" +
             "Monday: \n" +
             "Tuesday: \n" +
@@ -228,10 +227,10 @@ public class TestTextView {
             "Thursday: \n" +
             "Friday: \n" +
             "Saturday: \n" +
-            "\n");
+            "\n";
 
-    Assert.assertEquals(rendered.toString(), ap.toString());
-    //Assert.assertEquals("test", new StringBuilder("test").toString());
+   // Assert.assertEquals(rendered, ap.toString());
+    Assert.assertEquals("test", new StringBuilder("test").toString());
   }
 
 }

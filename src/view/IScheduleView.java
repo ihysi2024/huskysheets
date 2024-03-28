@@ -1,15 +1,14 @@
 package view;
 
-import java.awt.*;
-
-import controller.Controller;
 import controller.ViewFeatures;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
-import model.ReadOnlyPlanner;
-import model.User;
 
+/**
+ * Represents the interface for a schedule view to be implemented through a panel
+ * and frame.
+ */
 public interface IScheduleView {
 
   /**
@@ -41,7 +40,7 @@ public interface IScheduleView {
    *
    * @param userToShow desired user schedule to show
    */
-  void displayUserSchedule(IUser userToShow);
+  void displayUserSchedule(String userToShow);
 
   /**
    * Closes the current schedule view.

@@ -34,12 +34,6 @@ public interface ISchedule {
    */
   HashMap<Time.Day, List<IEvent>> dayToEventsMappping();
 
-  /**
-   * Convert the schedule to a string format for XML exportation.
-   *
-   * @return a string representing the schedule
-   */
-  String scheduleToString();
 
   /**
    * Convert the schedule to proper XML format for exportation.

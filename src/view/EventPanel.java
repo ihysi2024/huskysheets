@@ -23,6 +23,8 @@ import javax.swing.event.MouseInputAdapter;
 import controller.ViewFeatures;
 import model.IEvent;
 import model.IUser;
+import model.NUPlanner;
+import model.PlannerSystem;
 import model.ReadOnlyPlanner;
 import model.Time;
 
@@ -47,6 +49,9 @@ public class EventPanel extends JPanel implements IEventView {
   private final JButton modifyEvent;
   private final JButton removeEvent;
   private final JButton saveEvent;
+
+  private IScheduleTextView textV;
+
 
   /**
    * TEXT FIELDS.
@@ -160,6 +165,11 @@ public class EventPanel extends JPanel implements IEventView {
 
     setVisible(true);
 
+    // NOTE: PlannerSystem model is only integrated for code reuse purposes.
+    // HW8 requires that create event, modify event, and remove event print
+    // the event's information to the console, which is a method implemented
+    // in the IScheduleTextView interface and ScheduleTextView class.
+
   }
 
   /**
@@ -171,10 +181,10 @@ public class EventPanel extends JPanel implements IEventView {
   public void populateEventContents(IEvent event) {
     eventName.setText(event.getEventName());
     startDay.setSelectedIndex(event.getStartTime().getDate().getDayIdx());
-    startTime.setText(String.valueOf(event.getStartTime().getHours())
+    startTime.setText(event.getStartTime().getHours()
             + String.valueOf(event.getStartTime().getMinutes()));
     endDay.setSelectedIndex(event.getEndTime().getDate().getDayIdx());
-    endTime.setText(String.valueOf(event.getEndTime().getHours())
+    endTime.setText(event.getEndTime().getHours()
             + String.valueOf(event.getEndTime().getMinutes()));
     location.setText(event.getLocation());
 
@@ -209,7 +219,6 @@ public class EventPanel extends JPanel implements IEventView {
    *
    * @return a String[] of the event time
    */
-
   public String[] getTimeInput() {
     return new String[]{startDay.getSelectedItem().toString(), startTime.getText(),
             endDay.getSelectedItem().toString(), endTime.getText()};
@@ -264,18 +273,17 @@ public class EventPanel extends JPanel implements IEventView {
    * @param host host of the event
    */
   public void resetPanel(String host) {
-    System.out.println("got here");
     eventName.setText("");
     startTime.setText("");
     endTime.setText("");
     location.setText("");
-    usersList.getAnchorSelectionIndex();
-    usersList.getSelectedValuesList();
-    for (String user : usersList.getSelectedValuesList()) {
-      System.out.println("usersss: " + user);
+    usersList.clearSelection();
+    // always selecting this schedule's user as an invitee to event
+    for (int index = 0; index < usersList.getModel().getSize(); index++) {
+      if (usersList.getModel().getElementAt(index).equals(host)) {
+        usersList.addSelectionInterval(index, index);
+      }
     }
-   // System.out.println("index: " + index);
-   // usersList.addSelectionInterval(index, index);
   }
 
   /**
@@ -353,24 +361,18 @@ public class EventPanel extends JPanel implements IEventView {
    * Store the user's input as an event that is added to their schedule.
    */
   public void createEvent() {
+    PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
+    IScheduleTextView textV = new ScheduleTextView(modelForTextView, new StringBuilder());
     HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
     try {
       IEvent eventMade = makeEvent(eventMap);
       System.out.println("Create event: ");
-      System.out.println(eventMade.eventToString());
-      /*
-      for (IUser user : model.getUsers()) {
-        for (String userName : this.getUsersInput()) {
-          if (userName.contains(user.getName())) {
-            user.addEventForUser(eventMade);
-          }
-        }
-      }
-       */
+      System.out.println(textV.eventToString(eventMade));
+
     } catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Could not create event: " +
-              "Event info not fully entered, error in given values, " +
-              "or event already exists at that time");
+      System.out.println("Could not create event: "
+              + "Event info not fully entered, error in given values, "
+              + "or event already exists at that time");
     }
   }
 
@@ -380,8 +382,10 @@ public class EventPanel extends JPanel implements IEventView {
    * @param event represents the updated event
    */
   public void modifyEvent(IEvent event) {
+    PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
+    IScheduleTextView textV = new ScheduleTextView(modelForTextView, new StringBuilder());
     System.out.println("Modify event: ");
-    System.out.println(event.eventToString());
+    System.out.println(textV.eventToString(event));
   }
 
   /**

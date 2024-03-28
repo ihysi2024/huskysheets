@@ -64,13 +64,6 @@ public interface IEvent {
   int hashCode();
 
   /**
-   * Formats this event as a String to easily interpret this event's contents and aid in testing.
-   *
-   * @return user-friendly representation of this event
-   */
-  String eventToString();
-
-  /**
    * Parses through each field of this event and adds the proper XML tags around each field.
    *
    * @return String represenation of event with proper XML tags.

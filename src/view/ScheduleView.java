@@ -1,5 +1,7 @@
 package view;
 
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
 import controller.ViewFeatures;
@@ -8,9 +10,13 @@ import model.ITime;
 
 import model.IUser;
 import model.ReadOnlyPlanner;
+import model.Schedule;
+import model.User;
 
 /**
- * Creates a frame for a schedule. This frame will be used to draw the planner system within it,
+<<<<<<< HEAD
+ * Represents the view of the planner system through the GUI. Creates a frame for a schedule.
+ * This frame will be used to draw the planner system within it,
  * including the schedules and the buttons related to its functionality.
  */
 public class ScheduleView extends JFrame implements IScheduleView {
@@ -23,7 +29,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
    */
   public ScheduleView(ReadOnlyPlanner model) {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     this.panel = new PlannerPanel(model);
     this.add(panel);
     this.setVisible(true);
@@ -45,9 +50,8 @@ public class ScheduleView extends JFrame implements IScheduleView {
   }
 
   /**
-   * Retrieves the currently selected user.
-   *
-   * @return the currently selected user
+   * Observational method to retrieve the user whose schedule is being displayed.
+   * @return the user being interacted with.
    */
   public IUser getCurrentUser() {
     return panel.getCurrentUser();
@@ -102,7 +106,7 @@ public class ScheduleView extends JFrame implements IScheduleView {
    */
   @Override
   public IEvent findEventAtTime(ITime timeOfEvent) {
-    return this.panel.findEventAtTime(timeOfEvent);
+    return panel.findEventAtTime(timeOfEvent);
   }
 
   /**
@@ -112,7 +116,7 @@ public class ScheduleView extends JFrame implements IScheduleView {
    */
   @Override
   public void display(boolean show) {
-    this.setVisible(show);
+    this.setVisible(true);
   }
 
   /**
@@ -123,14 +127,13 @@ public class ScheduleView extends JFrame implements IScheduleView {
     panel.openScheduleView();
   }
 
-
   /**
    * Displays the desired user's schedule.
    *
    * @param userToShow desired user schedule to show
    */
   @Override
-  public void displayUserSchedule(IUser userToShow) {
+  public void displayUserSchedule(String userToShow) {
     panel.displayUserSchedule(userToShow);
   }
 
