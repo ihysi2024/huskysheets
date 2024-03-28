@@ -87,7 +87,7 @@ public class Time implements ITime {
    * @return # of minutes since midnight until beginning of event
    */
   public int minutesSinceMidnight() {
-    return 60*this.getHours() + this.getMinutes();
+    return 60 * this.getHours() + this.getMinutes();
   }
 
   /**
@@ -151,8 +151,6 @@ public class Time implements ITime {
       }
     }
     if (time.length() != 4) {
-      System.out.println("day string: " + day);
-      System.out.println("time string: " + time);
       throw new IllegalArgumentException("invalid time input");
     }
 
@@ -169,7 +167,7 @@ public class Time implements ITime {
 
 
   /**
-   * Creates a time from the given day index and time
+   * Creates a time from the given day index and time.
    *
    * @param dayIndex day of the week
    * @param totMinutes minutes of the time

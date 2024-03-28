@@ -7,9 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import model.Event;
+import model.NUPlanner;
+import model.PlannerSystem;
+import model.ReadOnlyPlanner;
 import model.Schedule;
 import model.Time;
 import model.User;
+import view.IScheduleTextView;
+import view.ScheduleTextView;
 
 /**
  * Class to test the functionality of the Event class.
@@ -24,8 +29,14 @@ public class TestEvent {
   private Event afternoonLecOverlapping;
   private Event afternoonLecEndAfter;
 
+  private IScheduleTextView textV;
+  private ReadOnlyPlanner model;
+
   @Before
   public void setUp() {
+    PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
+    this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
+
     Schedule emptySchedule = new Schedule(new ArrayList<>());
 
     User profLuciaUser = new User("Prof Lucia", emptySchedule);
@@ -163,15 +174,15 @@ public class TestEvent {
   @Test
   public void testObservationalMethods() {
     // observe the start time of the event
-    Assert.assertEquals(new Time(Time.Day.TUESDAY, 9, 50).timeToString(),
-            this.morningLec.getStartTime().timeToString());
-    Assert.assertEquals(new Time(Time.Day.TUESDAY, 13, 35).timeToString(),
-            this.afternoonLec.getStartTime().timeToString());
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.TUESDAY, 9, 50)),
+            textV.timeToString(this.morningLec.getStartTime()));
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.TUESDAY, 13, 35)),
+            textV.timeToString(this.afternoonLec.getStartTime()));
     // observe the end time of the event
-    Assert.assertEquals(new Time(Time.Day.TUESDAY, 11, 30).timeToString(),
-            this.morningLec.getEndTime().timeToString());
-    Assert.assertEquals(new Time(Time.Day.TUESDAY, 15, 15).timeToString(),
-            this.afternoonLec.getEndTime().timeToString());
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.TUESDAY, 11, 30)),
+            textV.timeToString(this.morningLec.getEndTime()));
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.TUESDAY, 15, 15)),
+            textV.timeToString(this.afternoonLec.getEndTime()));
     // observe the users of the event
     Assert.assertEquals(List.of("Prof. Lucia", "Student Anon", "Chat"), this.morningLec.getUsers());
     Assert.assertEquals(List.of("Prof. Lucia", "Chat"), this.afternoonLec.getUsers());
@@ -207,23 +218,23 @@ public class TestEvent {
    */
   @Test
   public void testEventToString() {
-    String morningLec = "name: CS3500 Morning Lecture\n" +
-            "time: Tuesday: 09:50->Tuesday: 11:30\n" +
-            "location: Churchill Hall 101\n" +
-            "online: false\n" +
-            "users: Prof. Lucia\n" +
-            "Student Anon\n" +
-            "Chat";
-    Assert.assertEquals(morningLec, this.morningLec.eventToString());
+    String morningLec = "name: CS3500 Morning Lecture\n"
+            + "time: Tuesday: 09:50->Tuesday: 11:30\n"
+            + "location: Churchill Hall 101\n"
+            + "online: false\n"
+            + "users: Prof. Lucia\n"
+            + "Student Anon\n"
+            + "Chat";
+    Assert.assertEquals(morningLec, textV.eventToString(this.morningLec));
 
-    String afternoonLec  = "name: CS3500 Afternoon Lecture\n" +
-            "time: Tuesday: 13:35->Tuesday: 15:15\n" +
-            "location: Churchill Hall 101\n" +
-            "online: false\n" +
-            "users: Prof. Lucia\n" +
-            "Chat";
+    String afternoonLec  = "name: CS3500 Afternoon Lecture\n"
+            + "time: Tuesday: 13:35->Tuesday: 15:15\n"
+            + "location: Churchill Hall 101\n"
+            + "online: false\n"
+            + "users: Prof. Lucia\n"
+            + "Chat";
 
-    Assert.assertEquals(afternoonLec , this.afternoonLec.eventToString());
+    Assert.assertEquals(afternoonLec , textV.eventToString(this.afternoonLec));
 
   }
 
@@ -254,42 +265,42 @@ public class TestEvent {
   public void testEventToXML() {
     String indents5 = " ".repeat(5);
     String indents10 = " ".repeat(10);
-    String morningLecXML = "<event>\n" +
-            indents5 + "<name>CS3500 Morning Lecture</name>\n" +
-            indents5 + "<time>\n" +
-            indents10 + "<start-day>TUESDAY</start-day>\n" +
-            indents10 + "<start>0950</start>\n" +
-            indents10 + "<end-day>TUESDAY</end-day>\n" +
-            indents10 + "<end>1130</end>\n" +
-            indents5 + "</time>\n" +
-            indents5 + "<location>\n" +
-            indents10 + "<online>false</online>\n" +
-            indents10 + "<place>Churchill Hall 101</place>\n" +
-            indents5 + "</location>\n" +
-            indents5 + "<users>\n" +
-            indents10 + "<uid>Prof. Lucia</uid>\n" +
-            indents10 + "<uid>Student Anon</uid>\n" +
-            indents10 + "<uid>Chat</uid>\n" +
-            indents5 + "</users>\n" +
-            "</event>";
+    String morningLecXML = "<event>\n"
+            + indents5 + "<name>CS3500 Morning Lecture</name>\n"
+            + indents5 + "<time>\n"
+            + indents10 + "<start-day>TUESDAY</start-day>\n"
+            + indents10 + "<start>0950</start>\n"
+            + indents10 + "<end-day>TUESDAY</end-day>\n"
+            + indents10 + "<end>1130</end>\n"
+            + indents5 + "</time>\n"
+            + indents5 + "<location>\n"
+            + indents10 + "<online>false</online>\n"
+            + indents10 + "<place>Churchill Hall 101</place>\n"
+            + indents5 + "</location>\n"
+            + indents5 + "<users>\n"
+            + indents10 + "<uid>Prof. Lucia</uid>\n"
+            + indents10 + "<uid>Student Anon</uid>\n"
+            + indents10 + "<uid>Chat</uid>\n"
+            + indents5 + "</users>\n"
+            + "</event>";
     Assert.assertEquals(morningLecXML, this.morningLec.eventToXMLFormat());
-    String afternoonLecXML = "<event>\n" +
-            indents5 + "<name>CS3500 Afternoon Lecture</name>\n" +
-            indents5 + "<time>\n" +
-            indents10 + "<start-day>TUESDAY</start-day>\n" +
-            indents10 + "<start>1335</start>\n" +
-            indents10 + "<end-day>TUESDAY</end-day>\n" +
-            indents10 + "<end>1515</end>\n" +
-            indents5 + "</time>\n" +
-            indents5 + "<location>\n" +
-            indents10 + "<online>false</online>\n" +
-            indents10 + "<place>Churchill Hall 101</place>\n" +
-            indents5 + "</location>\n" +
-            indents5 + "<users>\n" +
-            indents10 + "<uid>Prof. Lucia</uid>\n" +
-            indents10 + "<uid>Chat</uid>\n" +
-            indents5 + "</users>\n" +
-            "</event>";
+    String afternoonLecXML = "<event>\n"
+            + indents5 + "<name>CS3500 Afternoon Lecture</name>\n"
+            + indents5 + "<time>\n"
+            + indents10 + "<start-day>TUESDAY</start-day>\n"
+            + indents10 + "<start>1335</start>\n"
+            + indents10 + "<end-day>TUESDAY</end-day>\n"
+            + indents10 + "<end>1515</end>\n"
+            + indents5 + "</time>\n"
+            + indents5 + "<location>\n"
+            + indents10 + "<online>false</online>\n"
+            + indents10 + "<place>Churchill Hall 101</place>\n"
+            + indents5 + "</location>\n"
+            + indents5 + "<users>\n"
+            + indents10 + "<uid>Prof. Lucia</uid>\n"
+            + indents10 + "<uid>Chat</uid>\n"
+            + indents5 + "</users>\n"
+            + "</event>";
     Assert.assertEquals(afternoonLecXML, this.afternoonLec.eventToXMLFormat());
   }
 }

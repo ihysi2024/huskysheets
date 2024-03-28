@@ -3,6 +3,10 @@ package model;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Represents the observational interface for the calendar system that
+ * the user interacts with through the view and controller.
+ */
 public interface ReadOnlyPlanner {
 
   /**
@@ -16,9 +20,8 @@ public interface ReadOnlyPlanner {
   IEvent retrieveUserScheduleAtTime(IUser user, ITime givenTime);
 
   /**
-   * User list
+   * Retrieves the set of users in the planner system.
    */
-
   Set<IUser> getUsers();
 
   /**

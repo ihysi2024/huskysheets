@@ -1,14 +1,14 @@
 package controller;
 
-import java.awt.*;
 import java.util.HashMap;
-import java.util.List;
 
-import model.Event;
 import model.IEvent;
 import model.ITime;
-import model.ReadOnlyPlanner;
-import model.Time;
+
+/**
+ * Represents the features that the user is allowed to use to interact
+ * with the calendar system.
+ */
 
 public interface ViewFeatures {
 
@@ -46,12 +46,10 @@ public interface ViewFeatures {
   /**
    * Delegate to the view of the event to take in a current event as a map of its contents
    * and modify it.
-   * @param eventMap a String of content tags to a String[] of content values
-   * @param model observational planner system the controller reflects.
+   * @param event a String of content tags to a String[] of content values
    */
+  void modifyEvent(IEvent event);
 
-
-  void modifyEvent(HashMap<String, String[]> eventMap, ReadOnlyPlanner model);
 
   /**
    * Delegates to the view fo the even to populate the fields in the panel
@@ -100,9 +98,11 @@ public interface ViewFeatures {
 
   /**
    * Delegates to the view of the event to create empty fields in the panel.
+   *
+   * @param host host of the event
    */
 
-  void resetPanelView();
+  void resetPanelView(String host);
 
   /**
    * Delegate to the view of the schedule to add the calendar info to the planner system.

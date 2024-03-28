@@ -10,7 +10,6 @@ import model.ITime;
 import model.IUser;
 import model.PlannerSystem;
 import model.Time;
-import model.User;
 
 /**
  * Represents a textual view of the planner system.
@@ -49,7 +48,7 @@ public class ScheduleTextView implements IScheduleTextView {
    * @return String representing the user's schedule
    */
 
-  private String userToString(IUser user) {
+  public String userToString(IUser user) {
     return "User: " + user.getName() + "\n" + this.scheduleToString(user.getSchedule());
   }
 
@@ -58,7 +57,7 @@ public class ScheduleTextView implements IScheduleTextView {
    *
    * @return a string representing the schedule
    */
-  private String scheduleToString(ISchedule schedule) {
+  public String scheduleToString(ISchedule schedule) {
     StringBuilder scheduleStr = new StringBuilder();
     HashMap<Time.Day, List<IEvent>> eventsMap = schedule.dayToEventsMappping();
     for (Time.Day dayOfTheWeek: eventsMap.keySet()) {
@@ -76,7 +75,7 @@ public class ScheduleTextView implements IScheduleTextView {
    *
    * @return user-friendly representation of this event
    */
-  private String eventToString(IEvent event) {
+  public String eventToString(IEvent event) {
     return "name: " + event.getEventName() + "\n"
             + "time: " + this.timeToString(event.getStartTime()) + "->"
             + this.timeToString(event.getEndTime()) + "\n"
@@ -89,7 +88,8 @@ public class ScheduleTextView implements IScheduleTextView {
    *
    * @return String rep of time in readable format
    */
-  private String timeToString(ITime time) {
+
+  public String timeToString(ITime time) {
     String hoursStr = "" + time.getHours();
     String minutesStr = "" + time.getMinutes();
     if (time.getHours() < 10) {

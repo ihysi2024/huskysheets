@@ -1,7 +1,9 @@
 package view;
 
 import java.util.HashMap;
-import javax.swing.*;
+
+import javax.swing.JFrame;
+
 import controller.ViewFeatures;
 
 import model.IEvent;
@@ -33,7 +35,6 @@ public class EventView extends JFrame implements IEventView {
    * Store the user's input as an event that is added to their schedule.
    * Delegate to the panel.
    */
-
   public void createEvent() {
     panel.createEvent();
   }
@@ -44,7 +45,6 @@ public class EventView extends JFrame implements IEventView {
    * Delegate to the panel.
    * @param event event to visualize in the event panel.
    */
-
   public void populateEventContents(IEvent event) {
     this.panel.populateEventContents(event);
   }
@@ -54,7 +54,6 @@ public class EventView extends JFrame implements IEventView {
    * Delegate to the panel.
    * @return a String[] of the event name
    */
-
   @Override
   public String[] getEventNameInput() {
     return panel.getEventNameInput();
@@ -65,7 +64,6 @@ public class EventView extends JFrame implements IEventView {
    * Delegate to the panel.
    * @return a String[] of the event time
    */
-
   @Override
   public String[] getTimeInput() {
     return panel.getTimeInput();
@@ -76,7 +74,6 @@ public class EventView extends JFrame implements IEventView {
    * Delegate to the panel.
    * @return a String[] of the location
    */
-
   @Override
   public String[] getLocationInput() {
     return panel.getLocationInput();
@@ -86,10 +83,11 @@ public class EventView extends JFrame implements IEventView {
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * Delegate to the panel.
    * after an event has already been created.
+   *
+   * @param host host of the event
    */
-
-  public void resetPanel() {
-    panel.resetPanel();
+  public void resetPanel(String host) {
+    panel.resetPanel(host);
   }
 
   /**
@@ -97,7 +95,6 @@ public class EventView extends JFrame implements IEventView {
    * Delegate to the panel.
    * @return a String[] of the location
    */
-
   @Override
   public String[] getUsersInput() {
     return panel.getUsersInput();
@@ -107,9 +104,9 @@ public class EventView extends JFrame implements IEventView {
    * Store the current event's inputs as a map of String -> String[]
    * Useful for modifying an event with the current panel inputs.
    * Delegate to the panel.
+   *
    * @return a map of strings to string[]
    */
-
   @Override
   public HashMap<String, String[]> storeOpenedEventMap() {
     return panel.storeOpenedEventMap();
@@ -118,50 +115,36 @@ public class EventView extends JFrame implements IEventView {
   /**
    * Modify an event with the user's new input to the event panel.
    * Delegate to the panel.
-   * @param eventMap represents the updated event
+   *
+   * @param event represents the updated event
    */
-
-  public void modifyEvent(HashMap<String, String[]> eventMap) {
-    panel.modifyEvent(eventMap);
+  public void modifyEvent(IEvent event) {
+    panel.modifyEvent(event);
   }
 
   /**
    * Allow the user to interact with the calendar through the features present
    * in the event view.
    * Delegate to the panel.
+   *
    * @param features functionality that the user has access to through the event view.
    */
-
   @Override
   public void addFeatures(ViewFeatures features) {
     panel.addFeatures(features);
-    //saveEvent.addActionListener(evt -> features.displayUserSchedule());
-    //Event oldEvent = features.storeEvent();
-    //System.out.println(oldEvent.getEventName());
   }
 
   /**
    * Close the event view so it stops being visible.
    */
-
   public void closeEvent() {
     this.setVisible(false);
-  }
-
-  /**
-   * Display the view.
-   * @param show whether to the display or not
-   */
-
-  @Override
-  public void display(boolean show) {
   }
 
   /**
    * Open the event view for the user to see.
    * Delegate to the panel.
    */
-
   public void openEvent() {
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setVisible(true);

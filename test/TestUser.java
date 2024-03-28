@@ -10,10 +10,17 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import model.Event;
+import model.IEvent;
+import model.ISchedule;
+import model.IUser;
 import model.NUPlanner;
+import model.PlannerSystem;
+import model.ReadOnlyPlanner;
 import model.Schedule;
 import model.Time;
 import model.User;
+import view.IScheduleTextView;
+import view.ScheduleTextView;
 
 import static controller.UtilsXML.readXML;
 import static model.User.interpretXML;
@@ -23,19 +30,25 @@ import static model.User.makeEvent;
  * Class to test functionality of User class.
  */
 public class TestUser {
-  private Event morningLec;
-  private Event morningSnack;
-  private Event afternoonLec;
-  private Event officeHours;
-  private Event sleep;
-  private Schedule luciaSchedule;
-  private Schedule studentAnonSchedule;
-  private User profLuciaUser;
-  private User studentAnonUser;
-  private User chatUser;
+  private IEvent morningLec;
+  private IEvent morningSnack;
+  private IEvent afternoonLec;
+  private IEvent officeHours;
+  private IEvent sleep;
+  private ISchedule luciaSchedule;
+  private ISchedule studentAnonSchedule;
+  private IUser profLuciaUser;
+  private IUser studentAnonUser;
+  private IUser chatUser;
+
+  private IScheduleTextView textV;
+  private ReadOnlyPlanner model;
+
 
   @Before
   public void setUp() {
+    PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
+    this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     Schedule emptySchedule = new Schedule(new ArrayList<>());
 
@@ -161,7 +174,7 @@ public class TestUser {
             List.of("Student Anon",
                     "Prof. Lucia"));
 
-    LinkedHashSet<User> users = new LinkedHashSet<>();
+    LinkedHashSet<IUser> users = new LinkedHashSet<>();
     users.add(this.profLuciaUser);
     users.add(this.studentAnonUser);
     users.add(this.chatUser);
@@ -214,26 +227,26 @@ public class TestUser {
     String saturdayLine = "Saturday: \n";
 
     // grabbing different parts of the schedule from the userToString method
-    String sundaySubstring = this.profLuciaUser.userToString()
-            .substring(this.profLuciaUser.userToString().indexOf("Sunday"),
-                    this.profLuciaUser.userToString().indexOf("Monday"));
-    String mondaySubstring = this.profLuciaUser.userToString()
-            .substring(this.profLuciaUser.userToString().indexOf("Monday"),
-                    this.profLuciaUser.userToString().indexOf("Tuesday"));
-    String tuesdaySubstring = this.profLuciaUser.userToString()
-            .substring(this.profLuciaUser.userToString().indexOf("Tuesday"),
-                    this.profLuciaUser.userToString().indexOf("Wednesday"));
-    String wednesdaySubstring = this.profLuciaUser.userToString()
-            .substring(this.profLuciaUser.userToString().indexOf("Wednesday"),
-                    this.profLuciaUser.userToString().indexOf("Thursday"));
-    String thursdaySubstring = this.profLuciaUser.userToString()
-            .substring(this.profLuciaUser.userToString().indexOf("Thursday"),
-                    this.profLuciaUser.userToString().indexOf("Friday"));
-    String fridaySubstring = this.profLuciaUser.userToString()
-            .substring(this.profLuciaUser.userToString().indexOf("Friday"),
-                    this.profLuciaUser.userToString().indexOf("Saturday"));
-    String saturdaySubstring = this.profLuciaUser.userToString()
-            .substring(this.profLuciaUser.userToString().indexOf("Saturday"));
+    String sundaySubstring = textV.userToString(this.profLuciaUser)
+            .substring(textV.userToString(this.profLuciaUser).indexOf("Sunday"),
+                    textV.userToString(this.profLuciaUser).indexOf("Monday"));
+    String mondaySubstring = textV.userToString(this.profLuciaUser)
+            .substring(textV.userToString(this.profLuciaUser).indexOf("Monday"),
+                    textV.userToString(this.profLuciaUser).indexOf("Tuesday"));
+    String tuesdaySubstring = textV.userToString(this.profLuciaUser)
+            .substring(textV.userToString(this.profLuciaUser).indexOf("Tuesday"),
+                    textV.userToString(this.profLuciaUser).indexOf("Wednesday"));
+    String wednesdaySubstring = textV.userToString(this.profLuciaUser)
+            .substring(textV.userToString(this.profLuciaUser).indexOf("Wednesday"),
+                    textV.userToString(this.profLuciaUser).indexOf("Thursday"));
+    String thursdaySubstring = textV.userToString(this.profLuciaUser)
+            .substring(textV.userToString(this.profLuciaUser).indexOf("Thursday"),
+                    textV.userToString(this.profLuciaUser).indexOf("Friday"));
+    String fridaySubstring = textV.userToString(this.profLuciaUser)
+            .substring(textV.userToString(this.profLuciaUser).indexOf("Friday"),
+                    textV.userToString(this.profLuciaUser).indexOf("Saturday"));
+    String saturdaySubstring = textV.userToString(this.profLuciaUser)
+            .substring(textV.userToString(this.profLuciaUser).indexOf("Saturday"));
     // check if each day lists the correct events
     Assert.assertEquals(sundayLine, sundaySubstring);
     Assert.assertEquals(mondayLine, mondaySubstring);
@@ -256,21 +269,25 @@ public class TestUser {
     this.profLuciaUser.userSchedToXML("src/controller/");
     // try grabbing the events
     Document xmlDoc1 = readXML("src/controller/Prof. Lucia_schedule.xml");
-    List<Event> luciaEvents = interpretXML(xmlDoc1);
+    List<IEvent> luciaEvents = interpretXML(xmlDoc1);
     // ensure the correct events are included in the right order and nothing else
-    Assert.assertEquals(this.morningLec.eventToString(), luciaEvents.get(0).eventToString());
-    Assert.assertEquals(this.afternoonLec.eventToString(), luciaEvents.get(1).eventToString());
-    Assert.assertEquals(this.sleep.eventToString(), luciaEvents.get(2).eventToString());
+    Assert.assertEquals(textV.eventToString(this.morningLec),
+            textV.eventToString(luciaEvents.get(0)));
+    Assert.assertEquals(textV.eventToString(this.afternoonLec),
+            textV.eventToString(luciaEvents.get(1)));
+    Assert.assertEquals(textV.eventToString(this.sleep), textV.eventToString(luciaEvents.get(2)));
     Assert.assertEquals(3, luciaEvents.size());
 
     // write a schedule to a file for Chat
     this.chatUser.userSchedToXML("src/controller/");
     Document xmlDoc2 = readXML("src/controller/Chat_schedule.xml");
     // try grabbing the events
-    List<Event> chatEvents = interpretXML(xmlDoc2);
+    List<IEvent> chatEvents = interpretXML(xmlDoc2);
     // ensure the correct events are included in the right order and nothing else
-    Assert.assertEquals(this.morningLec.eventToString(), chatEvents.get(0).eventToString());
-    Assert.assertEquals(this.afternoonLec.eventToString(), chatEvents.get(1).eventToString());
+    Assert.assertEquals(textV.eventToString(this.morningLec),
+            textV.eventToString(chatEvents.get(0)));
+    Assert.assertEquals(textV.eventToString(this.afternoonLec),
+            textV.eventToString(chatEvents.get(1)));
     Assert.assertEquals(2, chatEvents.size());
   }
 

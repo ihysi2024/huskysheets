@@ -2,7 +2,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.NUPlanner;
+import model.PlannerSystem;
+import model.ReadOnlyPlanner;
 import model.Time;
+import view.IScheduleTextView;
+import view.ScheduleTextView;
 
 /**
  * Class to test functionality of Time class.
@@ -17,9 +22,14 @@ public class TestTime {
   private Time satOnePMTwo;
   private Time sunThreePM;
   private Time monFiveAM;
+  private IScheduleTextView textV;
+  private ReadOnlyPlanner model;
 
   @Before
   public void setUp() {
+    PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
+    this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
+
     this.satOnePM = new Time(Time.Day.SATURDAY, 13, 0);
     this.tues10AM = new Time(Time.Day.TUESDAY, 10, 0);
     this.tues10PM = new Time(Time.Day.TUESDAY, 22, 0);
@@ -43,28 +53,28 @@ public class TestTime {
 
   @Test
   public void testStringToTime() {
-    Assert.assertEquals(new Time(Time.Day.TUESDAY, 9, 50).timeToString(),
-            Time.stringToTime("Tuesday", "0950").timeToString());
-    Assert.assertEquals(new Time(Time.Day.SUNDAY, 11, 49).timeToString(),
-            Time.stringToTime("Sunday", "1149").timeToString());
-    Assert.assertEquals(new Time(Time.Day.FRIDAY, 0, 8).timeToString(),
-            Time.stringToTime("FRIDAY", "0008").timeToString());
-    Assert.assertEquals(new Time(Time.Day.WEDNESDAY, 12, 48).timeToString(),
-            Time.stringToTime("wednesday", "1248").timeToString());
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.TUESDAY, 9, 50)),
+            textV.timeToString(Time.stringToTime("Tuesday", "0950")));
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.SUNDAY, 11, 49)),
+            textV.timeToString(Time.stringToTime("Sunday", "1149")));
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.FRIDAY, 0, 8)),
+            textV.timeToString(Time.stringToTime("FRIDAY", "0008")));
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.WEDNESDAY, 12, 48)),
+            textV.timeToString(Time.stringToTime("wednesday", "1248")));
   }
 
   @Test
   public void testTimeToString() {
-    Assert.assertEquals(new Time(Time.Day.TUESDAY, 9, 50).timeToString(),
-            Time.stringToTime("tuesday", "0950").timeToString());
-    Assert.assertEquals(new Time(Time.Day.MONDAY, 1, 12).timeToString(),
-            Time.stringToTime("MONDAY", "0112").timeToString());
-    Assert.assertEquals(new Time(Time.Day.THURSDAY, 23, 59).timeToString(),
-            Time.stringToTime("thursday", "2359").timeToString());
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.TUESDAY, 9, 50)),
+            textV.timeToString(Time.stringToTime("tuesday", "0950")));
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.MONDAY, 1, 12)),
+            textV.timeToString(Time.stringToTime("MONDAY", "0112")));
+    Assert.assertEquals(textV.timeToString(new Time(Time.Day.THURSDAY, 23, 59)),
+           textV.timeToString( Time.stringToTime("thursday", "2359")));
 
-    Assert.assertEquals("Monday: 05:00", this.monFiveAM.timeToString());
-    Assert.assertEquals("Saturday: 13:00", this.satOnePMTwo.timeToString());
-    Assert.assertEquals("Thursday: 12:00", this.thursNoon.timeToString());
+    Assert.assertEquals("Monday: 05:00", textV.timeToString(this.monFiveAM));
+    Assert.assertEquals("Saturday: 13:00", textV.timeToString(this.satOnePMTwo));
+    Assert.assertEquals("Thursday: 12:00", textV.timeToString(this.thursNoon));
   }
 
   @Test

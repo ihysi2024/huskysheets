@@ -3,11 +3,8 @@ package view;
 import java.util.HashMap;
 
 import controller.ViewFeatures;
-import model.Event;
 import model.IEvent;
-import model.IUser;
-import model.ReadOnlyPlanner;
-import model.User;
+
 
 /**
  * Frame for the event window.
@@ -20,17 +17,10 @@ public interface IEventView {
    */
   void addFeatures(ViewFeatures features);
 
-  /**
-   * Display the view.
-   * @param show whether to the display or not
-   */
-
-  void display(boolean show);
 
   /**
    * Close the event view so it stops being visible.
    */
-
   void closeEvent();
 
   /**
@@ -71,24 +61,24 @@ public interface IEventView {
 
   /**
    * Modify an event with the user's new input to the event panel.
-   * @param eventMap represents the updated event
-   * @param model observational planner system to use.
+   * @param event represents the updated event
    */
 
-  void modifyEvent(HashMap<String, String[]> eventMap);
+  void modifyEvent(IEvent event);
+
+  /**
+   * Resets the panel to its originally empty fields. Useful for trying to create a new event
+   * after an event has already been created.
+   *
+   * @param host host of the event
+   */
+
+  void resetPanel(String host);
 
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
    */
-
-  void resetPanel();
-
-  /**
-   * Resets the panel to its originally empty fields. Useful for trying to create a new event
-   * after an event has already been created.
-   */
-
   void openEvent();
 
   /**
