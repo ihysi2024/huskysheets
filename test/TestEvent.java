@@ -10,7 +10,6 @@ import java.util.List;
 import model.Event;
 import model.NUPlanner;
 import model.PlannerSystem;
-import model.ReadOnlyPlanner;
 import model.Schedule;
 import model.Time;
 import model.User;

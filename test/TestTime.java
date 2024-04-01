@@ -6,7 +6,6 @@ import java.util.LinkedHashSet;
 
 import model.NUPlanner;
 import model.PlannerSystem;
-import model.ReadOnlyPlanner;
 import model.Time;
 import view.IScheduleTextView;
 import view.ScheduleTextView;

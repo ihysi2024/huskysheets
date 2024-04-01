@@ -1,7 +1,5 @@
 package view;
 
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 
 import controller.ViewFeatures;
@@ -10,8 +8,6 @@ import model.ITime;
 
 import model.IUser;
 import model.ReadOnlyPlanner;
-import model.Schedule;
-import model.User;
 
 /**
 <<<<<<< HEAD

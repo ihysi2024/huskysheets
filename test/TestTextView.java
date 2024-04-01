@@ -229,7 +229,7 @@ public class TestTextView {
             "Saturday: \n" +
             "\n";
 
-   // Assert.assertEquals(rendered, ap.toString());
+    // Assert.assertEquals(rendered, ap.toString());
     Assert.assertEquals("test", new StringBuilder("test").toString());
   }
 

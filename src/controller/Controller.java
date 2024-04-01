@@ -1,13 +1,9 @@
 package controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import model.IEvent;
 import model.ITime;
-import model.IUser;
 import model.PlannerSystem;
-import model.Schedule;
-import model.User;
 import view.IEventView;
 import view.IScheduleTextView;
 import view.IScheduleView;
@@ -16,7 +12,6 @@ import view.IScheduleView;
  * Controller to control the functions of the Simon Game.
  */
 public class Controller implements ViewFeatures {
-  private final PlannerSystem model;
 
   private IScheduleView scheduleView;
 
@@ -30,7 +25,7 @@ public class Controller implements ViewFeatures {
    * @param model model of calendar implementations reflected by controller
    */
   public Controller(PlannerSystem model) {
-    this.model = model;
+    // creates a controller using given model
   }
 
   /**

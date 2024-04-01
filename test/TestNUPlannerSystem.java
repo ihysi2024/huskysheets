@@ -14,7 +14,6 @@ import model.IEvent;
 import model.IUser;
 import model.NUPlanner;
 import model.PlannerSystem;
-import model.ReadOnlyPlanner;
 import model.Schedule;
 import model.Time;
 import model.User;
