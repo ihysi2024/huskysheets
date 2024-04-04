@@ -1,10 +1,12 @@
 package model;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
+
+import static controller.UtilsXML.readXML;
+import static model.User.interpretXML;
 
 /**
  * Planner system that contains a set of users and their corresponding schedules.
@@ -21,22 +23,22 @@ public class NUPlanner implements PlannerSystem {
    * users cannot be added to the system by the inclusion of a set of users
    * instead of a list.
    */
-  private final Set<IUser> users;
+  private List<IUser> users;
 
   /**
    * Initialize a planner system with a given set of users.
    *
    * @param users non-duplicate user list in the system
    */
-  public NUPlanner(Set<IUser> users) {
-    this.users = new LinkedHashSet<>(users);
+  public NUPlanner(List<IUser> users) {
+    this.users = new ArrayList<>(users);
   }
 
   /**
    * Initialize a planner system with an empty list of users.
    */
   public NUPlanner() {
-    this.users = new LinkedHashSet<>();
+    this.users = new ArrayList<>();
   }
 
   /**
@@ -44,8 +46,32 @@ public class NUPlanner implements PlannerSystem {
    * @return a set of users
    */
 
-  public Set<IUser> getUsers() {
+  public List<IUser> getUsers() {
     return this.users;
+  }
+
+  /**
+   * Adds a user to the planner system with the schedule provided in the file path's XML
+   *
+   * @param filePath file path to read XML schedule from
+   */
+  // how do we know what user's schedule we're adding this to?? how are we making a new user??
+  //
+  @Override
+  public void importScheduleFromXML(String filePath) {
+    this.users.add(interpretXML(readXML(filePath))); // adding new user to planner system
+
+    // adding this user's events to each existing schedule
+    int numUsers = this.users.size();
+    System.out.println("size: " + numUsers);
+    for (IUser currUser : this.users) {
+      System.out.println("curr user: " + currUser.getName());
+    }
+    List<IEvent> newUserEvents = this.users.get(numUsers - 1).getSchedule().getEvents();
+    ArrayList<IEvent> arrNewUserEvents = new ArrayList<>(newUserEvents);
+    for (IEvent eventToAdd : arrNewUserEvents) {
+      this.addEventForRelevantUsers(eventToAdd);
+    }
   }
 
   /**
@@ -88,12 +114,15 @@ public class NUPlanner implements PlannerSystem {
    * @param eventToAdd event to add to the relevant user schedule
    */
   public void addEventForRelevantUsers(IEvent eventToAdd) {
+   // System.out.println("current event adding: " + eventToAdd.getEventName());
     for (IUser currUser : this.users) {
       if (eventToAdd.getUsers().contains(currUser.getName())) {
+      //  System.out.println("current user adding event to: " + currUser.getName());
         try {
           // add event to current user's schedule
-          currUser.addEventForUser(eventToAdd);
+          currUser.addEventForUser(eventToAdd); // make sure event isn't being added for ira again
         } catch (IllegalArgumentException e) {
+          //throw new IllegalArgumentException("Cannot add event for: " + currUser.getName());
           // event is not added because it overlaps
         }
       }
@@ -152,7 +181,9 @@ public class NUPlanner implements PlannerSystem {
   public void removeEventForRelevantUsers(IEvent eventToRemove, IUser userRemovingEvent) {
     Iterator<IUser> iterUsers = this.users.iterator();
 
-    if (userRemovingEvent.getName().equals(eventToRemove.getUsers().get(0))) {
+    String hostOfEvent = eventToRemove.getUsers().get(0);
+
+    if (userRemovingEvent.getName().equals(hostOfEvent)) { // host removing event, remove for all
       while (iterUsers.hasNext()) {
         IUser currUser = iterUsers.next();
         if (eventToRemove.getUsers().contains(currUser.getName())) {
@@ -163,13 +194,55 @@ public class NUPlanner implements PlannerSystem {
           // given event is not in schedule
           catch (IllegalArgumentException e) {
             // ignoring exception because event will not be removed for this user
+            System.out.println("given event not part of this user's schedule: " + currUser.getName());
+            //throw new IllegalArgumentException("given event not part of this user's schedule");
           }
         }
       }
     }
-    // just an invitee trying to remove an event
+    // just an invitee trying to remove an event, removing event + updating invitee list for all
     else {
       userRemovingEvent.removeEventForUser(eventToRemove);
+      removeUserFromEventList(eventToRemove, userRemovingEvent);
+      //eventToRemove.removeUserFromList(userRemovingEvent.getName());
+     // for (String userName : eventToRemove.getUsers()) {
+      //  System.out.println("updated user in event to remove: " + userName);
+     // }
+    }
+  }
+
+  /**
+   * Remove a user from the event list for every other person in planner system
+   * that is also invited to the given event.
+   *
+   * @param event event to updated in planner system
+   * @param userToRemove user being removed from the event
+   */
+  @Override
+  public void removeUserFromEventList(IEvent event, IUser userToRemove) {
+    // loop through all of the users
+    // if the given event is part of their schedule, remove this user from their user list
+    // can you just edit the actual event's user list??
+    for (IUser currUser : this.users) {
+      if (event.getUsers().contains(currUser.getName())) {
+        for (int eventIdx = 0; eventIdx < currUser.getSchedule().getEvents().size(); eventIdx++) {
+          IEvent currEvent = currUser.getSchedule().getEvents().get(eventIdx);
+        //  if ((event.getEventName().equals(currEvent.getEventName())) &&
+         //         (event.getStartTime() == currEvent.getStartTime())) {
+            if (event.getEventName().equals(currEvent.getEventName())) {
+            currEvent.removeUserFromList(userToRemove.getName());
+          }
+        }
+      }
+
+      /*
+            for (IEvent eventForThisUser : currUser.getSchedule().getEvents()) {
+        if (eventForThisUser.) {
+          System.out.println("for this user: " + currUser.getName() + ", found event: " + event.getEventName());
+          event.removeUserFromList(userToRemove.getName());
+        }
+      }
+       */
     }
   }
 

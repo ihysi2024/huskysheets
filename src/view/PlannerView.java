@@ -15,7 +15,7 @@ import model.ReadOnlyPlanner;
  * This frame will be used to draw the planner system within it,
  * including the schedules and the buttons related to its functionality.
  */
-public class ScheduleView extends JFrame implements IScheduleView {
+public class PlannerView extends JFrame implements IScheduleView {
 
   private final PlannerPanel panel;
 
@@ -23,7 +23,7 @@ public class ScheduleView extends JFrame implements IScheduleView {
    * Creates a view of the planner system view.
    * @param model desired model to represent a planner system
    */
-  public ScheduleView(ReadOnlyPlanner model) {
+  public PlannerView(ReadOnlyPlanner model) {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.panel = new PlannerPanel(model);
     this.add(panel);
@@ -77,10 +77,16 @@ public class ScheduleView extends JFrame implements IScheduleView {
   /**
    * Allowing user to select an .xml file that contains the desired calendar.
    * Automatically starts in current directory.
+   * @return String of selected file path
    */
   @Override
-  public void addCalendarInfo() {
-    panel.addCalendarInfo();
+  public String addCalendarInfo() {
+    return panel.addCalendarInfo();
+  }
+
+  @Override
+  public void addUserToDropdown(String userName) {
+    panel.addUserToDropdown(userName);
   }
 
   /**
@@ -88,9 +94,8 @@ public class ScheduleView extends JFrame implements IScheduleView {
    * Automatically starts in current directory.
    */
   @Override
-  public void saveCalendarInfo() {
-    panel.saveCalendarInfo();
-
+  public String saveCalendarInfo() {
+    return panel.saveCalendarInfo();
   }
 
   /**

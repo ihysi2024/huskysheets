@@ -70,7 +70,7 @@ public class User implements IUser {
    */
 
   // should take in a Document instead - if not a bit of coupling but okay
-  public static List<IEvent> interpretXML(Document xmlDoc) {
+  public static IUser interpretXML(Document xmlDoc) {
     // create an empty list of events represented as hashmaps
     List<HashMap<String, String[]>> listEventsMap = new ArrayList<>();
     // create an empty list of events represented as events
@@ -79,6 +79,9 @@ public class User implements IUser {
     // grab the schedule node and a list of its children nodes representing events
     Node scheduleNode = xmlDoc.getElementsByTagName("schedule").item(0);
     NodeList nodeList = scheduleNode.getChildNodes();
+
+    Element elemSched = (Element) scheduleNode;
+    String userName = elemSched.getAttribute("id");
 
     // go through each event in the schedule
     for (int item = 0; item < nodeList.getLength(); item++) {
@@ -112,7 +115,8 @@ public class User implements IUser {
     for (HashMap<String, String[]> eventMapping : listEventsMap) {
       listEvents.add(makeEvent(eventMapping));
     }
-    return listEvents;
+    ArrayList<IEvent> events = new ArrayList<>(listEvents);
+    return new User(userName, new Schedule(events));
   }
 
   /**

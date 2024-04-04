@@ -29,6 +29,13 @@ public interface IScheduleView {
   void setCurrentUser();
 
   /**
+   * Adds specified user to list of users to select from
+   *
+   * @param userName name of user to add
+   */
+  void addUserToDropdown(String userName);
+
+  /**
    * Retrieves the currently selected user.
    *
    * @return the currently selected user
@@ -66,14 +73,16 @@ public interface IScheduleView {
   /**
    * Allowing user to select an .xml file that contains the desired calendar.
    * Automatically starts in current directory.
+   * @return String of the selected file path
    */
-  void addCalendarInfo();
+  String addCalendarInfo();
 
   /**
    * Allowing user to select a folder where they will export the user schedules.
    * Automatically starts in current directory.
+   * @return String of the selected file path
    */
-  void saveCalendarInfo();
+  String saveCalendarInfo();
 
   /**
    * Finds the event that is occurring at the specified time. If two events start and end at the

@@ -2,6 +2,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import model.NUPlanner;
@@ -27,7 +28,7 @@ public class TestTime {
 
   @Before
   public void setUp() {
-    PlannerSystem modelForTextView = new NUPlanner(new LinkedHashSet<>());
+    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>());
     this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     this.satOnePM = new Time(Time.Day.SATURDAY, 13, 0);

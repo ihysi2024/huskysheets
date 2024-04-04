@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<schedule id='Ira'><event>
+     <name>snack</name>
+     <time>
+          <start-day>MONDAY</start-day>
+          <start>1030</start>
+          <end-day>TUESDAY</end-day>
+          <end>1145</end>
+     </time>
+     <location>
+          <online>false</online>
+          <place>Churchill Hall 101</place>
+     </location>
+     <users>
+          <uid>Ira</uid>
+     </users>
+</event>
+<event>
+     <name>OOD office hours</name>
+     <time>
+          <start-day>WEDNESDAY</start-day>
+          <start>1210</start>
+          <end-day>WEDNESDAY</end-day>
+          <end>1530</end>
+     </time>
+     <location>
+          <online>false</online>
+          <place>Churchill Hall 101</place>
+     </location>
+     <users>
+          <uid>Prof. Lucia</uid>
+          <uid>Me</uid>
+          <uid>Ira</uid>
+     </users>
+</event>
+<event>
+     <name>go out</name>
+     <time>
+          <start-day>FRIDAY</start-day>
+          <start>1210</start>
+          <end-day>SUNDAY</end-day>
+          <end>1530</end>
+     </time>
+     <location>
+          <online>false</online>
+          <place>Boston</place>
+     </location>
+     <users>
+          <uid>Ira</uid>
+     </users>
+</event>
+</schedule>

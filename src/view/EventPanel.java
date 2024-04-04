@@ -63,7 +63,7 @@ public class EventPanel extends JPanel implements IEventView {
   private final JTextField startTime;
 
   private final JTextField endTime;
-  private final JList<String> usersList;
+  private JList<String> usersList;
 
   /**
    * Creates a panel that will house the input labels, buttons, and text fields for the user to
@@ -140,6 +140,7 @@ public class EventPanel extends JPanel implements IEventView {
     DefaultListModel<String> allUsers = new DefaultListModel<>();
 
     for (IUser user : model.getUsers()) {
+      System.out.println("curr user adding to user list: " + user.getName());
       allUsers.addElement(user.getName());
     }
     usersList = new JList<>(allUsers);
@@ -194,13 +195,13 @@ public class EventPanel extends JPanel implements IEventView {
       onlineMenu.setSelectedIndex(1);
     }
 
+    this.updateUserList();
     usersList.clearSelection();
-    for (IUser plannerUsers : model.getUsers()) {
-      for (int currIndex = 0; currIndex < event.getUsers().size(); currIndex++) {
-        String currUserName = event.getUsers().get(currIndex);
-        if (currUserName.equals(plannerUsers.getName())) {
-          usersList.addSelectionInterval(currIndex, currIndex);
-        }
+
+    for (int plannerUserIdx = 0; plannerUserIdx < model.getUsers().size(); plannerUserIdx++) {
+      String currPlannerUserName = model.getUsers().get(plannerUserIdx).getName();
+      if (event.getUsers().contains(currPlannerUserName)) {
+        usersList.addSelectionInterval(plannerUserIdx, plannerUserIdx);
       }
     }
   }
@@ -250,7 +251,7 @@ public class EventPanel extends JPanel implements IEventView {
    */
   @Override
   public Dimension getPreferredSize() {
-    return new Dimension(350, 350);
+    return new Dimension(350, 400);
   }
 
   /**
@@ -277,6 +278,8 @@ public class EventPanel extends JPanel implements IEventView {
     startTime.setText("");
     endTime.setText("");
     location.setText("");
+
+    this.updateUserList();
     usersList.clearSelection();
     // always selecting this schedule's user as an invitee to event
     for (int index = 0; index < usersList.getModel().getSize(); index++) {
@@ -292,6 +295,18 @@ public class EventPanel extends JPanel implements IEventView {
   public void openEvent() {
     // implemented by the IEventView interface for the EventView. Panel shouldn't
     // be implemented, entire view should be.
+  }
+
+  /**
+   * Updates list of users in event view.
+   */
+  @Override
+  public void updateUserList() {
+    DefaultListModel<String> newUsers = new DefaultListModel<>();
+    for (IUser user : model.getUsers()) {
+      newUsers.addElement(user.getName());
+    }
+    usersList.setModel(newUsers);
   }
 
   /**
@@ -360,7 +375,7 @@ public class EventPanel extends JPanel implements IEventView {
   /**
    * Store the user's input as an event that is added to their schedule.
    */
-  public void createEvent() {
+  public IEvent createEvent() {
     PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
     IScheduleTextView textV = new ScheduleTextView(modelForTextView, new StringBuilder());
     HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
@@ -368,12 +383,14 @@ public class EventPanel extends JPanel implements IEventView {
       IEvent eventMade = makeEvent(eventMap);
       System.out.println("Create event: ");
       System.out.println(textV.eventToString(eventMade));
+      return eventMade;
 
     } catch (NullPointerException | IllegalArgumentException ignored) {
       System.out.println("Could not create event: "
               + "Event info not fully entered, error in given values, "
               + "or event already exists at that time");
     }
+    return null;
   }
 
   /**

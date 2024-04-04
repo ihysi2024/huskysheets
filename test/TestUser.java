@@ -43,7 +43,7 @@ public class TestUser {
 
   @Before
   public void setUp() {
-    PlannerSystem modelForTextView = new NUPlanner(new LinkedHashSet<>());
+    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>());
     this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     Schedule emptySchedule = new Schedule(new ArrayList<>());
@@ -170,7 +170,7 @@ public class TestUser {
             List.of("Student Anon",
                     "Prof. Lucia"));
 
-    LinkedHashSet<IUser> users = new LinkedHashSet<>();
+    List<IUser> users = new ArrayList<>();
     users.add(this.profLuciaUser);
     users.add(this.studentAnonUser);
     users.add(this.chatUser);
@@ -265,26 +265,26 @@ public class TestUser {
     this.profLuciaUser.userSchedToXML("src/controller/");
     // try grabbing the events
     Document xmlDoc1 = readXML("src/controller/Prof. Lucia_schedule.xml");
-    List<IEvent> luciaEvents = interpretXML(xmlDoc1);
+    IUser lucia = interpretXML(xmlDoc1);
     // ensure the correct events are included in the right order and nothing else
     Assert.assertEquals(textV.eventToString(this.morningLec),
-            textV.eventToString(luciaEvents.get(0)));
+            textV.eventToString(lucia.getSchedule().getEvents().get(0)));
     Assert.assertEquals(textV.eventToString(this.afternoonLec),
-            textV.eventToString(luciaEvents.get(1)));
-    Assert.assertEquals(textV.eventToString(this.sleep), textV.eventToString(luciaEvents.get(2)));
-    Assert.assertEquals(3, luciaEvents.size());
+            textV.eventToString(lucia.getSchedule().getEvents().get(1)));
+    Assert.assertEquals(textV.eventToString(this.sleep), textV.eventToString(lucia.getSchedule().getEvents().get(2)));
+    Assert.assertEquals(3, lucia.getSchedule().getEvents().size());
 
     // write a schedule to a file for Chat
     this.chatUser.userSchedToXML("src/controller/");
     Document xmlDoc2 = readXML("src/controller/Chat_schedule.xml");
     // try grabbing the events
-    List<IEvent> chatEvents = interpretXML(xmlDoc2);
+    IUser chat = interpretXML(xmlDoc2);
     // ensure the correct events are included in the right order and nothing else
     Assert.assertEquals(textV.eventToString(this.morningLec),
-            textV.eventToString(chatEvents.get(0)));
+            textV.eventToString(chat.getSchedule().getEvents().get(0)));
     Assert.assertEquals(textV.eventToString(this.afternoonLec),
-            textV.eventToString(chatEvents.get(1)));
-    Assert.assertEquals(2, chatEvents.size());
+            textV.eventToString(chat.getSchedule().getEvents().get(1)));
+    Assert.assertEquals(2, chat.getSchedule().getEvents().size());
   }
 
 

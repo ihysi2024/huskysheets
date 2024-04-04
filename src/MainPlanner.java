@@ -15,7 +15,7 @@ import view.IEventView;
 import view.IScheduleTextView;
 import view.IScheduleView;
 import view.ScheduleTextView;
-import view.ScheduleView;
+import view.PlannerView;
 
 /**
  * Represents the class that allows the user to run the calendar system end to end
@@ -53,7 +53,7 @@ public class MainPlanner {
             new Schedule(new ArrayList<>(List.of(morningSnack, officeHours, sleep)))));
     model.addUser(new User("Me", new Schedule(new ArrayList<>(List.of(officeHours)))));
 
-    IScheduleView schedView = new ScheduleView(model);
+    IScheduleView schedView = new PlannerView(model);
     IEventView eView = new EventView(model);
     IScheduleTextView tView = new ScheduleTextView(model, new StringBuilder());
     Controller controller = new Controller(model);
