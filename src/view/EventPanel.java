@@ -182,11 +182,53 @@ public class EventPanel extends JPanel implements IEventView {
   public void populateEventContents(IEvent event) {
     eventName.setText(event.getEventName());
     startDay.setSelectedIndex(event.getStartTime().getDate().getDayIdx());
+    endDay.setSelectedIndex(event.getEndTime().getDate().getDayIdx());
+
+    int minValue = event.getStartTime().getMinutes();
+    String minString = "";
+    if (minValue < 10) {
+      minString = "0" + minValue;
+    }
+    else {
+      minString = String.valueOf(minValue);
+    }
+
+    int hourValue = event.getStartTime().getHours();
+    String hourString = "";
+    if (hourValue < 10) {
+      hourString = "0" + hourValue;
+    }
+    else {
+      hourString = String.valueOf(hourValue);
+    }
+
+    int minValue2 = event.getEndTime().getMinutes();
+    String minString2 = "";
+    if (minValue < 10) {
+      minString2 = "0" + minValue2;
+    }
+    else {
+      minString2 = String.valueOf(minValue2);
+    }
+
+    int hourValue2 = event.getEndTime().getHours();
+    String hourString2 = "";
+    if (hourValue2 < 10) {
+      hourString2 = "0" + hourValue2;
+    }
+    else {
+      hourString2 = String.valueOf(hourValue2);
+    }
+    /*
     startTime.setText(event.getStartTime().getHours()
             + String.valueOf(event.getStartTime().getMinutes()));
-    endDay.setSelectedIndex(event.getEndTime().getDate().getDayIdx());
     endTime.setText(event.getEndTime().getHours()
             + String.valueOf(event.getEndTime().getMinutes()));
+     */
+    startTime.setText(hourString + minString);
+    endTime.setText(hourString2 + minString2);
+
+
     location.setText(event.getLocation());
 
     if (event.getOnline()) {
@@ -221,6 +263,9 @@ public class EventPanel extends JPanel implements IEventView {
    * @return a String[] of the event time
    */
   public String[] getTimeInput() {
+  //  System.out.println("start time 2: " + startTime.getText());
+   // System.out.println("end time 2: " + endTime.getText());
+
     return new String[]{startDay.getSelectedItem().toString(), startTime.getText(),
             endDay.getSelectedItem().toString(), endTime.getText()};
   }

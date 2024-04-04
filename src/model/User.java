@@ -187,6 +187,9 @@ public class User implements IUser {
         if (key.equals("time")) {
           tempStartTime = Time.stringToTime(eventToMake.get(key)[0], eventToMake.get(key)[1]);
           tempEndTime = Time.stringToTime(eventToMake.get(key)[2], eventToMake.get(key)[3]);
+         // System.out.println("start time: " + eventToMake.get(key)[1]);
+         // System.out.println("end time: " + eventToMake.get(key)[3]);
+
         }
         if (key.equals("location")) {
           online = (eventToMake.get(key)[0].equals("true"));

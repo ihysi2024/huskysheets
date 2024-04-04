@@ -202,6 +202,7 @@ public class Controller implements ViewFeatures {
 
   /**
    * Delegate to the view of the event and store the opened event's information.
+   *
    * @return a Hashmap of String content tags to String[] content values.
    */
   public HashMap<String, String[]> storeEvent() {
