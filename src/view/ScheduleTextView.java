@@ -20,6 +20,9 @@ public class ScheduleTextView implements IScheduleTextView {
   private final PlannerSystem plannerSystem;
   private final Appendable appendable;
 
+
+
+
   /**
    * Produce a view for this planner system for all users' schedules to be seen.
    * @param plannerSystem planner system to be viewed
@@ -106,5 +109,6 @@ public class ScheduleTextView implements IScheduleTextView {
   public void renderPlanner() throws IOException {
     this.appendable.append(this.plannerSystemString());
   }
+
 
 }

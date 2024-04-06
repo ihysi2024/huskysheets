@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -362,7 +364,9 @@ public class EventPanel extends JPanel implements IEventView {
    */
   public void createEvent() {
     PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
-    IScheduleTextView textV = new ScheduleTextView(modelForTextView, new StringBuilder());
+    IScheduleTextView tView = new ScheduleTextView(modelForTextView,
+            new StringBuilder());
+
     HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
     try {
       IEvent eventMade = makeEvent(eventMap);

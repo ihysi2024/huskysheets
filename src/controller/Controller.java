@@ -1,21 +1,34 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import model.IEvent;
 import model.ITime;
+import model.IUser;
 import model.PlannerSystem;
+import model.Time;
+import model.User;
 import view.IEventView;
+import view.IScheduleStrategy;
 import view.IScheduleTextView;
+import view.IPlannerView;
 import view.IScheduleView;
+import view.SchedulePanel;
+import view.scheduleAnyTime;
+import view.scheduleWorkHours;
 
 /**
  * Controller to control the functions of the Simon Game.
  */
 public class Controller implements ViewFeatures {
 
-  private IScheduleView scheduleView;
+  private IScheduleStrategy strategy;
+  private IPlannerView plannerView;
 
   private IEventView eventView;
+  private IScheduleView scheduleView;
 
   private IScheduleTextView scheduleTextView;
 
@@ -24,7 +37,8 @@ public class Controller implements ViewFeatures {
    * or button presses.
    * @param model model of calendar implementations reflected by controller
    */
-  public Controller(PlannerSystem model) {
+  public Controller(PlannerSystem model, IScheduleStrategy strategy) {
+    this.strategy = strategy;
     // creates a controller using given model
   }
 
@@ -32,9 +46,9 @@ public class Controller implements ViewFeatures {
    * Initialize the view of the Schedule.
    * @param v the view to visualize.
    */
-  public void setScheduleView(IScheduleView v) {
-    scheduleView = v;
-    scheduleView.addFeatures(this);
+  public void setPlannerView(IPlannerView v) {
+    plannerView = v;
+    plannerView.addFeatures(this);
   }
 
   /**
@@ -46,6 +60,15 @@ public class Controller implements ViewFeatures {
     eventView.addFeatures(this);
   }
 
+  public void setScheduleView(IScheduleView v) {
+    scheduleView = v;
+    scheduleView.addFeatures(this);
+  }
+
+  public void scheduleEvent() {
+    // delegate to the text view
+  }
+
   public void setTextView(IScheduleTextView v) {
     scheduleTextView = v;
   }
@@ -54,14 +77,20 @@ public class Controller implements ViewFeatures {
    * Listen to user input and visualize the game.
    */
   public void goLaunchPlanner() {
-    this.scheduleView.addClickListener(this);
-    this.scheduleView.display(true);
+    this.plannerView.addClickListener(this);
+    this.plannerView.display(true);
+  }
+
+  @Override
+  public void closePlannerView() {
+    plannerView.closePlannerView();
   }
 
   /**
    * Delegate to the view of the schedule to close the view.
    */
   public void closeScheduleView() {
+    System.out.println("here");
     scheduleView.closeScheduleView();
   }
 
@@ -80,7 +109,7 @@ public class Controller implements ViewFeatures {
    */
   public void selectUserSchedule(String userName) {
 
-    scheduleView.displayUserSchedule(userName);
+    plannerView.displayUserSchedule(userName);
 
     /*
     for (IUser user: model.getUsers()) {
@@ -103,7 +132,7 @@ public class Controller implements ViewFeatures {
    * Delegate to the view of the schedule to set who the current user is.
    */
   public void setCurrentUser() {
-    scheduleView.setCurrentUser();
+    plannerView.setCurrentUser();
   }
 
   /**
@@ -113,7 +142,7 @@ public class Controller implements ViewFeatures {
    * @return an event at the given time.
    */
   public IEvent findEvent(ITime timeOfEvent) {
-    return scheduleView.findEventAtTime(timeOfEvent);
+    return plannerView.findEventAtTime(timeOfEvent);
   }
 
   /**
@@ -137,6 +166,11 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the schedule to open the view.
    */
+  public void openPlannerView() {
+    plannerView.openPlannerView();
+  }
+
+  @Override
   public void openScheduleView() {
     scheduleView.openScheduleView();
   }
@@ -165,7 +199,7 @@ public class Controller implements ViewFeatures {
     try {
       ITime startTime = eventToRemove.getStartTime();
       IEvent userEventAtStartTime =
-              scheduleView.getCurrentUser().getSchedule().eventOccurring(startTime);
+              plannerView.getCurrentUser().getSchedule().eventOccurring(startTime);
       System.out.println("user event at time: "
               + scheduleTextView.eventToString(userEventAtStartTime));
       System.out.println("event to remove: "
@@ -173,7 +207,7 @@ public class Controller implements ViewFeatures {
       if (eventToRemove.equals(userEventAtStartTime)) {
         System.out.println("Remove event: ");
         System.out.println("User from which event is being removed: "
-                + scheduleView.getCurrentUser().getName());
+                + plannerView.getCurrentUser().getName());
         System.out.println(scheduleTextView.eventToString(eventToRemove));
       }
       else {
@@ -208,7 +242,7 @@ public class Controller implements ViewFeatures {
    */
   @Override
   public void addCalendar() {
-    scheduleView.addCalendarInfo();
+    plannerView.addCalendarInfo();
   }
 
   /**
@@ -216,7 +250,17 @@ public class Controller implements ViewFeatures {
    */
   @Override
   public void saveCalendars() {
-    scheduleView.saveCalendarInfo();
+    plannerView.saveCalendarInfo();
+  }
+
+  public void scheduleEventInPlanner() {
+    System.out.println("AT CONTROLLER with strategy: " + this.strategy);
+    IUser currentUser = plannerView.getCurrentUser();
+    // compare user readable
+    List<ITime> startEndTimes = this.strategy.scheduleEvent(currentUser, scheduleView.getDuration());
+
+    scheduleView.addScheduleAtTime(currentUser, startEndTimes.get(0), startEndTimes.get(1));
+
   }
 
 }

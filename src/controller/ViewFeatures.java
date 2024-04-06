@@ -16,14 +16,17 @@ public interface ViewFeatures {
    * Delegate to the view of the schedule to close the view.
    */
 
+  void closePlannerView();
+
   void closeScheduleView();
 
   /**
    * Delegate to the view of the schedule to open the view.
    */
 
-  void openScheduleView();
+  void openPlannerView();
 
+  void openScheduleView();
   /**
    * Delegate to the view of the event to open the view.
    */
@@ -116,5 +119,8 @@ public interface ViewFeatures {
 
   void saveCalendars();
 
+  void scheduleEvent();
+
+  void scheduleEventInPlanner();
 
 }

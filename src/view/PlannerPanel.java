@@ -40,7 +40,7 @@ import static model.Time.indexToTime;
  * Represents the panel of the planner system that will be displayed on the view.
  */
 
-public class PlannerPanel extends JPanel implements IScheduleView {
+public class PlannerPanel extends JPanel implements IPlannerView {
 
   private final ReadOnlyPlanner model;
   private IUser currentUser;
@@ -193,8 +193,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * Opens up the current user's schedule.
    */
 
-  @Override
-  public void openScheduleView() {
+  public void openPlannerView() {
     try {
       for (IUser user : model.getUsers()) {
         if (user.getName().equals(currentUser.getName())) {
@@ -236,7 +235,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * Closes the current schedule view.
    */
   @Override
-  public void closeScheduleView() {
+  public void closePlannerView() {
     this.setVisible(false);
   }
 
@@ -261,7 +260,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
 
-    scheduleEventButton.addActionListener(evt -> features.openEventView());
+    scheduleEventButton.addActionListener(evt -> features.openScheduleView());
     scheduleEventButton.addActionListener(evt ->
             features.resetPanelView(this.getCurrentUser().getName()));
 
@@ -483,7 +482,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * Allowing user to select a folder where they will export the user schedules.
    * Automatically starts in current directory.
    */
-  @Override
   public void saveCalendarInfo() {
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -503,7 +501,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * @param timeOfEvent desired time to search at
    * @return Event occurring at that time, null otherwise
    */
-  @Override
+
   public IEvent findEventAtTime(ITime timeOfEvent) {
     return model.retrieveUserScheduleAtTime(this.currentUser, timeOfEvent);
   }

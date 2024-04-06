@@ -1,136 +1,90 @@
 package view;
 
-import javax.swing.JFrame;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.swing.*;
 
 import controller.ViewFeatures;
 import model.IEvent;
 import model.ITime;
-
 import model.IUser;
 import model.ReadOnlyPlanner;
+import model.Time;
 
-/**
-<<<<<<< HEAD
- * Represents the view of the planner system through the GUI. Creates a frame for a schedule.
- * This frame will be used to draw the planner system within it,
- * including the schedules and the buttons related to its functionality.
- */
 public class ScheduleView extends JFrame implements IScheduleView {
-
-  private final PlannerPanel panel;
+  private final SchedulePanel panel;
 
   /**
-   * Creates a view of the planner system view.
-   * @param model desired model to represent a planner system
+   * Creates a view of the Simon game.
+   *
+   * @param model desired model to represent Simon game
    */
   public ScheduleView(ReadOnlyPlanner model) {
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.panel = new PlannerPanel(model);
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.panel = new SchedulePanel(model);
     this.add(panel);
-    this.setVisible(true);
+    this.setVisible(false);
     this.pack();
   }
 
-  /**
-   * Sets the current user to what is selected in the appropriate button in the schedule view.
-   */
-  public void setCurrentUser() {
-    panel.setCurrentUser();
-  }
-
-  /**
-   * Closes the current schedule view.
-   */
-  public void closeScheduleView() {
-    panel.closeScheduleView();
-  }
-
-  /**
-   * Observational method to retrieve the user whose schedule is being displayed.
-   * @return the user being interacted with.
-   */
-  public IUser getCurrentUser() {
-    return panel.getCurrentUser();
-  }
-
-  /**
-   * Adds feature listeners available on this panel, including the button clicks for
-   * creating and scheduling events, adding/saving calendars, and selecting a user.
-   *
-   * @param features available features
-   */
+  @Override
   public void addFeatures(ViewFeatures features) {
     panel.addFeatures(features);
   }
 
-  /**
-   * Handles the clicks in schedule panel. Specifically handles clicking on an event in the
-   * schedule and opening up the corresponding view.
-   *
-   * @param features features available
-   */
   @Override
-  public void addClickListener(ViewFeatures features) {
-    panel.addClickListener(features);
-  }
-
-  /**
-   * Allowing user to select an .xml file that contains the desired calendar.
-   * Automatically starts in current directory.
-   */
-  @Override
-  public void addCalendarInfo() {
-    panel.addCalendarInfo();
-  }
-
-  /**
-   * Allowing user to select a folder where they will export the user schedules.
-   * Automatically starts in current directory.
-   */
-  @Override
-  public void saveCalendarInfo() {
-    panel.saveCalendarInfo();
+  public void closeEvent() {
 
   }
 
-  /**
-   * Finds the event that is occurring at the specified time. If two events start and end at the
-   * same time, returns the earlier event.
-   *
-   * @param timeOfEvent desired time to search at
-   * @return Event occuring at that time, null otherwise
-   */
   @Override
-  public IEvent findEventAtTime(ITime timeOfEvent) {
-    return panel.findEventAtTime(timeOfEvent);
+  public String getEventNameInput() {
+    return panel.getEventNameInput();
   }
 
-  /**
-   * Shows or hides the frame as specified.
-   *
-   * @param show true if frame should be shown, false otherwise
-   */
   @Override
-  public void display(boolean show) {
+  public String getLocationInput() {
+    return panel.getLocationInput();
+  }
+
+  @Override
+  public List<String> getUsersInput() {
+    return panel.getUsersInput();
+  }
+
+  public boolean getOnline() {
+    return panel.getOnline();
+  }
+  @Override
+  public void resetPanel(String host) {
+
+  }
+
+  @Override
+  public void openEvent() {
+
+  }
+
+  @Override
+  public void openScheduleView() {
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setVisible(true);
   }
 
-  /**
-   * Opens up the current user's schedule.
-   */
-  @Override
-  public void openScheduleView() {
-    panel.openScheduleView();
+  public int getDuration() {
+    return panel.getDuration();
   }
 
-  /**
-   * Displays the desired user's schedule.
-   *
-   * @param userToShow desired user schedule to show
-   */
-  @Override
-  public void displayUserSchedule(String userToShow) {
-    panel.displayUserSchedule(userToShow);
+  public void addScheduleAtTime(IUser user, ITime startTime, ITime endTime) {
+    panel.addScheduleAtTime(user, startTime, endTime);
+    // make an event with the information given by the user and
+    // the times provided by the controller
+  }
+
+  public void closeScheduleView() {
+    this.setVisible(false);
   }
 
 }
+
