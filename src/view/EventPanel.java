@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +53,7 @@ public class EventPanel extends JPanel implements IEventView {
 
   private IScheduleTextView textV;
 
+  private IScheduleView plannerView;
 
   /**
    * TEXT FIELDS.
@@ -73,6 +75,8 @@ public class EventPanel extends JPanel implements IEventView {
    */
   public EventPanel(ReadOnlyPlanner model) {
     this.model = Objects.requireNonNull(model);
+    this.plannerView = new PlannerView(model);
+
     List<ViewFeatures> featuresListeners = new ArrayList<>();
 
     MouseListener listener = new MouseEventsListener();
@@ -207,6 +211,11 @@ public class EventPanel extends JPanel implements IEventView {
   }
 
   /**
+   * Get current user.
+   */
+  // public
+
+  /**
    * Get the user's input for the event name.
    *
    * @return a String[] of the event name
@@ -240,7 +249,21 @@ public class EventPanel extends JPanel implements IEventView {
    * @return a String[] of the user list
    */
   public String[] getUsersInput() {
-    return usersList.getSelectedValuesList().toArray(new String[0]);
+    String currUser = this.plannerView.getCurrentUser().getName();
+    List<String> arrOfUsers = usersList.getSelectedValuesList();
+    int indexOfHost = 0;
+    for (int indexOfUsers = 0; indexOfUsers < arrOfUsers.size(); indexOfUsers++) {
+      if (arrOfUsers.get(indexOfUsers).equals(currUser)) {
+        System.out.println("this is host index: " + arrOfUsers.get(indexOfUsers));
+        System.out.println("got here, this is host index: " + arrOfUsers.indexOf(currUser));
+        indexOfHost = indexOfUsers;
+        break;
+    }
+    }
+    Collections.swap(arrOfUsers, 0, indexOfHost);
+    return arrOfUsers.toArray(new String[0]);
+
+    //return usersList.getSelectedValuesList().toArray(new String[0]);
   }
 
   /**
