@@ -35,6 +35,7 @@ public interface IPlannerView {
    * @return the currently selected user
    */
   IUser getCurrentUser();
+  void addUserToDropdown(String userName);
 
   /**
    * Displays the desired user's schedule.
@@ -68,13 +69,13 @@ public interface IPlannerView {
    * Allowing user to select an .xml file that contains the desired calendar.
    * Automatically starts in current directory.
    */
-  void addCalendarInfo();
+  String addCalendarInfo();
 
   /**
    * Allowing user to select a folder where they will export the user schedules.
    * Automatically starts in current directory.
    */
-  void saveCalendarInfo();
+  String saveCalendarInfo();
 
   /**
    * Finds the event that is occurring at the specified time. If two events start and end at the

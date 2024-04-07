@@ -34,11 +34,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
   }
 
   @Override
-  public void closeEvent() {
-
-  }
-
-  @Override
   public String getEventNameInput() {
     return panel.getEventNameInput();
   }
@@ -56,15 +51,7 @@ public class ScheduleView extends JFrame implements IScheduleView {
   public boolean getOnline() {
     return panel.getOnline();
   }
-  @Override
-  public void resetPanel(String host) {
 
-  }
-
-  @Override
-  public void openEvent() {
-
-  }
 
   @Override
   public void openScheduleView() {
@@ -85,6 +72,6 @@ public class ScheduleView extends JFrame implements IScheduleView {
   public void closeScheduleView() {
     this.setVisible(false);
   }
-
 }
+
 

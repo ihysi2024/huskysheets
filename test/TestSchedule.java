@@ -38,7 +38,7 @@ public class TestSchedule {
 
   @Before
   public void setUp() {
-    PlannerSystem modelForTextView = new NUPlanner(new LinkedHashSet<>());
+    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>());
     this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     this.emptySchedule = new Schedule(new ArrayList<>());
@@ -134,7 +134,7 @@ public class TestSchedule {
             List.of("Student Anon",
                     "Prof. Lucia"));
 
-    LinkedHashSet<IUser> users = new LinkedHashSet<>();
+    List<IUser> users = new ArrayList<>();
     users.add(profLuciaUser);
     users.add(studentAnonUser);
     users.add(chatUser);

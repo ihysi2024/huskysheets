@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<schedule id='Me'><event>
+     <name>office hours</name>
+     <time>
+          <start-day>MONDAY</start-day>
+          <start>1210</start>
+          <end-day>MONDAY</end-day>
+          <end>1530</end>
+     </time>
+     <location>
+          <online>false</online>
+          <place>Churchill Hall 101</place>
+     </location>
+     <users>
+          <uid>Prof. Lucia</uid>
+          <uid>Me</uid>
+     </users>
+</event>
+</schedule>

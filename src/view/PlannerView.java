@@ -1,6 +1,9 @@
 package view;
 
-import javax.swing.JFrame;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.swing.*;
 
 import controller.ViewFeatures;
 import model.IEvent;
@@ -8,13 +11,8 @@ import model.ITime;
 
 import model.IUser;
 import model.ReadOnlyPlanner;
+import model.Time;
 
-/**
-<<<<<<< HEAD
- * Represents the view of the planner system through the GUI. Creates a frame for a schedule.
- * This frame will be used to draw the planner system within it,
- * including the schedules and the buttons related to its functionality.
- */
 public class PlannerView extends JFrame implements IPlannerView {
 
   private final PlannerPanel panel;
@@ -53,12 +51,7 @@ public class PlannerView extends JFrame implements IPlannerView {
     return panel.getCurrentUser();
   }
 
-  /**
-   * Adds feature listeners available on this panel, including the button clicks for
-   * creating and scheduling events, adding/saving calendars, and selecting a user.
-   *
-   * @param features available features
-   */
+
   public void addFeatures(ViewFeatures features) {
     panel.addFeatures(features);
   }
@@ -69,7 +62,8 @@ public class PlannerView extends JFrame implements IPlannerView {
    *
    * @param features features available
    */
-  @Override
+
+
   public void addClickListener(ViewFeatures features) {
     panel.addClickListener(features);
   }
@@ -79,8 +73,12 @@ public class PlannerView extends JFrame implements IPlannerView {
    * Automatically starts in current directory.
    */
 
-  public void addCalendarInfo() {
-    panel.addCalendarInfo();
+  public String addCalendarInfo() {
+    return panel.addCalendarInfo();
+  }
+
+  public void addUserToDropdown(String userName) {
+    panel.addUserToDropdown(userName);
   }
 
   /**
@@ -88,9 +86,8 @@ public class PlannerView extends JFrame implements IPlannerView {
    * Automatically starts in current directory.
    */
 
-  public void saveCalendarInfo() {
-    panel.saveCalendarInfo();
-
+  public String saveCalendarInfo() {
+    return panel.saveCalendarInfo();
   }
 
   /**
@@ -131,5 +128,6 @@ public class PlannerView extends JFrame implements IPlannerView {
   public void displayUserSchedule(String userToShow) {
     panel.displayUserSchedule(userToShow);
   }
+
 
 }

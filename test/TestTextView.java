@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import model.Event;
@@ -70,7 +71,7 @@ public class TestTextView {
     User studentAnonUser = new User("Student Anon", studentAnonSchedule);
     User chatUser = new User("Chat", chatSchedule);
 
-    Set<IUser> users = new LinkedHashSet<>();
+    List<IUser> users = new ArrayList<>();
     users.add(profLuciaUser);
     users.add(studentAnonUser);
     users.add(chatUser);

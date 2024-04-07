@@ -1,5 +1,6 @@
 package model;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,7 +13,14 @@ public interface PlannerSystem extends ReadOnlyPlanner {
    */
   void exportScheduleAsXML(String filePath);
 
-  Set<IUser> getUsers();
+  List<IUser> getUsers();
+
+  /**
+   * Adds a user to the planner system with the schedule provided in the file path's XML
+   *
+   * @param filePath file path to read XML schedule from
+   */
+  void importScheduleFromXML(String filePath);
 
   /**
    * Remove an event from planner system for relevant users.
@@ -23,6 +31,15 @@ public interface PlannerSystem extends ReadOnlyPlanner {
    * @param userRemovingEvent user removing the event
    */
   void removeEventForRelevantUsers(IEvent eventToRemove, IUser userRemovingEvent);
+
+  /**
+   * Remove a user from the event list for every other person in planner system
+   * that is also invited to the given event.
+   *
+   * @param event event to updated in planner system
+   * @param userToRemove user being removed from the event
+   */
+  void removeUserFromEventList(IEvent event, IUser userToRemove);
 
   /**
    * Events can only be modified if all users can attend the event.
@@ -44,12 +61,4 @@ public interface PlannerSystem extends ReadOnlyPlanner {
   // or a User (with a schedule)
   // gui is adding a user via xml
   void addUser(IUser userToAdd);
-
-
 }
-
-//QUESTIONS:
-// adding a user: our users have a schedule
-// Event vs IEvent in methods?
-  // change all of these into IEvents
-// LinkedHashSet issue

@@ -17,6 +17,7 @@ import view.IScheduleStrategy;
 import view.IScheduleTextView;
 import view.IPlannerView;
 import view.IScheduleView;
+import view.SchedulePanel;
 import view.ScheduleTextView;
 import view.PlannerView;
 import view.ScheduleView;
@@ -70,6 +71,7 @@ public class MainPlanner {
       throw new IllegalArgumentException("Not a valid scheduling strategy");
     }
     IPlannerView plannerView = new PlannerView(model);
+
     IEventView eView = new EventView(model);
     IScheduleView schedView = new ScheduleView(model);
     IScheduleTextView tView = new ScheduleTextView(model, System.out);

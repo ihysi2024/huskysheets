@@ -10,17 +10,25 @@ import model.IUser;
 import model.Time;
 
 public interface IScheduleView {
-  /**
-   * Allow the user to interact with the calendar through the features present
-   * in the event view.
-   * @param features functionality that the user has access to through the event view.
-   */
-  void addFeatures(ViewFeatures features);
 
   /**
-   * Close the event view so it stops being visible.
+   * Opens up the current user's schedule.
    */
-  void closeEvent();
+  void openScheduleView();
+
+
+  /**
+   * Closes the current schedule view.
+   */
+  void closeScheduleView();
+
+  /**
+   * Adds feature listeners available on this panel, including the button clicks for
+   * creating and scheduling events, adding/saving calendars, and selecting a user.
+   *
+   * @param features available features
+   */
+  void addFeatures(ViewFeatures features);
 
   /**
    * Get the user's input for the event name.
@@ -42,25 +50,8 @@ public interface IScheduleView {
 
   boolean getOnline();
 
-  /**
-   * Resets the panel to its originally empty fields. Useful for trying to create a new event
-   * after an event has already been created.
-   *
-   * @param host host of the event
-   */
-  void resetPanel(String host);
-
-  /**
-   * Resets the panel to its originally empty fields. Useful for trying to create a new event
-   * after an event has already been created.
-   */
-  void openEvent();
-
-  void openScheduleView();
-
   void addScheduleAtTime(IUser user, ITime startTime, ITime endTime);
 
   int getDuration();
 
-  void closeScheduleView();
 }

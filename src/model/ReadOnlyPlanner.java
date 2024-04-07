@@ -22,7 +22,7 @@ public interface ReadOnlyPlanner {
   /**
    * Retrieves the set of users in the planner system.
    */
-  Set<IUser> getUsers();
+  List<IUser> getUsers();
 
   /**
    * Retrieves the events in this user's schedule.

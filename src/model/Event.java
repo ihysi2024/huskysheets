@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +56,7 @@ public class Event implements IEvent {
     this.endTime = endTime;
     this.online = online;
     this.location = location;
-    this.users = users;
+    this.users = new ArrayList<>(users);
   }
 
   /**
@@ -93,6 +94,29 @@ public class Event implements IEvent {
    */
   public int eventDuration() {
     return this.startTime.minutesSinceMidnight() - this.endTime.minutesSinceMidnight();
+  }
+
+  /**
+   * Remove specified user from list of invitees to event
+   *
+   * @param userName user to remove
+   */
+  @Override
+  public void removeUserFromList(String userName) {
+    if (this.users.size() > 1) { // preserving invariant by ensuring user list has at least 2 people
+      int indexOfUser = -5;
+
+      for (int userIdx = 0; userIdx < this.users.size(); userIdx++) {
+        if (this.users.get(userIdx).equals(userName)) {
+          indexOfUser = userIdx;
+          break;
+        }
+      }
+      if (indexOfUser != -5) { // found user in list
+        this.users.remove(indexOfUser);
+      }
+
+    }
   }
 
   /**

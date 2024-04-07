@@ -2,12 +2,13 @@ package view;
 
 import java.util.HashMap;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import controller.ViewFeatures;
 
 import model.IEvent;
 
+import model.IUser;
 import model.ReadOnlyPlanner;
 
 /**
@@ -35,8 +36,8 @@ public class EventView extends JFrame implements IEventView {
    * Store the user's input as an event that is added to their schedule.
    * Delegate to the panel.
    */
-  public void createEvent() {
-    panel.createEvent();
+  public IEvent createEvent() {
+    return panel.createEvent();
   }
 
   /**
@@ -46,7 +47,7 @@ public class EventView extends JFrame implements IEventView {
    * @param event event to visualize in the event panel.
    */
   public void populateEventContents(IEvent event) {
-    this.panel.populateEventContents(event);
+    panel.populateEventContents(event);
   }
 
   /**
@@ -148,5 +149,13 @@ public class EventView extends JFrame implements IEventView {
   public void openEvent() {
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setVisible(true);
+  }
+
+  /**
+   * Updates list of users in event view.
+   */
+  @Override
+  public void updateUserList() {
+    panel.updateUserList();
   }
 }

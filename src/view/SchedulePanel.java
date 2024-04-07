@@ -116,14 +116,9 @@ public class SchedulePanel extends JPanel implements IScheduleView {
   }
   @Override
   public void addFeatures(ViewFeatures features) {
-  // if user presses schedule event button
+    // if user presses schedule event button
     scheduleEvent.addActionListener(evt -> features.scheduleEventInPlanner());
     scheduleEvent.addActionListener(evt -> features.closeScheduleView());
-
-  }
-
-  @Override
-  public void closeEvent() {
 
   }
 
@@ -149,18 +144,9 @@ public class SchedulePanel extends JPanel implements IScheduleView {
   }
 
   @Override
-  public void resetPanel(String host) {
-
-  }
-
-  @Override
-  public void openEvent() {
-
-  }
-
-  @Override
   public void openScheduleView() {
-    this.setVisible(true);
+    //System.out.println("HERE");
+    //this.setVisible(true);
   }
 
   /**

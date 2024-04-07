@@ -170,6 +170,10 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     return new Dimension(500, 500);
   }
 
+  public void addUserToDropdown(String userName) {
+    selectUserButton.addItem(userName);
+  }
+
   /**
    * Conceptually, we can choose a different coordinate system
    * and pretend that our panel is 100x100 "cells" big. You can choose
@@ -427,13 +431,21 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     this.addMouseListener(new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        PlannerPanel panel = PlannerPanel.this;
-        ITime timeOfEvent = panel.timeAtClick(e);
+
+        // might not even need try catch
         try {
+          PlannerPanel panel = PlannerPanel.this;
+          ITime timeOfEvent = panel.timeAtClick(e);
+        //  System.out.println("time: " + timeOfEvent.getDate() + timeOfEvent.getHours() + timeOfEvent.getMinutes());
           IEvent eventClicked = features.findEvent(timeOfEvent);
-          features.openEventView();
-          features.populateEvent(eventClicked);
+          if(eventClicked != null) {
+            features.openEventView();
+            System.out.println(eventClicked.getEventName());
+            features.populateEvent(eventClicked);
+          }
+
         } catch (NullPointerException ignored) {
+         // System.out.println("got here no event");
           // click where no event is present, ignoring
         }
       }
@@ -463,8 +475,9 @@ public class PlannerPanel extends JPanel implements IPlannerView {
   /**
    * Allowing user to select an .xml file that contains the desired calendar.
    * Automatically starts in current directory.
+   * @return String of the selected file path
    */
-  public void addCalendarInfo() {
+  public String addCalendarInfo() {
     JFileChooser chooser = new JFileChooser();
     FileNameExtensionFilter filter = new FileNameExtensionFilter(
             "XML files", "xml");
@@ -475,14 +488,19 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       System.out.println("Selected file path: "
               + chooser.getSelectedFile().getName());
+      return chooser.getSelectedFile().getName();
+      //displayUserSchedule(String userToShow);
     }
+    return "";
   }
 
   /**
    * Allowing user to select a folder where they will export the user schedules.
    * Automatically starts in current directory.
+   * @return String of the selected file path
    */
-  public void saveCalendarInfo() {
+  @Override
+  public String saveCalendarInfo() {
     JFileChooser chooser = new JFileChooser();
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     File workingDirectory = new File(System.getProperty("user.dir"));
@@ -491,7 +509,9 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       System.out.println("Selected folder for saving each xml: "
               + chooser.getCurrentDirectory() + "\\" + chooser.getSelectedFile().getName());
+      return chooser.getCurrentDirectory() + "\\" + chooser.getSelectedFile().getName();
     }
+    return "";
   }
 
   /**

@@ -1,23 +1,23 @@
 package controller;
 
-import java.util.ArrayList;
+
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.swing.*;
 
 import model.IEvent;
 import model.ITime;
 import model.IUser;
+
 import model.PlannerSystem;
-import model.Time;
-import model.User;
 import view.IEventView;
 import view.IScheduleStrategy;
 import view.IScheduleTextView;
 import view.IPlannerView;
 import view.IScheduleView;
-import view.SchedulePanel;
-import view.scheduleAnyTime;
-import view.scheduleWorkHours;
+
 
 /**
  * Controller to control the functions of the Simon Game.
@@ -32,6 +32,8 @@ public class Controller implements ViewFeatures {
 
   private IScheduleTextView scheduleTextView;
 
+  private final PlannerSystem model;
+
   /**
    * Creates an instance of a Calendar Controller that responds to user input via mouse clicks
    * or button presses.
@@ -40,6 +42,7 @@ public class Controller implements ViewFeatures {
   public Controller(PlannerSystem model, IScheduleStrategy strategy) {
     this.strategy = strategy;
     // creates a controller using given model
+    this.model = model;
   }
 
   /**
@@ -67,6 +70,13 @@ public class Controller implements ViewFeatures {
 
   public void scheduleEvent() {
     // delegate to the text view
+  }
+
+  @Override
+  public void scheduleEventInPlanner() {
+    IUser user = plannerView.getCurrentUser();
+    List<ITime> times = this.strategy.scheduleEvent(user, scheduleView.getDuration());
+    scheduleView.addScheduleAtTime(user, times.get(0), times.get(1));
   }
 
   public void setTextView(IScheduleTextView v) {
@@ -99,27 +109,10 @@ public class Controller implements ViewFeatures {
    */
   @Override
   public void openEventView() {
+   // System.out.println("opening an event");
     eventView.openEvent();
   }
 
-  /**
-   * Delegate to the view of the schedule to display the schedule of the user
-   * with the same given name.
-   * @param userName name to cross-reference with set of users in the system.
-   */
-  public void selectUserSchedule(String userName) {
-
-    plannerView.displayUserSchedule(userName);
-
-    /*
-    for (IUser user: model.getUsers()) {
-      if (user.getName().equals(userName)) {
-        scheduleView.displayUserSchedule(user);
-      }
-    }
-     */
-
-  }
 
   /**
    * Delegate to the view of the event to close the event view.
@@ -163,6 +156,11 @@ public class Controller implements ViewFeatures {
     eventView.populateEventContents(event);
   }
 
+  @Override
+  public void selectUserSchedule(String userName) {
+    plannerView.displayUserSchedule(userName);
+  }
+
   /**
    * Delegate to the view of the schedule to open the view.
    */
@@ -170,10 +168,6 @@ public class Controller implements ViewFeatures {
     plannerView.openPlannerView();
   }
 
-  @Override
-  public void openScheduleView() {
-    scheduleView.openScheduleView();
-  }
 
   /**
    * Delegate to the view of the event to take in a current event as a map of its contents
@@ -200,21 +194,15 @@ public class Controller implements ViewFeatures {
       ITime startTime = eventToRemove.getStartTime();
       IEvent userEventAtStartTime =
               plannerView.getCurrentUser().getSchedule().eventOccurring(startTime);
-      System.out.println("user event at time: "
-              + scheduleTextView.eventToString(userEventAtStartTime));
-      System.out.println("event to remove: "
-              + scheduleTextView.eventToString(eventToRemove));
       if (eventToRemove.equals(userEventAtStartTime)) {
-        System.out.println("Remove event: ");
-        System.out.println("User from which event is being removed: "
-                + plannerView.getCurrentUser().getName());
-        System.out.println(scheduleTextView.eventToString(eventToRemove));
+        model.removeEventForRelevantUsers(eventToRemove, this.plannerView.getCurrentUser());
+        this.openPlannerView();
       }
       else {
         System.out.println("Error in removing event: Given event not part of system, check inputs");
       }
     }
-    catch (NullPointerException | IllegalArgumentException ignored) {
+      catch (NullPointerException | IllegalArgumentException ignored) {
       System.out.println("Error in removing event: Given event not part of system, check inputs");
 
     }
@@ -223,11 +211,23 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the event and create a new event.
    */
+  // is casting okay here, and should this throw an error if event overlaps with any other schedule?? assumption that we're making
   @Override
   public void createEvent() {
-    eventView.createEvent();
+    IEvent event = eventView.createEvent();
+    try {
+      model.addEventForRelevantUsers(event);
+    }
+    catch (IllegalArgumentException e) {
+      JOptionPane.showMessageDialog((Component) eventView, "Event conflicts with 1+ user schedules",
+              "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
+    this.openPlannerView();
   }
 
+  public void openScheduleView() {
+    scheduleView.openScheduleView();
+  }
   /**
    * Delegate to the view of the event and store the opened event's information.
    * @return a Hashmap of String content tags to String[] content values.
@@ -242,7 +242,22 @@ public class Controller implements ViewFeatures {
    */
   @Override
   public void addCalendar() {
-    plannerView.addCalendarInfo();
+   // scheduleView.addCalendarInfo();
+    String filePath = plannerView.addCalendarInfo();
+    if (!filePath.isEmpty()) {
+      model.importScheduleFromXML(filePath);
+    //  model.getUsers();
+    //  for (IUser user : model.getUsers()) {
+    //    System.out.println("curr user: " + user.getName());
+    //  }
+     // scheduleView.getCurrentUser();
+    //  model.exportScheduleAsXML(filePath);
+    }
+    int numUsers = model.getUsers().size();
+    String newUserName = model.getUsers().get(numUsers - 1).getName();
+    plannerView.addUserToDropdown(newUserName);
+    //   scheduleView.add(newUserName);
+    this.openPlannerView();
   }
 
   /**
@@ -250,17 +265,11 @@ public class Controller implements ViewFeatures {
    */
   @Override
   public void saveCalendars() {
-    plannerView.saveCalendarInfo();
-  }
-
-  public void scheduleEventInPlanner() {
-    System.out.println("AT CONTROLLER with strategy: " + this.strategy);
-    IUser currentUser = plannerView.getCurrentUser();
-    // compare user readable
-    List<ITime> startEndTimes = this.strategy.scheduleEvent(currentUser, scheduleView.getDuration());
-
-    scheduleView.addScheduleAtTime(currentUser, startEndTimes.get(0), startEndTimes.get(1));
-
+    String filePath = plannerView.saveCalendarInfo();
+    if (!filePath.isEmpty()) {
+      model.exportScheduleAsXML(filePath);
+    }
+    this.openPlannerView();
   }
 
 }

@@ -5,7 +5,7 @@
           <start-day>TUESDAY</start-day>
           <start>0950</start>
           <end-day>TUESDAY</end-day>
-          <end>1130</end>
+          <end>0001</end>
      </time>
      <location>
           <online>false</online>

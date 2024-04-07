@@ -1,5 +1,6 @@
 package view;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import controller.ViewFeatures;
@@ -82,6 +83,12 @@ public interface IEventView {
 
   /**
    * Store the user's input as an event that is added to their schedule.
+   * @return the event that was created, null otherwise
    */
-  void createEvent();
+  IEvent createEvent();
+
+  /**
+   * Updates list of users in event view.
+   */
+  void updateUserList();
 }

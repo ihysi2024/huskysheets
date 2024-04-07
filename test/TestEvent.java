@@ -33,7 +33,7 @@ public class TestEvent {
 
   @Before
   public void setUp() {
-    PlannerSystem modelForTextView = new NUPlanner(new LinkedHashSet<>());
+    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>());
     this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     Schedule emptySchedule = new Schedule(new ArrayList<>());
