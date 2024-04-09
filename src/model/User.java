@@ -218,7 +218,13 @@ public class User implements IUser {
    * @param event event to add
    */
   public void addEventForUser(IEvent event) {
-    this.schedule.addEvent(event);
+    try {
+      System.out.println("*********adding this event for the user: " + event. getEventName());
+      this.schedule.addEvent(event);
+    }
+    catch (IllegalArgumentException ex) {
+      throw new IllegalArgumentException("cannot add this event");
+    }
   }
 
   /**

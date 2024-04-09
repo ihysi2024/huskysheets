@@ -124,6 +124,7 @@ public class Controller implements ViewFeatures {
    * Delegates to the view of the event to create empty fields in the panel.
    */
   public void resetPanelView() {
+
     eventView.resetPanel();
   }
 
@@ -166,6 +167,30 @@ public class Controller implements ViewFeatures {
    * @param eventToRemove event that the model should remove.
    */
   public void removeEvent(IEvent eventToRemove) {
+    System.out.println("tryin to remove event: " + eventToRemove.getEventName());
+    System.out.println("curr user: " + this.scheduleView.getCurrentUser().getName() );
+
+    model.removeEventForRelevantUsers(eventToRemove, this.scheduleView.getCurrentUser());
+
+    /*
+
+     */
+
+    try {
+      System.out.println("got here in removeee");
+
+        model.removeEventForRelevantUsers(eventToRemove, this.scheduleView.getCurrentUser());
+        this.openScheduleView();
+
+    }
+    catch (NullPointerException | IllegalArgumentException ignored) {
+      System.out.println("Error in removing event2: Given event not part of system, check inputs");
+
+    }
+
+
+    /*
+        System.out.println("tryin to remove event: " + eventToRemove.getEventName());
     try {
       ITime startTime = eventToRemove.getStartTime();
       IEvent userEventAtStartTime =
@@ -179,9 +204,11 @@ public class Controller implements ViewFeatures {
       }
     }
       catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Error in removing event: Given event not part of system, check inputs");
+      System.out.println("Error in removing event2: Given event not part of system, check inputs");
 
     }
+     */
+
   }
 
   /**
@@ -221,6 +248,8 @@ public class Controller implements ViewFeatures {
     }
     int numUsers = model.getUsers().size();
     String newUserName = model.getUsers().get(numUsers - 1).getName();
+   // model.r
+    System.out.println("size of events: " + model.retrieveUserEvents(model.getUsers().get(numUsers - 1)).size());
     scheduleView.addUserToDropdown(newUserName);
     this.openScheduleView();
   }

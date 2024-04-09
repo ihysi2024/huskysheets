@@ -232,6 +232,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
       this.resetPanel();
     }
 
+    this.repaint();
     menuPanel.revalidate();
     menuPanel.repaint();
     menuBar.revalidate();
@@ -442,16 +443,13 @@ public class PlannerPanel extends JPanel implements IScheduleView {
         try {
           PlannerPanel panel = PlannerPanel.this;
           ITime timeOfEvent = panel.timeAtClick(e);
-        //  System.out.println("time: " + timeOfEvent.getDate() + timeOfEvent.getHours() + timeOfEvent.getMinutes());
           IEvent eventClicked = features.findEvent(timeOfEvent);
           if(eventClicked != null) {
             features.openEventView(panel.getCurrentUser().getName());
             features.populateEvent(eventClicked); // check the order of this!! opening the event before populating it
-            System.out.println(eventClicked.getEventName());
           }
 
         } catch (NullPointerException ignored) {
-         // System.out.println("got here no event");
           // click where no event is present, ignoring
         }
       }
@@ -492,10 +490,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     chooser.setFileFilter(filter);
     int returnVal = chooser.showOpenDialog(addCalendar);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
-      System.out.println("Selected file path: "
-              + chooser.getSelectedFile().getName());
       return chooser.getSelectedFile().getName();
-      //displayUserSchedule(String userToShow);
     }
     return "";
   }
@@ -513,8 +508,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     chooser.setCurrentDirectory(workingDirectory);
     int returnVal = chooser.showOpenDialog(saveCalendar);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
-      System.out.println("Selected folder for saving each xml: "
-              + chooser.getCurrentDirectory() + "\\" + chooser.getSelectedFile().getName());
       return chooser.getCurrentDirectory() + "\\" + chooser.getSelectedFile().getName();
     }
     return "";

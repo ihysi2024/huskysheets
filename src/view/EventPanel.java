@@ -201,11 +201,10 @@ public class EventPanel extends JPanel implements IEventView {
       onlineMenu.setSelectedIndex(1);
     }
 
-    this.updateUserList();
+    // highlighting attendees of event
     usersList.clearSelection();
-
-    for (int plannerUserIdx = 0; plannerUserIdx < model.getUsers().size(); plannerUserIdx++) {
-      String currPlannerUserName = model.getUsers().get(plannerUserIdx).getName();
+    for (int plannerUserIdx = 0; plannerUserIdx < usersList.getModel().getSize(); plannerUserIdx++) {
+      String currPlannerUserName = usersList.getModel().getElementAt(plannerUserIdx);
       if (event.getUsers().contains(currPlannerUserName)) {
         usersList.addSelectionInterval(plannerUserIdx, plannerUserIdx);
       }
@@ -291,7 +290,7 @@ public class EventPanel extends JPanel implements IEventView {
     endTime.setText("");
     location.setText("");
 
-    this.updateUserList();
+   // this.updateUserList();
     usersList.clearSelection();
     // always selecting this schedule's user as an invitee to event
     for (int index = 0; index < usersList.getModel().getSize(); index++) {
@@ -307,6 +306,8 @@ public class EventPanel extends JPanel implements IEventView {
   public void openEvent(String host) {
     this.currHost = host;
     this.updateUserList();
+
+    // this.updateUserList();
   }
 
   /**
