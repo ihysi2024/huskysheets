@@ -1,6 +1,7 @@
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import controller.ViewFeatures;
 import model.Event;
@@ -114,6 +115,12 @@ public class MockEventView implements IEventView {
     out.append("Opening an event");
   }
 
+  @Override
+  public void displayCreateError() {
+    out.delete(0, out.length());
+    out.append("Error in creating an event");
+  }
+
   /**
    * Store the current event's inputs as a map of String -> String[]
    * Useful for modifying an event with the current panel inputs.
@@ -145,6 +152,12 @@ public class MockEventView implements IEventView {
    */
   public void updateUserList() {
 
+  }
+
+  @Override
+  public void displayRemoveError(Map<String, String[]> eventToRemove) {
+    out.delete(0, out.length());
+    out.append("Error in removing an event");
   }
 
 }

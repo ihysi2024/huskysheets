@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import model.IEvent;
 import model.ITime;
@@ -14,11 +15,14 @@ import model.ITime;
 public interface ViewFeatures {
 
   /**
-   * Delegate to the view of the schedule to close the view.
+   * Delegate to the view of the planner to close the view.
    */
 
   void closePlannerView();
 
+  /**
+   * Delegate to the view of the schedule to stop visualizing the schedule event panel.
+   */
   void closeScheduleView();
 
   /**
@@ -27,7 +31,12 @@ public interface ViewFeatures {
 
   void openPlannerView();
 
+  /**
+   * Visualize the panel that allows users to automatically schedule an event.
+   */
+
   void openScheduleView();
+
   /**
    * Delegate to the view of the event to open the view.
    */
@@ -38,6 +47,7 @@ public interface ViewFeatures {
   /**
    * Delegate to the view of the event and create a new event.
    */
+
   void createEvent();
 
   /**
@@ -64,7 +74,7 @@ public interface ViewFeatures {
   void populateEvent(IEvent event);
 
   /**
-   * Delegate to the view of the schedule to display the schedule of the user
+   * Delegate to the view of the planner to display the schedule of the user
    * with the same given name.
    * @param userName name to cross-reference with set of users in the system.
    */
@@ -106,7 +116,14 @@ public interface ViewFeatures {
    * @param host host of the event
    */
 
-  void resetPanelView(String host);
+  void resetEventPanelView(String host);
+
+  /**
+   * Delegates to the view of the scheduled event to create empty fields in the panel.
+   * @param host of the event.
+   */
+
+  void resetSchedulePanelView(String host);
 
   /**
    * Delegate to the view of the schedule to add the calendar info to the planner system.
@@ -120,8 +137,30 @@ public interface ViewFeatures {
 
   void saveCalendars();
 
-  void scheduleEvent();
+  /**
+   * Allow the user to schedule an event at the earliest possible time within the constraints
+   * detailed in the command line arguments.
+   */
 
   void scheduleEventInPlanner();
 
+  /**
+   * Delegates to the Schedule View to displays the errors in a dialog box if the user
+   * has tried to schedule an event with invalid inputs.
+   */
+
+  void displayScheduleErrors();
+
+  /**
+   * Display errors that arise when user provides invalid inputs when creating an event.
+   */
+
+  void displayEventCreateErrors();
+
+  /**
+   * Display errors that arise when user provides invalid inputs when removing an event.
+   * @param eventToRemove event the user is trying to remove.
+   */
+
+  void displayEventRemoveErrors(Map<String, String[]> eventToRemove);
 }

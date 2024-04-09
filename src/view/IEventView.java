@@ -2,6 +2,7 @@ package view;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import controller.ViewFeatures;
 import model.IEvent;
@@ -74,6 +75,8 @@ public interface IEventView {
    */
   void openEvent();
 
+  void displayCreateError();
+
   /**
    * Store the current event's inputs as a map of String -> String[]
    * Useful for modifying an event with the current panel inputs.
@@ -91,4 +94,6 @@ public interface IEventView {
    * Updates list of users in event view.
    */
   void updateUserList();
+
+  void displayRemoveError(Map<String, String[]> eventToRemove);
 }

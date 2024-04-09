@@ -9,6 +9,10 @@ import model.ITime;
 import model.IUser;
 import model.Time;
 
+/**
+ * Represents the view that allows an event to be scheduled as early as possible given
+ * user time constraints.
+ */
 public interface IScheduleView {
 
   /**
@@ -16,10 +20,10 @@ public interface IScheduleView {
    */
   void openScheduleView();
 
-
   /**
    * Closes the current schedule view.
    */
+
   void closeScheduleView();
 
   /**
@@ -28,17 +32,19 @@ public interface IScheduleView {
    *
    * @param features available features
    */
+
   void addFeatures(ViewFeatures features);
 
   /**
    * Get the user's input for the event name.
-   * @return a String[] of the event name
+   * @return a String of the event name
    */
+
   String getEventNameInput();
 
   /**
    * Get the user's input for the event location.
-   * @return a String[] of the location
+   * @return a String of the location
    */
   String getLocationInput();
 
@@ -48,10 +54,27 @@ public interface IScheduleView {
    */
   List<String> getUsersInput();
 
+  /**
+   * Observes the user's input for whether the event is online or not
+   * @return whether the event is online
+   */
   boolean getOnline();
 
-  void addScheduleAtTime(IUser user, ITime startTime, ITime endTime);
-
+  /**
+   * Observes how long the event is.
+   * @return the length of the event
+   */
   int getDuration();
 
+  /**
+   * Empties the fields in the panel for the user to enter their own inputs.
+   * @param host the host of the event.
+   */
+  void resetSchedulePanel(String host);
+
+  /**
+   * Display errors that may arise should the user provide invalid inputs to the panel.
+   */
+
+  void displayError();
 }

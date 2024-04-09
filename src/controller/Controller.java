@@ -1,26 +1,29 @@
 package controller;
 
-
-import java.awt.*;
+import java.awt.Component;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
+import model.Event;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
 
 import model.PlannerSystem;
 import view.IEventView;
-import view.IScheduleStrategy;
+import strategies.IScheduleStrategy;
 import view.IScheduleTextView;
 import view.IPlannerView;
 import view.IScheduleView;
 
-
 /**
- * Controller to control the functions of the Simon Game.
+ * Controller to delegate client-based decisions to the event view, planner view, and
+ * scheduling event view. The controller also takes in a scheduling strategy
+ * that is one of "anytime" or "workhours" to signify which time constraints
+ * the controller can allow the client to schedule events automatically to.
  */
 public class Controller implements ViewFeatures {
 
@@ -38,10 +41,10 @@ public class Controller implements ViewFeatures {
    * Creates an instance of a Calendar Controller that responds to user input via mouse clicks
    * or button presses.
    * @param model model of calendar implementations reflected by controller
+   * @param strategy way in which a calendar can automatically schedule an event.
    */
   public Controller(PlannerSystem model, IScheduleStrategy strategy) {
     this.strategy = strategy;
-    // creates a controller using given model
     this.model = model;
   }
 
@@ -63,24 +66,59 @@ public class Controller implements ViewFeatures {
     eventView.addFeatures(this);
   }
 
+  /**
+   * Initializes the view of scheduling an event.
+   * @param v view to visualize
+   */
   public void setScheduleView(IScheduleView v) {
     scheduleView = v;
     scheduleView.addFeatures(this);
   }
 
-  public void scheduleEvent() {
-    // delegate to the text view
+  /**
+   * Initializes the textual view of the planner system.
+   * @param v view to visualize.
+   */
+  public void setTextView(IScheduleTextView v) {
+    scheduleTextView = v;
   }
 
+
+  /**
+   * Allow the user to schedule an event at the earliest possible time within the constraints
+   * detailed in the command line arguments.
+   */
   @Override
   public void scheduleEventInPlanner() {
     IUser user = plannerView.getCurrentUser();
-    List<ITime> times = this.strategy.scheduleEvent(user, scheduleView.getDuration());
-    scheduleView.addScheduleAtTime(user, times.get(0), times.get(1));
+    try {
+      List<ITime> times = this.strategy.scheduleEvent(user, scheduleView.getDuration());
+      if (times == null || times.isEmpty()) {
+        JOptionPane.showMessageDialog((Component) eventView,
+                "Unable to find enough time in schedule for this event",
+                "ERROR", JOptionPane.ERROR_MESSAGE);
+      }
+      IEvent eventToAdd = new Event(scheduleView.getEventNameInput(),
+              times.get(0), times.get(1),
+              scheduleView.getOnline(),
+              scheduleView.getLocationInput(),
+              scheduleView.getUsersInput());
+
+      scheduleTextView.eventToString(eventToAdd);
+      user.addEventForUser(eventToAdd);
+    }
+    catch (IllegalArgumentException ignored) {
+
+    }
   }
 
-  public void setTextView(IScheduleTextView v) {
-    scheduleTextView = v;
+  /**
+   * Delegates to the Schedule View to displays the errors in a dialog box if the user
+   * has tried to schedule an event with invalid inputs.
+   */
+  @Override
+  public void displayScheduleErrors() {
+    scheduleView.displayError();
   }
 
   /**
@@ -91,6 +129,9 @@ public class Controller implements ViewFeatures {
     this.plannerView.display(true);
   }
 
+  /**
+   * Delegate to the planner view to stop visualizing the planner.
+   */
   @Override
   public void closePlannerView() {
     plannerView.closePlannerView();
@@ -100,7 +141,6 @@ public class Controller implements ViewFeatures {
    * Delegate to the view of the schedule to close the view.
    */
   public void closeScheduleView() {
-    System.out.println("here");
     scheduleView.closeScheduleView();
   }
 
@@ -109,14 +149,13 @@ public class Controller implements ViewFeatures {
    */
   @Override
   public void openEventView() {
-   // System.out.println("opening an event");
     eventView.openEvent();
   }
-
 
   /**
    * Delegate to the view of the event to close the event view.
    */
+
   public void closeEventView() {
     eventView.closeEvent();
   }
@@ -134,17 +173,26 @@ public class Controller implements ViewFeatures {
    * @param timeOfEvent time of event the controller is searching for
    * @return an event at the given time.
    */
+
   public IEvent findEvent(ITime timeOfEvent) {
     return plannerView.findEventAtTime(timeOfEvent);
   }
 
   /**
    * Delegates to the view of the event to create empty fields in the panel.
-   *
    * @param host of the event
    */
-  public void resetPanelView(String host) {
+
+  public void resetEventPanelView(String host) {
     eventView.resetPanel(host);
+  }
+
+  /**
+   * Delegates to the view of the scheduled event to create empty fields in the panel.
+   * @param host of the event.
+   */
+  public void resetSchedulePanelView(String host) {
+    scheduleView.resetSchedulePanel(host);
   }
 
   /**
@@ -156,6 +204,11 @@ public class Controller implements ViewFeatures {
     eventView.populateEventContents(event);
   }
 
+  /**
+   * Delegate to the view of the planner to display the schedule of the user
+   * with the same given name.
+   * @param userName name to cross-reference with set of users in the system.
+   */
   @Override
   public void selectUserSchedule(String userName) {
     plannerView.displayUserSchedule(userName);
@@ -164,6 +217,7 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the schedule to open the view.
    */
+
   public void openPlannerView() {
     plannerView.openPlannerView();
   }
@@ -174,13 +228,15 @@ public class Controller implements ViewFeatures {
    * and modify it.
    * @param event a String of content tags to a String[] of content values
    */
+
   public void modifyEvent(IEvent event) {
     try {
       eventView.modifyEvent(event);
     }
-    catch (IllegalArgumentException | NullPointerException exc) {
-      throw new IllegalArgumentException("Error in modifying event: " +
-              "given event not part of system.");
+    catch (IllegalArgumentException | NullPointerException ignored) {
+      JOptionPane.showMessageDialog((Component) eventView,
+              "Error in modifying event: given event not part of system",
+              "ERROR", JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -194,69 +250,71 @@ public class Controller implements ViewFeatures {
       ITime startTime = eventToRemove.getStartTime();
       IEvent userEventAtStartTime =
               plannerView.getCurrentUser().getSchedule().eventOccurring(startTime);
-      if (eventToRemove.equals(userEventAtStartTime)) {
+      if ((eventToRemove.getStartTime().compareTimes(userEventAtStartTime.getStartTime()) == 0)
+        && (eventToRemove.getEndTime().compareTimes(userEventAtStartTime.getEndTime()) == 0)) {
         model.removeEventForRelevantUsers(eventToRemove, this.plannerView.getCurrentUser());
         this.openPlannerView();
       }
       else {
-        System.out.println("Error in removing event: Given event not part of system, check inputs");
+        JOptionPane.showMessageDialog((Component) eventView,
+                "Event to be removed is not part of schedule",
+                "ERROR", JOptionPane.ERROR_MESSAGE);
       }
     }
-      catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Error in removing event: Given event not part of system, check inputs");
-
+    catch (NullPointerException | IllegalArgumentException ignored) {
     }
   }
 
   /**
    * Delegate to the view of the event and create a new event.
    */
+
   // is casting okay here, and should this throw an error if event overlaps with any other schedule?? assumption that we're making
   @Override
   public void createEvent() {
     IEvent event = eventView.createEvent();
-    try {
-      model.addEventForRelevantUsers(event);
-    }
-    catch (IllegalArgumentException e) {
-      JOptionPane.showMessageDialog((Component) eventView, "Event conflicts with 1+ user schedules",
-              "ERROR", JOptionPane.ERROR_MESSAGE);
+    if (event != null) {
+      try {
+        model.addEventForRelevantUsers(event);
+      } catch (IllegalArgumentException e) {
+        JOptionPane.showMessageDialog((Component) eventView,
+                "Event conflicts with 1+ user schedules",
+                "ERROR", JOptionPane.ERROR_MESSAGE);
+      }
     }
     this.openPlannerView();
   }
 
+  /**
+   * Visualize the panel that allows users to automatically schedule an event.
+   */
+
   public void openScheduleView() {
     scheduleView.openScheduleView();
   }
+
   /**
    * Delegate to the view of the event and store the opened event's information.
    * @return a Hashmap of String content tags to String[] content values.
    */
+
   public HashMap<String, String[]> storeEvent() {
     return eventView.storeOpenedEventMap();
   }
 
-
   /**
    * Delegate to the view of the schedule to add the calendar info to the planner system.
    */
+
   @Override
   public void addCalendar() {
-   // scheduleView.addCalendarInfo();
     String filePath = plannerView.addCalendarInfo();
     if (!filePath.isEmpty()) {
       model.importScheduleFromXML(filePath);
-    //  model.getUsers();
-    //  for (IUser user : model.getUsers()) {
-    //    System.out.println("curr user: " + user.getName());
-    //  }
-     // scheduleView.getCurrentUser();
-    //  model.exportScheduleAsXML(filePath);
     }
     int numUsers = model.getUsers().size();
     String newUserName = model.getUsers().get(numUsers - 1).getName();
     plannerView.addUserToDropdown(newUserName);
-    //   scheduleView.add(newUserName);
     this.openPlannerView();
   }
 
@@ -270,6 +328,21 @@ public class Controller implements ViewFeatures {
       model.exportScheduleAsXML(filePath);
     }
     this.openPlannerView();
+  }
+
+  /**
+   * Display errors that arise when user provides invalid inputs when creating an event.
+   */
+  public void displayEventCreateErrors() {
+    eventView.displayCreateError();
+  }
+
+  /**
+   * Display errors that arise when user provides invalid inputs when removing an event.
+   * @param eventToRemove event the user is trying to remove.
+   */
+  public void displayEventRemoveErrors(Map<String, String[]> eventToRemove) {
+    eventView.displayRemoveError(eventToRemove);
   }
 
 }

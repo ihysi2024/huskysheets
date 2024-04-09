@@ -123,7 +123,7 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     menuPanel.add(createEventButton);
     menuPanel.add(scheduleEventButton);
     this.add(menuPanel, BorderLayout.SOUTH);
-    this.setVisible(true);
+    //this.setVisible(true);
   }
 
 
@@ -258,15 +258,15 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
 
     createEventButton.addActionListener(evt ->
-            features.resetPanelView(this.getCurrentUser().getName()));
+            features.resetEventPanelView(this.getCurrentUser().getName()));
     createEventButton.addActionListener(evt -> features.openEventView());
 
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
 
-    scheduleEventButton.addActionListener(evt -> features.openScheduleView());
     scheduleEventButton.addActionListener(evt ->
-            features.resetPanelView(this.getCurrentUser().getName()));
+            features.resetSchedulePanelView(this.getCurrentUser().getName()));
+    scheduleEventButton.addActionListener(evt -> features.openScheduleView());
 
 
   }

@@ -1,6 +1,7 @@
 package view;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -151,6 +152,13 @@ public class EventView extends JFrame implements IEventView {
     this.setVisible(true);
   }
 
+  public void displayCreateError() {
+    panel.displayCreateError();
+  }
+
+  public void displayRemoveError(Map<String, String[]> eventToRemove) {
+    panel.displayRemoveError(eventToRemove);
+  }
   /**
    * Updates list of users in event view.
    */

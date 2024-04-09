@@ -6,7 +6,7 @@ import model.ITime;
 import model.IUser;
 
 /**
- * Represents the interface for a schedule view to be implemented through a panel
+ * Represents the interface for a planner view to be implemented through a panel
  * and frame.
  */
 public interface IPlannerView {
@@ -35,6 +35,11 @@ public interface IPlannerView {
    * @return the currently selected user
    */
   IUser getCurrentUser();
+
+  /**
+   * Adds a user to the drop-down menu.
+   * @param userName user's name to add
+   */
   void addUserToDropdown(String userName);
 
   /**

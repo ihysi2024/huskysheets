@@ -1,4 +1,3 @@
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,16 +12,15 @@ import model.Time;
 import model.User;
 import view.EventView;
 import view.IEventView;
-import view.IScheduleStrategy;
+import strategies.IScheduleStrategy;
 import view.IScheduleTextView;
 import view.IPlannerView;
 import view.IScheduleView;
-import view.SchedulePanel;
 import view.ScheduleTextView;
 import view.PlannerView;
 import view.ScheduleView;
-import view.scheduleAnyTime;
-import view.scheduleWorkHours;
+import strategies.scheduleAnyTime;
+import strategies.scheduleWorkHours;
 
 /**
  * Represents the class that allows the user to run the calendar system end to end

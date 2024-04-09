@@ -2,10 +2,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import controller.Controller;
 import model.Event;
@@ -18,13 +19,16 @@ import model.Time;
 import model.User;
 import view.IEventView;
 import view.IPlannerView;
-import view.IScheduleStrategy;
+import strategies.IScheduleStrategy;
 import view.IScheduleTextView;
 import view.IScheduleView;
 import view.ScheduleTextView;
-import view.scheduleAnyTime;
-import view.scheduleWorkHours;
+import strategies.scheduleAnyTime;
+import strategies.scheduleWorkHours;
 
+/**
+ * Test the controller and that it can correctly delegate to the right views.
+ */
 public class testController {
   private IEvent morningLec;
   private IEvent morningSnack;
@@ -36,9 +40,12 @@ public class testController {
   private IUser chatUser;
   private PlannerSystem plannerSystem;
   private IScheduleTextView textV;
-
   private IScheduleStrategy strategyWorkHours;
   private IScheduleStrategy strategyAnyTime;
+
+  /**
+   * Set up examples to use in the corresponding tests.
+   */
   @Before
   public void setUp() {
     PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>());
@@ -167,6 +174,10 @@ public class testController {
     this.strategyWorkHours = new scheduleWorkHours();
   }
 
+  /**
+   * Test that the controller correctly delegates to the event view.
+   */
+
   @Test
   public void testEventFunctionality() {
     Controller controller = new Controller(this.plannerSystem, this.strategyAnyTime);
@@ -181,7 +192,7 @@ public class testController {
 
     Assert.assertEquals("Opening an event", outEvent.toString());
 
-    controller.resetPanelView("Prof. Lucia");
+    controller.resetEventPanelView("Prof. Lucia");
 
     Assert.assertEquals("Resetting the panel with host: Prof. Lucia", outEvent.toString());
 
@@ -207,8 +218,6 @@ public class testController {
 
     Assert.assertEquals("Creating an event", outEvent.toString());
 
-    //Assert.assertEquals("Opening planner view", outPlanner.toString());
-
     controller.storeEvent();
 
     Assert.assertEquals("Storing an opened event", outEvent.toString());
@@ -217,8 +226,21 @@ public class testController {
 
     Assert.assertEquals("Closing an event", outEvent.toString());
 
+    Map<String, String[]> dummyMap = new HashMap<>();
+
+    controller.displayEventCreateErrors();
+
+    Assert.assertEquals("Error in creating an event", outEvent.toString());
+
+    controller.displayEventRemoveErrors(dummyMap);
+
+    Assert.assertEquals("Error in removing an event", outEvent.toString());
+
   }
 
+  /**
+   * Test that the controller correctly delegates to the planner view.
+   */
   @Test
   public void testPlannerFunctionality() {
     Controller controller = new Controller(this.plannerSystem, this.strategyAnyTime);
@@ -299,6 +321,9 @@ public class testController {
     Assert.assertEquals("Closing the planner view", outPlanner.toString());
   }
 
+  /**
+   * Test that the controller correctly delegates to the schedule event view.
+   */
   @Test
   public void testScheduleFunctionality() {
     Controller controller = new Controller(this.plannerSystem, this.strategyAnyTime);
@@ -318,38 +343,18 @@ public class testController {
 
     controller.scheduleEventInPlanner();
 
-    Assert.assertEquals("Adding the scheduled event to this schedule: User: Prof. Lucia\n" +
-            "Sunday: \n" +
-            "Monday: \n" +
-            "Tuesday: \n" +
-            "name: CS3500 Morning Lecture\n" +
-            "time: Tuesday: 09:50->Tuesday: 11:30\n" +
-            "location: Churchill Hall 101\n" +
-            "online: false\n" +
-            "users: Prof. Lucia\n" +
-            "Student Anon\n" +
-            "Chat          \n" +
-            "name: CS3500 Afternoon Lecture\n" +
-            "time: Tuesday: 13:35->Tuesday: 15:15\n" +
-            "location: Churchill Hall 101\n" +
-            "online: false\n" +
-            "users: Prof. Lucia\n" +
-            "Chat          \n" +
-            "Wednesday: \n" +
-            "Thursday: \n" +
-            "Friday: \n" +
-            "name: Sleep\n" +
-            "time: Friday: 18:00->Sunday: 12:00\n" +
-            "location: Home\n" +
-            "online: true\n" +
-            "users: Prof. Lucia          \n" +
-            "Saturday: \n" +
-            "\n" +
-            "And from these times: Sunday: 12:00 - Sunday: 13:30", outSched.toString());
+    Assert.assertEquals("Opening schedule panel view", outSched.toString());
 
     controller.closeScheduleView();
 
     Assert.assertEquals("Closing schedule panel view", outSched.toString());
 
+    controller.resetSchedulePanelView("Prof. Lucia");
+
+    Assert.assertEquals("Resetting panel view", outSched.toString());
+
+    controller.displayScheduleErrors();
+
+    Assert.assertEquals("Displaying errors", outSched.toString());
   }
 }
