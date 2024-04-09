@@ -47,7 +47,6 @@ public class EventView extends JFrame implements IEventView {
    * @param event event to visualize in the event panel.
    */
   public void populateEventContents(IEvent event) {
-    System.out.println("got here to pop event");
     this.panel.populateEventContents(event);
   }
 
@@ -139,6 +138,18 @@ public class EventView extends JFrame implements IEventView {
    */
   public void openEvent(String host) {
     this.panel.openEvent(host);
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.setVisible(true);
+  }
+
+  /**
+   * Open the event view for the user to see.
+   * Delegate to the panel.
+   *
+   * @param host host of this event
+   */
+  public void openBlankEvent(String host) {
+    this.panel.openBlankEvent(host);
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setVisible(true);
   }

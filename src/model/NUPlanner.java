@@ -83,8 +83,6 @@ public class NUPlanner implements PlannerSystem {
     List<IEvent> newUserEvents = this.users.get(numUsers - 1).getSchedule().getEvents();
 
      ArrayList<IEvent> arrNewUserEvents = new ArrayList<>(newUserEvents);
-     System.out.println("user ************: " + this.users.get(numUsers - 1).getName());
-    System.out.println("ORIGINAL IMPORT SCHEDULE SIZE" + arrNewUserEvents.size());
 
     for (IEvent eventToAdd : arrNewUserEvents) {
       System.out.println("adding this event: " + eventToAdd.getEventName());

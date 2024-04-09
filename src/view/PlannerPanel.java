@@ -266,7 +266,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
 
     createEventButton.addActionListener(evt ->
             features.resetPanelView());
-    createEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
+    createEventButton.addActionListener(evt -> features.openBlankEventView(this.getCurrentUser().getName()));
 
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());

@@ -88,6 +88,17 @@ public class Controller implements ViewFeatures {
   }
 
   /**
+   * Delegate to the view of the event to open a blank event. The given user is the
+   * host of the event
+   *
+   * @param host the host of the event
+   */
+  @Override
+  public void openBlankEventView(String host) {
+    eventView.openBlankEvent(host);
+  }
+
+  /**
    * Delegate to the view of the schedule to display the schedule of the user
    * with the same given name.
    * @param userName name to cross-reference with set of users in the system.
@@ -167,54 +178,12 @@ public class Controller implements ViewFeatures {
    * @param eventToRemove event that the model should remove.
    */
   public void removeEvent(IEvent eventToRemove) {
-    System.out.println("tryin to remove event: " + eventToRemove.getEventName());
-    System.out.println("curr user: " + this.scheduleView.getCurrentUser().getName() );
-
     model.removeEventForRelevantUsers(eventToRemove, this.scheduleView.getCurrentUser());
-
-    /*
-
-     */
-
-    try {
-      System.out.println("got here in removeee");
-
-        model.removeEventForRelevantUsers(eventToRemove, this.scheduleView.getCurrentUser());
-        this.openScheduleView();
-
-    }
-    catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Error in removing event2: Given event not part of system, check inputs");
-
-    }
-
-
-    /*
-        System.out.println("tryin to remove event: " + eventToRemove.getEventName());
-    try {
-      ITime startTime = eventToRemove.getStartTime();
-      IEvent userEventAtStartTime =
-              scheduleView.getCurrentUser().getSchedule().eventOccurring(startTime);
-      if (eventToRemove.equals(userEventAtStartTime)) {
-        model.removeEventForRelevantUsers(eventToRemove, this.scheduleView.getCurrentUser());
-        this.openScheduleView();
-      }
-      else {
-        System.out.println("Error in removing event: Given event not part of system, check inputs");
-      }
-    }
-      catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Error in removing event2: Given event not part of system, check inputs");
-
-    }
-     */
-
   }
 
   /**
    * Delegate to the view of the event and create a new event.
    */
-  // is casting okay here, and should this throw an error if event overlaps with any other schedule?? assumption that we're making
   @Override
   public void createEvent() {
     IEvent event = eventView.createEvent();
@@ -248,8 +217,6 @@ public class Controller implements ViewFeatures {
     }
     int numUsers = model.getUsers().size();
     String newUserName = model.getUsers().get(numUsers - 1).getName();
-   // model.r
-    System.out.println("size of events: " + model.retrieveUserEvents(model.getUsers().get(numUsers - 1)).size());
     scheduleView.addUserToDropdown(newUserName);
     this.openScheduleView();
   }
