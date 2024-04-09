@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JPanel;
@@ -29,6 +30,7 @@ import controller.ViewFeatures;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
+import model.NUPlanner;
 import model.ReadOnlyPlanner;
 import model.Schedule;
 import model.Time;
@@ -43,8 +45,8 @@ import static model.Time.indexToTime;
 public class PlannerPanel extends JPanel implements IScheduleView {
 
   private final ReadOnlyPlanner model;
-  private IUser currentUser;
 
+  private IUser currentUser;
   private final JButton scheduleEventButton;
 
   private final JButton createEventButton;
@@ -66,7 +68,9 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * @param model desired model to represent Simon game
    */
   public PlannerPanel(ReadOnlyPlanner model) {
+//  public PlannerPanel(List<IUser> users, String currentUserName) {
     this.model = Objects.requireNonNull(model);
+    //this.model = new NUPlanner(users, currentUserName);
     MouseListener listener = new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -260,15 +264,15 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
 
     createEventButton.addActionListener(evt ->
-            features.resetPanelView(this.getCurrentUser().getName()));
-    createEventButton.addActionListener(evt -> features.openEventView());
+            features.resetPanelView());
+    createEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
 
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
 
-    scheduleEventButton.addActionListener(evt -> features.openEventView());
+    scheduleEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
     scheduleEventButton.addActionListener(evt ->
-            features.resetPanelView(this.getCurrentUser().getName()));
+            features.resetPanelView());
 
 
   }
@@ -441,9 +445,9 @@ public class PlannerPanel extends JPanel implements IScheduleView {
         //  System.out.println("time: " + timeOfEvent.getDate() + timeOfEvent.getHours() + timeOfEvent.getMinutes());
           IEvent eventClicked = features.findEvent(timeOfEvent);
           if(eventClicked != null) {
-            features.openEventView();
+            features.openEventView(panel.getCurrentUser().getName());
+            features.populateEvent(eventClicked); // check the order of this!! opening the event before populating it
             System.out.println(eventClicked.getEventName());
-            features.populateEvent(eventClicked);
           }
 
         } catch (NullPointerException ignored) {

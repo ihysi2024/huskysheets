@@ -25,20 +25,29 @@ public class NUPlanner implements PlannerSystem {
    */
   private List<IUser> users;
 
+  private String host;
+
   /**
    * Initialize a planner system with a given set of users.
    *
    * @param users non-duplicate user list in the system
    */
+  public NUPlanner(List<IUser> users, String host) {
+    this.users = new ArrayList<>(users);
+    this.host = host;
+  }
+
   public NUPlanner(List<IUser> users) {
     this.users = new ArrayList<>(users);
+    this.host = "None";
   }
 
   /**
    * Initialize a planner system with an empty list of users.
    */
-  public NUPlanner() {
+  public NUPlanner(String host) {
     this.users = new ArrayList<>();
+    this.host = host;
   }
 
   /**
@@ -48,6 +57,14 @@ public class NUPlanner implements PlannerSystem {
 
   public List<IUser> getUsers() {
     return this.users;
+  }
+
+  /**
+   *
+   * @return the current host whose planner is open
+   */
+  public String getHost() {
+    return this.host;
   }
 
   /**
@@ -166,6 +183,7 @@ public class NUPlanner implements PlannerSystem {
       catch (IllegalArgumentException e) {
         // if an exception is thrown, leave the list of events alone to avoid
         // causing conflict in any user's schedule
+        //addEventForRelevantUsers(prevEvent);
       }
     }
   }

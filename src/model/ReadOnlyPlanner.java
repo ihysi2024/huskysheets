@@ -25,6 +25,12 @@ public interface ReadOnlyPlanner {
   List<IUser> getUsers();
 
   /**
+   *
+   * @return the current host whose planner is open
+   */
+  String getHost();
+
+  /**
    * Retrieves the events in this user's schedule.
    *
    * @param user desired user for whom to retrieve the schedule

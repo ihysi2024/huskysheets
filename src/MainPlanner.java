@@ -27,7 +27,7 @@ public class MainPlanner {
    * @param args arguments to start an instance of Simon game
    */
   public static void main(String[] args) {
-    PlannerSystem model = new NUPlanner(); // Feel free to customize this as desired
+    PlannerSystem model = new NUPlanner("None"); // Feel free to customize this as desired
     IEvent morningSnack = new Event("snack",
             new Time(Time.Day.TUESDAY, 10, 30),
             new Time(Time.Day.TUESDAY, 11, 45),

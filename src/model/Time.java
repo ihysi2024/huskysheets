@@ -151,7 +151,7 @@ public class Time implements ITime {
       }
     }
     if (time.length() != 4) {
-      throw new IllegalArgumentException("invalid time input");
+      throw new IllegalArgumentException("invalid time input: " + time);
     }
 
     tempHours = Integer.parseInt(time.charAt(0) + String.valueOf(time.charAt(1)));

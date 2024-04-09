@@ -43,7 +43,7 @@ public class TestUser {
 
   @Before
   public void setUp() {
-    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>());
+    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>(), "None");
     this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     Schedule emptySchedule = new Schedule(new ArrayList<>());
@@ -163,7 +163,7 @@ public class TestUser {
             List.of("Student Anon"));
 
     this.officeHours = new Event("office hours",
-            new Time(Time.Day.MONDAY, 12, 01),
+            new Time(Time.Day.MONDAY, 12, 1),
             new Time(Time.Day.MONDAY, 12, 30),
             false,
             "Churchill Hall 101",
@@ -174,7 +174,7 @@ public class TestUser {
     users.add(this.profLuciaUser);
     users.add(this.studentAnonUser);
     users.add(this.chatUser);
-    NUPlanner plannerSystem = new NUPlanner(users);
+    NUPlanner plannerSystem = new NUPlanner(users, "None");
   }
 
   /**

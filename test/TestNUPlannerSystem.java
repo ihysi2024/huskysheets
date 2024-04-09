@@ -40,7 +40,7 @@ public class TestNUPlannerSystem {
 
   @Before
   public void setUp() {
-    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>());
+    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>(), "None");
     this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     Schedule emptySchedule = new Schedule(new ArrayList<>());
@@ -161,7 +161,7 @@ public class TestNUPlannerSystem {
     users.add(this.profLuciaUser);
     users.add(this.studentAnonUser);
     users.add(this.chatUser);
-    this.plannerSystem = new NUPlanner(users);
+    this.plannerSystem = new NUPlanner(users, "Prof. Lucia");
   }
 
   /**

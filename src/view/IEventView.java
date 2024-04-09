@@ -54,24 +54,18 @@ public interface IEventView {
   String[] getUsersInput();
 
   /**
-   * Modify an event with the user's new input to the event panel.
-   * @param event represents the updated event
+   * Resets the panel to its originally empty fields. Useful for trying to create a new event
+   * after an event has already been created.
    */
-  void modifyEvent(IEvent event);
+  void resetPanel();
 
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
    *
-   * @param host host of the event
+   * @param host host of this event
    */
-  void resetPanel(String host);
-
-  /**
-   * Resets the panel to its originally empty fields. Useful for trying to create a new event
-   * after an event has already been created.
-   */
-  void openEvent();
+  void openEvent(String host);
 
   /**
    * Store the current event's inputs as a map of String -> String[]

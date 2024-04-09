@@ -79,11 +79,12 @@ public class Controller implements ViewFeatures {
 
   /**
    * Delegate to the view of the event to open the view.
+   *
+   * @param host host of this event
    */
   @Override
-  public void openEventView() {
-   // System.out.println("opening an event");
-    eventView.openEvent();
+  public void openEventView(String host) {
+    eventView.openEvent(host);
   }
 
   /**
@@ -121,11 +122,9 @@ public class Controller implements ViewFeatures {
 
   /**
    * Delegates to the view of the event to create empty fields in the panel.
-   *
-   * @param host of the event
    */
-  public void resetPanelView(String host) {
-    eventView.resetPanel(host);
+  public void resetPanelView() {
+    eventView.resetPanel();
   }
 
   /**
@@ -147,11 +146,13 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the event to take in a current event as a map of its contents
    * and modify it.
-   * @param event a String of content tags to a String[] of content values
+   * @param oldEvent original event
+   * @param newEvent updated event
    */
-  public void modifyEvent(IEvent event) {
+  public void modifyEvent(IEvent oldEvent, IEvent newEvent) {
     try {
-      eventView.modifyEvent(event);
+      model.modifyEvent(oldEvent, newEvent);
+      scheduleView.displayUserSchedule(scheduleView.getCurrentUser().getName());
     }
     catch (IllegalArgumentException | NullPointerException exc) {
       throw new IllegalArgumentException("Error in modifying event: " +
@@ -214,21 +215,13 @@ public class Controller implements ViewFeatures {
    */
   @Override
   public void addCalendar() {
-   // scheduleView.addCalendarInfo();
     String filePath = scheduleView.addCalendarInfo();
     if (!filePath.isEmpty()) {
       model.importScheduleFromXML(filePath);
-    //  model.getUsers();
-    //  for (IUser user : model.getUsers()) {
-    //    System.out.println("curr user: " + user.getName());
-    //  }
-     // scheduleView.getCurrentUser();
-    //  model.exportScheduleAsXML(filePath);
     }
     int numUsers = model.getUsers().size();
     String newUserName = model.getUsers().get(numUsers - 1).getName();
     scheduleView.addUserToDropdown(newUserName);
- //   scheduleView.add(newUserName);
     this.openScheduleView();
   }
 

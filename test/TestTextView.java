@@ -75,7 +75,7 @@ public class TestTextView {
     users.add(profLuciaUser);
     users.add(studentAnonUser);
     users.add(chatUser);
-    this.plannerSystem = new NUPlanner(users);
+    this.plannerSystem = new NUPlanner(users, "Prof. Lucia");
     this.view = new ScheduleTextView(this.plannerSystem, new StringBuilder());
   }
 

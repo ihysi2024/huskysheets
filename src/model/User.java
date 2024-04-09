@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import static controller.UtilsXML.writeToFile;
 
@@ -57,8 +58,9 @@ public class User implements IUser {
    * @param filePathToSave path to save the XML written by the user
    */
   public void userSchedToXML(String filePathToSave) {
-    writeToFile(filePathToSave + this.name + "_schedule.xml", this.name,
+    writeToFile(filePathToSave + "\\" + this.name + "_schedule.xml", this.name,
             this.schedule.scheduleToXMLFormat());
+    System.out.println("got here");
   }
 
   /**
@@ -164,7 +166,7 @@ public class User implements IUser {
    * @param eventToMake HashMap of attribute name->list of values to convert to events.
    * @return the event corresponding to the HashMap
    */
-  public static IEvent makeEvent(HashMap<String, String[]> eventToMake) {
+  public static IEvent makeEvent(Map<String, String[]> eventToMake) {
     try {
       // generate temporary values for the event
       String tempEventName = "";
@@ -205,6 +207,7 @@ public class User implements IUser {
     }
     // input these variables to a new event and return it
     catch (IllegalArgumentException e) {
+      System.out.println("wasn't able to make event" + e.getMessage());
       return null;
     }
     //return null;
