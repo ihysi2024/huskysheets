@@ -85,11 +85,9 @@ public class EventView extends JFrame implements IEventView {
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * Delegate to the panel.
    * after an event has already been created.
-   *
-   * @param host host of the event
    */
-  public void resetPanel(String host) {
-    panel.resetPanel(host);
+  public void resetPanel() {
+    panel.resetPanel();
   }
 
   /**
@@ -115,16 +113,6 @@ public class EventView extends JFrame implements IEventView {
   }
 
   /**
-   * Modify an event with the user's new input to the event panel.
-   * Delegate to the panel.
-   *
-   * @param event represents the updated event
-   */
-  public void modifyEvent(IEvent event) {
-    panel.modifyEvent(event);
-  }
-
-  /**
    * Allow the user to interact with the calendar through the features present
    * in the event view.
    * Delegate to the panel.
@@ -146,8 +134,11 @@ public class EventView extends JFrame implements IEventView {
   /**
    * Open the event view for the user to see.
    * Delegate to the panel.
+   *
+   * @param host host of this event
    */
-  public void openEvent() {
+  public void openEvent(String host) {
+    this.panel.openEvent(host);
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setVisible(true);
   }
@@ -165,5 +156,14 @@ public class EventView extends JFrame implements IEventView {
   @Override
   public void updateUserList() {
     panel.updateUserList();
+  }
+
+  /**
+   * Displays the error that arises when a user tries to modify an event.
+   * @param host the user of the event
+   */
+
+  public void displayModifyError(IUser host) {
+    panel.displayModifyError(host);
   }
 }

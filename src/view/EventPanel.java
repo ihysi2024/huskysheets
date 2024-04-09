@@ -2,19 +2,22 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 import java.util.Objects;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JList;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import javax.swing.event.MouseInputAdapter;
 
@@ -47,10 +50,9 @@ public class EventPanel extends JPanel implements IEventView {
   private final JButton modifyEvent;
   private final JButton removeEvent;
   private final JButton saveEvent;
+  private String currHost;
 
-  private IScheduleTextView textV;
-
-  private IPlannerView plannerView;
+  private IEvent originalEvent;
 
   /**
    * TEXT FIELDS.
@@ -62,7 +64,7 @@ public class EventPanel extends JPanel implements IEventView {
   private final JTextField startTime;
 
   private final JTextField endTime;
-  private JList<String> usersList;
+  private final JList<String> usersList;
 
   /**
    * Creates a panel that will house the input labels, buttons, and text fields for the user to
@@ -72,12 +74,7 @@ public class EventPanel extends JPanel implements IEventView {
    */
   public EventPanel(ReadOnlyPlanner model) {
     this.model = Objects.requireNonNull(model);
-    this.plannerView = new PlannerView(model);
 
-    List<ViewFeatures> featuresListeners = new ArrayList<>();
-
-    MouseListener listener = new MouseEventsListener();
-    this.addMouseListener(listener);
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
     JLabel eventNameLabel = new JLabel("Event Name:");
@@ -141,9 +138,9 @@ public class EventPanel extends JPanel implements IEventView {
     DefaultListModel<String> allUsers = new DefaultListModel<>();
 
     for (IUser user : model.getUsers()) {
-      System.out.println("curr user adding to user list: " + user.getName());
       allUsers.addElement(user.getName());
     }
+
     usersList = new JList<>(allUsers);
     this.add(usersList);
 
@@ -176,6 +173,14 @@ public class EventPanel extends JPanel implements IEventView {
   }
 
   /**
+   * Get current user
+   */
+  private String getCurrUser() {
+    return model.getHost();
+   // return new PlannerView(model).getCurrentUser().getName();
+  }
+
+  /**
    * Set the event fields on the panel to the given event's fields.
    * Visualizes a user's entry for an event in the event panel text fields.
    *
@@ -198,16 +203,16 @@ public class EventPanel extends JPanel implements IEventView {
       onlineMenu.setSelectedIndex(1);
     }
 
-    System.out.println("Online menu selection" + onlineMenu.getSelectedItem().toString());
-    this.updateUserList();
+    // highlighting attendees of event
     usersList.clearSelection();
-
-    for (int plannerUserIdx = 0; plannerUserIdx < model.getUsers().size(); plannerUserIdx++) {
-      String currPlannerUserName = model.getUsers().get(plannerUserIdx).getName();
+    for (int plannerUserIdx = 0; plannerUserIdx < usersList.getModel().getSize(); plannerUserIdx++) {
+      String currPlannerUserName = usersList.getModel().getElementAt(plannerUserIdx);
       if (event.getUsers().contains(currPlannerUserName)) {
         usersList.addSelectionInterval(plannerUserIdx, plannerUserIdx);
       }
     }
+    this.originalEvent = event;
+
   }
 
   /**
@@ -245,25 +250,12 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Get the user's input for the event list of users.
+   * Makes sure that the host of the event (the current user) is at the front of the user list.
    *
    * @return a String[] of the user list
    */
   public String[] getUsersInput() {
-    String currUser = this.plannerView.getCurrentUser().getName();
-    List<String> arrOfUsers = usersList.getSelectedValuesList();
-    int indexOfHost = 0;
-    for (int indexOfUsers = 0; indexOfUsers < arrOfUsers.size(); indexOfUsers++) {
-      if (arrOfUsers.get(indexOfUsers).equals(currUser)) {
-        System.out.println("this is host index: " + arrOfUsers.get(indexOfUsers));
-        System.out.println("got here, this is host index: " + arrOfUsers.indexOf(currUser));
-        indexOfHost = indexOfUsers;
-        break;
-    }
-    }
-    Collections.swap(arrOfUsers, 0, indexOfHost);
-    return arrOfUsers.toArray(new String[0]);
-
-    //return usersList.getSelectedValuesList().toArray(new String[0]);
+    return usersList.getSelectedValuesList().toArray(new String[0]);
   }
 
   /**
@@ -292,21 +284,19 @@ public class EventPanel extends JPanel implements IEventView {
 
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
-   * after an event has already been created.
-   *
-   * @param host host of the event
+   * after an event has already been created
    */
-  public void resetPanel(String host) {
+  public void resetPanel() {
     eventName.setText("");
     startTime.setText("");
     endTime.setText("");
     location.setText("");
 
-    this.updateUserList();
+   // this.updateUserList();
     usersList.clearSelection();
     // always selecting this schedule's user as an invitee to event
     for (int index = 0; index < usersList.getModel().getSize(); index++) {
-      if (usersList.getModel().getElementAt(index).equals(host)) {
+      if (usersList.getModel().getElementAt(index).equals(this.currHost)) {
         usersList.addSelectionInterval(index, index);
       }
     }
@@ -315,13 +305,16 @@ public class EventPanel extends JPanel implements IEventView {
   /**
    * Open the event view for the user to see.
    */
-  public void openEvent() {
-    // implemented by the IEventView interface for the EventView. Panel shouldn't
-    // be implemented, entire view should be.
+  public void openEvent(String host) {
+    this.currHost = host;
+    this.updateUserList();
+
+    // this.updateUserList();
   }
 
   /**
-   * Updates list of users in event view.
+   * Updates list of users in event view, putting this user as the first element in the list.
+   * Used because host is always the first
    */
   @Override
   public void updateUserList() {
@@ -329,7 +322,12 @@ public class EventPanel extends JPanel implements IEventView {
     for (IUser user : model.getUsers()) {
       newUsers.addElement(user.getName());
     }
+    if (this.currHost != null) {
+      newUsers.removeElement(this.currHost);
+      newUsers.add(0, this.currHost);
+    }
     usersList.setModel(newUsers);
+
   }
 
   /**
@@ -368,9 +366,19 @@ public class EventPanel extends JPanel implements IEventView {
     removeEvent.addActionListener(evt -> features.closeEventView());
     removeEvent.addActionListener(evt -> features.openPlannerView());
 
-    modifyEvent.addActionListener(evt -> features.modifyEvent(makeEvent(features.storeEvent())));
+    modifyEvent.addActionListener(evt -> features.modifyEvent(this.originalEvent, this.getCurrEvent()));
+    modifyEvent.addActionListener(evt -> features.removeEvent(this.getCurrEvent()));
+    modifyEvent.addActionListener(evt -> features.displayEventCreateErrors());
+    modifyEvent.addActionListener(evt -> features.displayEventModifyErrors());
     modifyEvent.addActionListener(evt -> features.closeEventView());
     modifyEvent.addActionListener(evt -> features.openPlannerView());
+  }
+
+  /**
+   * Gets current event
+   */
+  public IEvent getCurrEvent() {
+    return makeEvent(this.storeOpenedEventMap());
   }
 
   /**
@@ -412,36 +420,16 @@ public class EventPanel extends JPanel implements IEventView {
       eventMade = makeEvent(eventMap);
       return eventMade;
     }
-    catch (IllegalArgumentException ignored) {
+    catch (IllegalArgumentException e) {
 
     }
     if (eventMade != null) {
       System.out.println("Create event: ");
       tView.eventToString(eventMade);
     }
-    /**
-
-    catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Could not create event: "
-              + "Event info not fully entered, error in given values, "
-              + "or event already exists at that time");
-    }
-    return null;
-     **/
     return null;
   }
 
-  /**
-   * Modify an event with the user's new input to the event panel.
-   *
-   * @param event represents the updated event
-   */
-  public void modifyEvent(IEvent event) {
-    PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
-    IScheduleTextView textV = new ScheduleTextView(modelForTextView, new StringBuilder());
-    System.out.println("Modify event: ");
-    System.out.println(textV.eventToString(event));
-  }
 
   public void displayCreateError() {
     int counter = 0;
@@ -525,6 +513,20 @@ public class EventPanel extends JPanel implements IEventView {
     if (sb.length() != 0) {
       JOptionPane.showMessageDialog(this, sb,
               "Errors in scheduling the event: \n", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  /**
+   * Displays the error that arises when a user tries to modify an event.
+   * @param host the user of the event
+   */
+
+  public void displayModifyError(IUser host) {
+
+    if (!this.usersList.getSelectedValuesList().contains(host.getName())) {
+      JOptionPane.showMessageDialog(this,
+              "Cannot remove host when modifying event",
+              "Errors in modifying the event: \n", JOptionPane.ERROR_MESSAGE);
     }
   }
 

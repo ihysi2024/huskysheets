@@ -105,9 +105,10 @@ public class Controller implements ViewFeatures {
               scheduleView.getUsersInput());
 
       scheduleTextView.eventToString(eventToAdd);
-      user.addEventForUser(eventToAdd);
+      model.addEventForRelevantUsers(eventToAdd);
+      this.openPlannerView();
     }
-    catch (IllegalArgumentException ignored) {
+    catch (IllegalArgumentException | IndexOutOfBoundsException ignored) {
 
     }
   }
@@ -146,10 +147,11 @@ public class Controller implements ViewFeatures {
 
   /**
    * Delegate to the view of the event to open the view.
+   *
+   * @param host host of this event
    */
-  @Override
-  public void openEventView() {
-    eventView.openEvent();
+  public void openEventView(String host) {
+    eventView.openEvent(host);
   }
 
   /**
@@ -180,12 +182,12 @@ public class Controller implements ViewFeatures {
 
   /**
    * Delegates to the view of the event to create empty fields in the panel.
-   * @param host of the event
    */
 
-  public void resetEventPanelView(String host) {
-    eventView.resetPanel(host);
+  public void resetPanelView() {
+    eventView.resetPanel();
   }
+
 
   /**
    * Delegates to the view of the scheduled event to create empty fields in the panel.
@@ -194,6 +196,7 @@ public class Controller implements ViewFeatures {
   public void resetSchedulePanelView(String host) {
     scheduleView.resetSchedulePanel(host);
   }
+
 
   /**
    * Delegates to the view fo the even to populate the fields in the panel
@@ -226,12 +229,14 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the event to take in a current event as a map of its contents
    * and modify it.
-   * @param event a String of content tags to a String[] of content values
+   * @param oldEvent original event
+   * @param newEvent updated event
    */
 
-  public void modifyEvent(IEvent event) {
+  public void modifyEvent(IEvent oldEvent, IEvent newEvent) {
     try {
-      eventView.modifyEvent(event);
+      model.modifyEvent(oldEvent, newEvent);
+      plannerView.displayUserSchedule(plannerView.getCurrentUser().getName());
     }
     catch (IllegalArgumentException | NullPointerException ignored) {
       JOptionPane.showMessageDialog((Component) eventView,
@@ -246,6 +251,17 @@ public class Controller implements ViewFeatures {
    * @param eventToRemove event that the model should remove.
    */
   public void removeEvent(IEvent eventToRemove) {
+
+    try {
+        model.removeEventForRelevantUsers(eventToRemove, this.plannerView.getCurrentUser());
+    }
+    catch (NullPointerException | IllegalArgumentException ignored) {
+
+    }
+
+
+    /*
+        System.out.println("tryin to remove event: " + eventToRemove.getEventName());
     try {
       ITime startTime = eventToRemove.getStartTime();
       IEvent userEventAtStartTime =
@@ -261,8 +277,12 @@ public class Controller implements ViewFeatures {
                 "ERROR", JOptionPane.ERROR_MESSAGE);
       }
     }
-    catch (NullPointerException | IllegalArgumentException ignored) {
+      catch (NullPointerException | IllegalArgumentException ignored) {
+      System.out.println("Error in removing event2: Given event not part of system, check inputs");
+
     }
+     */
+
   }
 
   /**
@@ -277,7 +297,7 @@ public class Controller implements ViewFeatures {
       try {
         model.addEventForRelevantUsers(event);
       } catch (IllegalArgumentException e) {
-        JOptionPane.showMessageDialog((Component) eventView,
+        JOptionPane.showMessageDialog((Component) plannerView,
                 "Event conflicts with 1+ user schedules",
                 "ERROR", JOptionPane.ERROR_MESSAGE);
       }
@@ -314,8 +334,9 @@ public class Controller implements ViewFeatures {
     }
     int numUsers = model.getUsers().size();
     String newUserName = model.getUsers().get(numUsers - 1).getName();
+   // model.r
     plannerView.addUserToDropdown(newUserName);
-    this.openPlannerView();
+    this.openScheduleView();
   }
 
   /**
@@ -343,6 +364,14 @@ public class Controller implements ViewFeatures {
    */
   public void displayEventRemoveErrors(Map<String, String[]> eventToRemove) {
     eventView.displayRemoveError(eventToRemove);
+  }
+
+  /**
+   * Display errors that arise when user provides invalid inputs when modifying an event.
+   */
+
+  public void displayEventModifyErrors() {
+    eventView.displayModifyError(plannerView.getCurrentUser());
   }
 
 }

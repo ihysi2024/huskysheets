@@ -43,6 +43,7 @@ public class testController {
   private IScheduleStrategy strategyWorkHours;
   private IScheduleStrategy strategyAnyTime;
 
+  private IEvent movie;
   /**
    * Set up examples to use in the corresponding tests.
    */
@@ -159,7 +160,7 @@ public class testController {
             "Churchill Hall 101",
             List.of("Student Anon",
                     "Prof. Lucia"));
-    Event movie = new Event("movie",
+    this.movie = new Event("movie",
             new Time(Time.Day.FRIDAY, 21, 15),
             new Time(Time.Day.FRIDAY, 23, 30),
             true,
@@ -188,13 +189,13 @@ public class testController {
     controller.setEventView(mockView);
     controller.setPlannerView(mockPlanner);
 
-    controller.openEventView();
+    controller.openEventView("Prof. Lucia");
 
     Assert.assertEquals("Opening an event", outEvent.toString());
 
-    controller.resetEventPanelView("Prof. Lucia");
+    controller.resetPanelView();
 
-    Assert.assertEquals("Resetting the panel with host: Prof. Lucia", outEvent.toString());
+    Assert.assertEquals("Resetting the panel", outEvent.toString());
 
     controller.populateEvent(this.morningSnack);
 
@@ -205,9 +206,9 @@ public class testController {
             "online: false\n" +
             "users: Student Anon", outEvent.toString());
 
-    controller.modifyEvent(this.morningSnack);
+    controller.modifyEvent(this.morningSnack, this.movie);
 
-    Assert.assertEquals("Modifying the event with the following event fields: \n" +
+    Assert.assertEquals("Populating the view with the following event fields: \n" +
             "name: snack\n" +
             "time: Tuesday: 08:30->Tuesday: 08:45\n" +
             "location: Churchill Hall 101\n" +
@@ -298,7 +299,7 @@ public class testController {
 
     controller.removeEvent(this.morningLec);
 
-    Assert.assertEquals("Opening planner view", outPlanner.toString());
+    Assert.assertEquals("Getting the current user", outPlanner.toString());
 
     controller.goLaunchPlanner();
 
@@ -310,7 +311,21 @@ public class testController {
 
     controller.addCalendar();
 
-    Assert.assertEquals("Opening planner view", outPlanner.toString());
+    Assert.assertEquals("Add this user: \n" +
+            "User: Chat\n" +
+            "Sunday: \n" +
+            "Monday: \n" +
+            "Tuesday: \n" +
+            "name: CS3500 Afternoon Lecture\n" +
+            "time: Tuesday: 13:35->Tuesday: 15:15\n" +
+            "location: Churchill Hall 101\n" +
+            "online: false\n" +
+            "users: Prof. Lucia\n" +
+            "Chat          \n" +
+            "Wednesday: \n" +
+            "Thursday: \n" +
+            "Friday: \n" +
+            "Saturday: \n", outPlanner.toString());
 
     controller.saveCalendars();
 
@@ -351,10 +366,10 @@ public class testController {
 
     controller.resetSchedulePanelView("Prof. Lucia");
 
-    Assert.assertEquals("Resetting panel view", outSched.toString());
+    Assert.assertEquals("Resetting the schedule panel", outSched.toString());
 
     controller.displayScheduleErrors();
 
-    Assert.assertEquals("Displaying errors", outSched.toString());
+    Assert.assertEquals("Displaying the error in scheduling an event", outSched.toString());
   }
 }

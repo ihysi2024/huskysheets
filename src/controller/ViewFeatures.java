@@ -41,7 +41,7 @@ public interface ViewFeatures {
    * Delegate to the view of the event to open the view.
    */
 
-  void openEventView();
+  void openEventView(String host);
 
 
   /**
@@ -58,15 +58,15 @@ public interface ViewFeatures {
   HashMap<String, String[]> storeEvent();
 
   /**
-   * Delegate to the view of the event to take in a current event as a map of its contents
-   * and modify it.
-   * @param event a String of content tags to a String[] of content values
+   * Modify an event with the user's new input to the event panel.
+   * @param oldEvent represents the updated event
+   * @param newEvent represents the updated event
    */
-  void modifyEvent(IEvent event);
+  void modifyEvent(IEvent oldEvent, IEvent newEvent);
 
 
   /**
-   * Delegates to the view fo the even to populate the fields in the panel
+   * Delegates to the view for the event to populate the fields in the panel
    * with the event information given.
    * @param event event that should be contained in the panel.
    */
@@ -111,19 +111,17 @@ public interface ViewFeatures {
   void removeEvent(IEvent eventToRemove);
 
   /**
-   * Delegates to the view of the event to create empty fields in the panel.
-   *
-   * @param host host of the event
-   */
-
-  void resetEventPanelView(String host);
-
-  /**
    * Delegates to the view of the scheduled event to create empty fields in the panel.
    * @param host of the event.
    */
 
   void resetSchedulePanelView(String host);
+
+  /**
+   * Delegates to the view of the event to create empty fields in the panel.
+   */
+
+  void resetPanelView();
 
   /**
    * Delegate to the view of the schedule to add the calendar info to the planner system.
@@ -163,4 +161,10 @@ public interface ViewFeatures {
    */
 
   void displayEventRemoveErrors(Map<String, String[]> eventToRemove);
+
+  /**
+   * Display errors that arise when user provides invalid inputs when modifying an event.
+   */
+
+  void displayEventModifyErrors();
 }

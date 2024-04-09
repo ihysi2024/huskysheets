@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JPanel;
@@ -29,6 +30,7 @@ import controller.ViewFeatures;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
+import model.NUPlanner;
 import model.ReadOnlyPlanner;
 import model.Schedule;
 import model.Time;
@@ -43,8 +45,8 @@ import static model.Time.indexToTime;
 public class PlannerPanel extends JPanel implements IPlannerView {
 
   private final ReadOnlyPlanner model;
-  private IUser currentUser;
 
+  private IUser currentUser;
   private final JButton scheduleEventButton;
 
   private final JButton createEventButton;
@@ -66,7 +68,9 @@ public class PlannerPanel extends JPanel implements IPlannerView {
    * @param model desired model to represent Simon game
    */
   public PlannerPanel(ReadOnlyPlanner model) {
+//  public PlannerPanel(List<IUser> users, String currentUserName) {
     this.model = Objects.requireNonNull(model);
+    //this.model = new NUPlanner(users, currentUserName);
     MouseListener listener = new MouseListener() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -226,6 +230,7 @@ public class PlannerPanel extends JPanel implements IPlannerView {
       this.resetPanel();
     }
 
+    this.repaint();
     menuPanel.revalidate();
     menuPanel.repaint();
     menuBar.revalidate();
@@ -257,17 +262,15 @@ public class PlannerPanel extends JPanel implements IPlannerView {
                     Objects.requireNonNull(selectUserButton.getSelectedItem()).toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
 
-    createEventButton.addActionListener(evt ->
-            features.resetEventPanelView(this.getCurrentUser().getName()));
-    createEventButton.addActionListener(evt -> features.openEventView());
+    createEventButton.addActionListener(evt -> features.resetPanelView());
+    createEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
 
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
 
+    scheduleEventButton.addActionListener(evt -> features.openScheduleView());
     scheduleEventButton.addActionListener(evt ->
             features.resetSchedulePanelView(this.getCurrentUser().getName()));
-    scheduleEventButton.addActionListener(evt -> features.openScheduleView());
-
 
   }
 
@@ -436,16 +439,13 @@ public class PlannerPanel extends JPanel implements IPlannerView {
         try {
           PlannerPanel panel = PlannerPanel.this;
           ITime timeOfEvent = panel.timeAtClick(e);
-        //  System.out.println("time: " + timeOfEvent.getDate() + timeOfEvent.getHours() + timeOfEvent.getMinutes());
           IEvent eventClicked = features.findEvent(timeOfEvent);
           if(eventClicked != null) {
-            features.openEventView();
-            System.out.println(eventClicked.getEventName());
-            features.populateEvent(eventClicked);
+            features.openEventView(panel.getCurrentUser().getName());
+            features.populateEvent(eventClicked); // check the order of this!! opening the event before populating it
           }
 
         } catch (NullPointerException ignored) {
-         // System.out.println("got here no event");
           // click where no event is present, ignoring
         }
       }
@@ -486,10 +486,7 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     chooser.setFileFilter(filter);
     int returnVal = chooser.showOpenDialog(addCalendar);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
-      System.out.println("Selected file path: "
-              + chooser.getSelectedFile().getName());
       return chooser.getSelectedFile().getName();
-      //displayUserSchedule(String userToShow);
     }
     return "";
   }
@@ -507,8 +504,6 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     chooser.setCurrentDirectory(workingDirectory);
     int returnVal = chooser.showOpenDialog(saveCalendar);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
-      System.out.println("Selected folder for saving each xml: "
-              + chooser.getCurrentDirectory() + "\\" + chooser.getSelectedFile().getName());
       return chooser.getCurrentDirectory() + "\\" + chooser.getSelectedFile().getName();
     }
     return "";

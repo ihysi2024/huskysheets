@@ -28,7 +28,7 @@ public class TestTime {
 
   @Before
   public void setUp() {
-    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>());
+    PlannerSystem modelForTextView = new NUPlanner(new ArrayList<>(), "None");
     this.textV = new ScheduleTextView(modelForTextView, new StringBuilder());
 
     this.satOnePM = new Time(Time.Day.SATURDAY, 13, 0);

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import controller.ViewFeatures;
 import model.IEvent;
+import model.IUser;
 
 /**
  * Frame for the event window.
@@ -56,24 +57,18 @@ public interface IEventView {
   String[] getUsersInput();
 
   /**
-   * Modify an event with the user's new input to the event panel.
-   * @param event represents the updated event
+   * Resets the panel to its originally empty fields. Useful for trying to create a new event
+   * after an event has already been created.
    */
-  void modifyEvent(IEvent event);
+  void resetPanel();
 
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
    *
-   * @param host host of the event
+   * @param host host of this event
    */
-  void resetPanel(String host);
-
-  /**
-   * Resets the panel to its originally empty fields. Useful for trying to create a new event
-   * after an event has already been created.
-   */
-  void openEvent();
+  void openEvent(String host);
 
   void displayCreateError();
 
@@ -95,5 +90,16 @@ public interface IEventView {
    */
   void updateUserList();
 
+  /**
+   * Displays the error that arises when a user tries to remove an event.
+   * @param eventToRemove event to remove in a map.
+   */
   void displayRemoveError(Map<String, String[]> eventToRemove);
+
+  /**
+   * Displays the error that arises when a user tries to modify an event.
+   * @param host the user of the event
+   */
+
+  void displayModifyError(IUser host);
 }

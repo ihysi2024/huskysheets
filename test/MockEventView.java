@@ -22,7 +22,7 @@ public class MockEventView implements IEventView {
 
   public MockEventView(StringBuilder out) {
     this.out = out;
-    PlannerSystem model = new NUPlanner();
+    PlannerSystem model = new NUPlanner("Prof. Lucia");
     this.view = new ScheduleTextView(model, out);
   }
 
@@ -99,19 +99,18 @@ public class MockEventView implements IEventView {
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
-   *
-   * @param host host of the event
    */
-  public void resetPanel(String host) {
+  public void resetPanel() {
     out.delete(0, out.length());
-    out.append("Resetting the panel with host: " + host);
+    out.append("Resetting the panel");
   }
 
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
+   * @param host of the event to open.
    */
-  public void openEvent() {
+  public void openEvent(String host) {
     out.append("Opening an event");
   }
 

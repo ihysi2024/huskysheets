@@ -25,20 +25,29 @@ public class NUPlanner implements PlannerSystem {
    */
   private List<IUser> users;
 
+  private String host;
+
   /**
    * Initialize a planner system with a given set of users.
    *
    * @param users non-duplicate user list in the system
    */
+  public NUPlanner(List<IUser> users, String host) {
+    this.users = new ArrayList<>(users);
+    this.host = host;
+  }
+
   public NUPlanner(List<IUser> users) {
     this.users = new ArrayList<>(users);
+    this.host = "None";
   }
 
   /**
    * Initialize a planner system with an empty list of users.
    */
-  public NUPlanner() {
+  public NUPlanner(String host) {
     this.users = new ArrayList<>();
+    this.host = host;
   }
 
   /**
@@ -48,6 +57,14 @@ public class NUPlanner implements PlannerSystem {
 
   public List<IUser> getUsers() {
     return this.users;
+  }
+
+  /**
+   *
+   * @return the current host whose planner is open
+   */
+  public String getHost() {
+    return this.host;
   }
 
   /**
@@ -63,15 +80,22 @@ public class NUPlanner implements PlannerSystem {
 
     // adding this user's events to each existing schedule
     int numUsers = this.users.size();
-    System.out.println("size: " + numUsers);
-    for (IUser currUser : this.users) {
-      System.out.println("curr user: " + currUser.getName());
-    }
     List<IEvent> newUserEvents = this.users.get(numUsers - 1).getSchedule().getEvents();
-    ArrayList<IEvent> arrNewUserEvents = new ArrayList<>(newUserEvents);
+
+     ArrayList<IEvent> arrNewUserEvents = new ArrayList<>(newUserEvents);
+     System.out.println("user ************: " + this.users.get(numUsers - 1).getName());
+    System.out.println("ORIGINAL IMPORT SCHEDULE SIZE" + arrNewUserEvents.size());
+
     for (IEvent eventToAdd : arrNewUserEvents) {
+      System.out.println("adding this event: " + eventToAdd.getEventName());
+      System.out.println("adding this event first user: " + eventToAdd.getUsers().get(0));
+
       this.addEventForRelevantUsers(eventToAdd);
     }
+
+
+
+    System.out.println("IMPORT SCHEDULE SIZE" + this.retrieveUserEvents(this.users.get(numUsers - 1)).size());
   }
 
   /**
@@ -82,6 +106,7 @@ public class NUPlanner implements PlannerSystem {
    */
   @Override
   public List<IEvent> retrieveUserEvents(IUser user) {
+    System.out.println("num events: " + user.getSchedule().getEvents().size());
     return user.getSchedule().getEvents();
   }
 
@@ -116,13 +141,15 @@ public class NUPlanner implements PlannerSystem {
   public void addEventForRelevantUsers(IEvent eventToAdd) {
    // System.out.println("current event adding: " + eventToAdd.getEventName());
     for (IUser currUser : this.users) {
-      if (eventToAdd.getUsers().contains(currUser.getName())) {
-      //  System.out.println("current user adding event to: " + currUser.getName());
+      boolean eventAtTime = currUser.getSchedule().getEvents().contains(eventToAdd);
+      if (eventToAdd.getUsers().contains(currUser.getName()) && !eventAtTime) {
+        System.out.println("current user adding event to: " + currUser.getName());
+        System.out.println("first user:" + eventToAdd.getUsers().get(0));
         try {
           // add event to current user's schedule
           currUser.addEventForUser(eventToAdd); // make sure event isn't being added for ira again
         } catch (IllegalArgumentException e) {
-          //throw new IllegalArgumentException("Cannot add event for: " + currUser.getName());
+          //throw new IllegalArgumentException("Cannot add event for: " + currUser.getName() + e.getMessage());
           // event is not added because it overlaps
         }
       }
@@ -166,6 +193,7 @@ public class NUPlanner implements PlannerSystem {
       catch (IllegalArgumentException e) {
         // if an exception is thrown, leave the list of events alone to avoid
         // causing conflict in any user's schedule
+        //addEventForRelevantUsers(prevEvent);
       }
     }
   }
@@ -197,7 +225,7 @@ public class NUPlanner implements PlannerSystem {
           catch (IllegalArgumentException e) {
             // ignoring exception because event will not be removed for this user
             System.out.println("given event not part of this user's schedule: " + currUser.getName());
-            //throw new IllegalArgumentException("given event not part of this user's schedule");
+            throw new IllegalArgumentException("given event not part of this user's schedule");
           }
         }
       }
