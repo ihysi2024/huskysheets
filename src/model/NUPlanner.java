@@ -210,9 +210,11 @@ public class NUPlanner implements PlannerSystem {
     String hostOfEvent = eventToRemove.getUsers().get(0);
 
     if (userRemovingEvent.getName().equals(hostOfEvent)) { // host removing event, remove for all
+      System.out.println("user removing the event is the same as host");
       while (iterUsers.hasNext()) {
         IUser currUser = iterUsers.next();
         if (eventToRemove.getUsers().contains(currUser.getName())) {
+          System.out.println("list of users has the current user");
           try {
             // remove the event from the current user's schedule
             currUser.removeEventForUser(eventToRemove);

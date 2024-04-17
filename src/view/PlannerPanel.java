@@ -42,7 +42,7 @@ import static model.Time.indexToTime;
  * Represents the panel of the planner system that will be displayed on the view.
  */
 
-public class PlannerPanel extends JPanel implements IScheduleView {
+public class PlannerPanel extends JPanel implements IPlannerView {
 
   private final ReadOnlyPlanner model;
 
@@ -127,7 +127,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     menuPanel.add(createEventButton);
     menuPanel.add(scheduleEventButton);
     this.add(menuPanel, BorderLayout.SOUTH);
-    this.setVisible(true);
+    //this.setVisible(true);
   }
 
 
@@ -174,7 +174,6 @@ public class PlannerPanel extends JPanel implements IScheduleView {
     return new Dimension(500, 500);
   }
 
-  @Override
   public void addUserToDropdown(String userName) {
     selectUserButton.addItem(userName);
   }
@@ -202,8 +201,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * Opens up the current user's schedule.
    */
 
-  @Override
-  public void openScheduleView() {
+  public void openPlannerView() {
     try {
       for (IUser user : model.getUsers()) {
         if (user.getName().equals(currentUser.getName())) {
@@ -246,7 +244,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * Closes the current schedule view.
    */
   @Override
-  public void closeScheduleView() {
+  public void closePlannerView() {
     this.setVisible(false);
   }
 
@@ -264,17 +262,17 @@ public class PlannerPanel extends JPanel implements IScheduleView {
                     Objects.requireNonNull(selectUserButton.getSelectedItem()).toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
 
-    createEventButton.addActionListener(evt ->
-            features.resetPanelView());
-    createEventButton.addActionListener(evt -> features.openBlankEventView(this.getCurrentUser().getName()));
+
+  //  createEventButton.addActionListener(evt -> features.openBlankEventView(this.getCurrentUser().getName()));
+    createEventButton.addActionListener(evt -> features.resetPanelView());
+    createEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
 
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
 
-    scheduleEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
+    scheduleEventButton.addActionListener(evt -> features.openScheduleView());
     scheduleEventButton.addActionListener(evt ->
-            features.resetPanelView());
-
+            features.resetSchedulePanelView(this.getCurrentUser().getName()));
 
   }
 
@@ -520,7 +518,7 @@ public class PlannerPanel extends JPanel implements IScheduleView {
    * @param timeOfEvent desired time to search at
    * @return Event occurring at that time, null otherwise
    */
-  @Override
+
   public IEvent findEventAtTime(ITime timeOfEvent) {
     return model.retrieveUserScheduleAtTime(this.currentUser, timeOfEvent);
   }

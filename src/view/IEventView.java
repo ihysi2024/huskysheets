@@ -1,9 +1,12 @@
 package view;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import controller.ViewFeatures;
 import model.IEvent;
+import model.IUser;
 
 /**
  * Frame for the event window.
@@ -74,6 +77,8 @@ public interface IEventView {
    */
   void openBlankEvent(String host);
 
+  void displayCreateError();
+
   /**
    * Store the current event's inputs as a map of String -> String[]
    * Useful for modifying an event with the current panel inputs.
@@ -91,4 +96,17 @@ public interface IEventView {
    * Updates list of users in event view.
    */
   void updateUserList();
+
+  /**
+   * Displays the error that arises when a user tries to remove an event.
+   * @param eventToRemove event to remove in a map.
+   */
+  void displayRemoveError(Map<String, String[]> eventToRemove);
+
+  /**
+   * Displays the error that arises when a user tries to modify an event.
+   * @param host the user of the event
+   */
+
+  void displayModifyError(IUser host);
 }

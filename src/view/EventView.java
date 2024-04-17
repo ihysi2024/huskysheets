@@ -1,6 +1,7 @@
 package view;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -47,7 +48,7 @@ public class EventView extends JFrame implements IEventView {
    * @param event event to visualize in the event panel.
    */
   public void populateEventContents(IEvent event) {
-    this.panel.populateEventContents(event);
+    panel.populateEventContents(event);
   }
 
   /**
@@ -142,6 +143,13 @@ public class EventView extends JFrame implements IEventView {
     this.setVisible(true);
   }
 
+  public void displayCreateError() {
+    panel.displayCreateError();
+  }
+
+  public void displayRemoveError(Map<String, String[]> eventToRemove) {
+    panel.displayRemoveError(eventToRemove);
+  }
   /**
    * Open the event view for the user to see.
    * Delegate to the panel.
@@ -160,5 +168,14 @@ public class EventView extends JFrame implements IEventView {
   @Override
   public void updateUserList() {
     panel.updateUserList();
+  }
+
+  /**
+   * Displays the error that arises when a user tries to modify an event.
+   * @param host the user of the event
+   */
+
+  public void displayModifyError(IUser host) {
+    panel.displayModifyError(host);
   }
 }

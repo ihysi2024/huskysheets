@@ -33,4 +33,5 @@ public interface IScheduleTextView {
    * @throws IOException if the planner system text view cannot be properly generated
    */
   void renderPlanner() throws IOException;
+
 }

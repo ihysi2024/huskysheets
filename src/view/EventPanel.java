@@ -2,22 +2,22 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.HashMap;
-import java.util.List;
+
+import java.util.Map;
 import java.util.Objects;
 
 import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JList;
+import javax.swing.JButton;
 import javax.swing.JTextField;
-import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import javax.swing.event.MouseInputAdapter;
 
@@ -160,6 +160,7 @@ public class EventPanel extends JPanel implements IEventView {
     buttonPanel.add(modifyEvent);
     buttonPanel.add(removeEvent);
     buttonPanel.setVisible(true);
+
     this.add(buttonPanel);
 
     setVisible(true);
@@ -195,6 +196,7 @@ public class EventPanel extends JPanel implements IEventView {
             + String.valueOf(event.getEndTime().getMinutes()));
     location.setText(event.getLocation());
 
+    System.out.println("Event online status stored: " + event.getOnline());
     if (event.getOnline()) {
       onlineMenu.setSelectedIndex(0);
     } else {
@@ -233,8 +235,8 @@ public class EventPanel extends JPanel implements IEventView {
    * @return a String[] of the event time
    */
   public String[] getTimeInput() {
-    return new String[]{startDay.getSelectedItem().toString(), startTime.getText(),
-            endDay.getSelectedItem().toString(), endTime.getText()};
+    return new String[]{startDay.getSelectedItem().toString(), this.startTime.getText(),
+            endDay.getSelectedItem().toString(), this.endTime.getText()};
   }
 
   /**
@@ -380,16 +382,22 @@ public class EventPanel extends JPanel implements IEventView {
   @Override
   public void addFeatures(ViewFeatures features) {
     saveEvent.addActionListener(evt -> features.createEvent());
+    saveEvent.addActionListener(evt -> features.displayEventCreateErrors());
     saveEvent.addActionListener(evt -> features.closeEventView());
-    saveEvent.addActionListener(evt -> features.openScheduleView());
+    saveEvent.addActionListener(evt -> features.openPlannerView());
 
+    //removeEvent.addActionListener(evt -> System.out.println(makeEvent(features.storeEvent())));
     removeEvent.addActionListener(evt -> features.removeEvent(makeEvent(features.storeEvent())));
+    removeEvent.addActionListener(evt -> features.displayEventRemoveErrors(features.storeEvent()));
     removeEvent.addActionListener(evt -> features.closeEventView());
-    removeEvent.addActionListener(evt -> features.openScheduleView());
+    removeEvent.addActionListener(evt -> features.openPlannerView());
 
     modifyEvent.addActionListener(evt -> features.modifyEvent(this.originalEvent, this.getCurrEvent()));
+    modifyEvent.addActionListener(evt -> features.removeEvent(this.getCurrEvent()));
+    modifyEvent.addActionListener(evt -> features.displayEventCreateErrors());
+    modifyEvent.addActionListener(evt -> features.displayEventModifyErrors());
     modifyEvent.addActionListener(evt -> features.closeEventView());
-    modifyEvent.addActionListener(evt -> features.openScheduleView());
+    modifyEvent.addActionListener(evt -> features.openPlannerView());
   }
 
   /**
@@ -428,16 +436,144 @@ public class EventPanel extends JPanel implements IEventView {
    * Store the user's input as an event that is added to their schedule.
    */
   public IEvent createEvent() {
-    try {
-      HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
-      return makeEvent(eventMap);
+    IEvent eventMade = null;
+    PlannerSystem modelForTextView = new NUPlanner(model.getUsers());
+    IScheduleTextView tView = new ScheduleTextView(modelForTextView,
+            new StringBuilder());
 
-    } catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Could not create event: "
-              + "Event info not fully entered, error in given values, "
-              + "or event already exists at that time");
+    HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
+    try {
+      eventMade = makeEvent(eventMap);
+      return eventMade;
+    }
+    catch (IllegalArgumentException e) {
+
+    }
+    if (eventMade != null) {
+      System.out.println("Create event: ");
+      tView.eventToString(eventMade);
     }
     return null;
+  }
+
+
+  public void displayCreateError() {
+    int counter = 0;
+    StringBuilder sb = new StringBuilder("");
+    if (this.eventName.getText().isEmpty()) {
+      sb.append("No name given to the event\n");
+    }
+    if (this.onlineMenu.getSelectedItem() == null) {
+      sb = sb.append("Online menu not selected\n");
+    }
+    sb = timeErrors(sb);
+    if (this.usersList.getSelectedValuesList() == null ||
+            this.usersList.getSelectedValuesList().isEmpty()) {
+      sb = sb.append("No users selected\n");
+    }
+    if (this.location.getText() == null || this.location.getText().isEmpty()) {
+      sb = sb.append("No location provided\n");
+    }
+    if (sb.length() != 0) {
+      JOptionPane.showMessageDialog(this, sb,
+              "Errors in scheduling the event: \n", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  private StringBuilder timeErrors(StringBuilder sb) {
+    if (this.startDay.getSelectedItem() == null || this.endDay.getSelectedItem() == null) {
+      sb = sb.append("No start day or end day selected\n");
+    }
+    if (this.startTime == null || this.startTime.getText().isEmpty()) {
+      sb = sb.append("No start time provided\n");
+    }
+    if (this.startTime.getText().length() != 4) {
+      sb = sb.append("Must provide start time in the form HHMM\n");
+    }
+    if (this.endTime == null || this.endTime.getText().isEmpty()) {
+      sb = sb.append("No end time provided\n");
+    }
+    if (this.endTime.getText().length() != 4) {
+      sb = sb.append("Must provide end time in the form HHMM\n");
+    }
+    try {
+      int start = Integer.parseInt(this.startTime.getText());
+      int end = Integer.parseInt(this.endTime.getText());
+      if (start <= 0) {
+        sb = sb.append("Invalid start time provided. Must be positive integer\n");
+      }
+      if (end <= 0) {
+        sb = sb.append("Invalid end time provided. Must be positive integer\n");
+      }
+    }
+    catch (IllegalArgumentException e) {
+      sb = sb.append("Invalid times provided. Must be positive integer\n");
+    }
+    return sb;
+  }
+
+  public void displayRemoveError(Map<String, String[]> eventToRemove) {
+    StringBuilder sb = new StringBuilder("");
+    for (String key: eventToRemove.keySet()) {
+      if (eventToRemove.get(key).length == 0) {
+        sb.append(key + " cannot be empty \n");
+      }
+      if (key == "time") {
+        if (eventToRemove.get(key).length != 4) {
+          sb.append("Missing time field input\n");
+        }
+        if (eventToRemove.get(key)[1] == null) {
+          sb.append("Start time cannot be null\n");
+        }
+        if (eventToRemove.get(key)[3] == null) {
+          sb.append("End time cannot be null\n");
+        }
+        if (eventToRemove.get(key)[1].length() != 4) {
+          sb.append("Start time must be in format HHMM\n");
+        }
+        if (eventToRemove.get(key)[3].length() != 4) {
+          sb.append("End time must be in format HHMM\n");
+        }
+      }
+    }
+    if (sb.length() != 0) {
+      JOptionPane.showMessageDialog(this, sb,
+              "Errors in scheduling the event: \n", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  /**
+   * Displays the error that arises when a user tries to modify an event.
+   * @param host the user of the event
+   */
+
+  public void displayModifyError(IUser host) {
+
+    if (!this.usersList.getSelectedValuesList().contains(host.getName())) {
+      JOptionPane.showMessageDialog(this,
+              "Cannot remove host when modifying event",
+              "Errors in modifying the event: \n", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  /**
+   * Mouse Events Listener to implement methods relevant to a user's mouse click.
+   */
+  private class MouseEventsListener extends MouseInputAdapter {
+    @Override
+    public void mousePressed(MouseEvent e) {
+      // not implemented because not needed for this program
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+      // not implemented because not needed for this program
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+      // not implemented because not needed for this program
+    }
   }
 
 }

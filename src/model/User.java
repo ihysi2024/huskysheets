@@ -186,12 +186,14 @@ public class User implements IUser {
         if (key.equals("name")) {
           tempEventName = eventToMake.get(key)[0];
         }
+
         if (key.equals("time")) {
+          System.out.println(eventToMake.get(key)[1]);
           tempStartTime = Time.stringToTime(eventToMake.get(key)[0], eventToMake.get(key)[1]);
           tempEndTime = Time.stringToTime(eventToMake.get(key)[2], eventToMake.get(key)[3]);
         }
         if (key.equals("location")) {
-          online = (eventToMake.get(key)[0].equals("true"));
+          online = (eventToMake.get(key)[0].toLowerCase().equals("true"));
           location = eventToMake.get(key)[1];
         }
         if (key.equals("users")) {
@@ -232,7 +234,9 @@ public class User implements IUser {
    * @param event to remove
    */
   public void removeEventForUser(IEvent event) {
+    System.out.println("Length of schedule pre-remove: " + this.schedule.getEvents().size());
     this.schedule.removeEvent(event);
+    System.out.println("Length of schedule post-remove: " + this.schedule.getEvents().size());
   }
 
 }

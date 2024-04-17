@@ -1,53 +1,24 @@
 package view;
 
+import java.util.HashMap;
+import java.util.List;
+
 import controller.ViewFeatures;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
+import model.Time;
 
 /**
- * Represents the interface for a schedule view to be implemented through a panel
- * and frame.
+ * Represents the view that allows an event to be scheduled as early as possible given
+ * user time constraints.
  */
 public interface IScheduleView {
-
-  /**
-   * Shows or hides the frame as specified.
-   *
-   * @param show true if frame should be shown, false otherwise
-   */
-  void display(boolean show);
 
   /**
    * Opens up the current user's schedule.
    */
   void openScheduleView();
-
-  /**
-   * Sets the current user to what is selected in the appropriate button in the schedule view.
-   */
-  void setCurrentUser();
-
-  /**
-   * Adds specified user to list of users to select from
-   *
-   * @param userName name of user to add
-   */
-  void addUserToDropdown(String userName);
-
-  /**
-   * Retrieves the currently selected user.
-   *
-   * @return the currently selected user
-   */
-  IUser getCurrentUser();
-
-  /**
-   * Displays the desired user's schedule.
-   *
-   * @param userToShow desired user schedule to show
-   */
-  void displayUserSchedule(String userToShow);
 
   /**
    * Closes the current schedule view.
@@ -60,37 +31,50 @@ public interface IScheduleView {
    *
    * @param features available features
    */
+
   void addFeatures(ViewFeatures features);
 
-  /**
-   * Handles the clicks in schedule panel. Specifically handles clicking on an event in the
-   * schedule and opening up the corresponding view.
-   *
-   * @param features features available
-   */
-  void addClickListener(ViewFeatures features);
 
   /**
-   * Allowing user to select an .xml file that contains the desired calendar.
-   * Automatically starts in current directory.
-   * @return String of the selected file path
+   * Get the user's input for the event name.
+   * @return a String of the event name
    */
-  String addCalendarInfo();
+
+  String getEventNameInput();
 
   /**
-   * Allowing user to select a folder where they will export the user schedules.
-   * Automatically starts in current directory.
-   * @return String of the selected file path
+   * Get the user's input for the event location.
+   * @return a String of the location
    */
-  String saveCalendarInfo();
+  String getLocationInput();
 
   /**
-   * Finds the event that is occurring at the specified time. If two events start and end at the
-   * same time, returns the earlier event.
-   *
-   * @param timeOfEvent desired time to search at
-   * @return Event occuring at that time, null otherwise
+   * Get the user's input for the event list of users.
+   * @return a String[] of the location
    */
-  IEvent findEventAtTime(ITime timeOfEvent);
+  List<String> getUsersInput();
 
+  /**
+   * Observes the user's input for whether the event is online or not
+   * @return whether the event is online
+   */
+  boolean getOnline();
+
+  /**
+   * Observes how long the event is.
+   * @return the length of the event
+   */
+  int getDuration();
+
+  /**
+   * Empties the fields in the panel for the user to enter their own inputs.
+   * @param host the host of the event.
+   */
+  void resetSchedulePanel(String host);
+
+  /**
+   * Display errors that may arise should the user provide invalid inputs to the panel.
+   */
+
+  void displayError();
 }
