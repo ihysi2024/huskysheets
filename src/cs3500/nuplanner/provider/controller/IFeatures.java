@@ -11,7 +11,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import cs3500.nuplanner.provider.model.ICentralSystem;
 import model.IEvent;
 import cs3500.nuplanner.provider.model.IEventTime;
-import cs3500.nuplanner.provider.strategy.ISchedulingStrategy;
 
 /**
  * Represents the features that the Controller implements through the model and view packages.
@@ -125,15 +124,4 @@ public interface IFeatures {
   void scheduleEvent(String name, boolean isOnline, String place, String durationMinutes,
                      List<String> userIds);
 
-  /**
-   * Sets the strategy in the controller with the given strategy.
-   * @param strategy ISchedulingStrategy instance.
-   */
-  void setStrategy(ISchedulingStrategy strategy);
-
-  /**
-   * accesses the strategy in the controller.
-   * @return returns a strategy instance.
-   */
-  ISchedulingStrategy accessStrategy();
 }
