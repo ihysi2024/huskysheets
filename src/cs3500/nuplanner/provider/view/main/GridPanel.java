@@ -174,10 +174,10 @@ public class GridPanel extends JPanel implements IGridPanel {
       @Override
       public void mouseClicked(MouseEvent e) {
         Point2D logicalP = transformPhysicalToLogical().transform(e.getPoint(), null);
-        System.out.println("coordinates: " + logicalP.getX() + ", " + logicalP.getY());
+       // System.out.println("coordinates: " + logicalP.getX() + ", " + logicalP.getY());
 
         IEventTime time = calculateTime(logicalP);
-        System.out.println("Current time clicked: " + time.toString());
+       // System.out.println("Current time clicked: " + time.toString());
 
         if (currentUser != null) {
           if (model.findEvent(currentUser, time) != null) {

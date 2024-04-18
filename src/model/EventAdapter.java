@@ -1,6 +1,7 @@
 package model;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -85,8 +86,11 @@ public class EventAdapter implements IEvent {
    */
   @Override
   public DayOfWeek accessStartDay() {
-    // return this.adaptee.getStartTime().getDate().getDayIdx();
-    return null;
+  //  model.IEvent newEvent = new Event(this.adaptee.getEventName(), this.adaptee.getOnline(), this.adaptee.getUsers())
+
+    ITime origTime = new Time(this.adaptee.getStartTime().getDate(), this.adaptee.getStartTime().getHours(), this.adaptee.getStartTime().getMinutes());
+    IEventTime adaptedTime = new TimeAdapter(origTime);
+    return adaptedTime.accessDay();
   }
 
   /**
@@ -96,7 +100,9 @@ public class EventAdapter implements IEvent {
    */
   @Override
   public DayOfWeek accessEndDay() {
-    return null;
+    ITime origTime = new Time(this.adaptee.getEndTime().getDate(), this.adaptee.getEndTime().getHours(), this.adaptee.getEndTime().getMinutes());
+    IEventTime adaptedTime = new TimeAdapter(origTime);
+    return adaptedTime.accessDay();
   }
 
   /**
@@ -106,7 +112,8 @@ public class EventAdapter implements IEvent {
    */
   @Override
   public IEventTime accessStartTime() {
-    return null;
+    ITime origTime = new Time(Time.Day.SUNDAY, this.adaptee.getStartTime().getHours(), this.adaptee.getStartTime().getMinutes());
+    return new TimeAdapter(origTime);
   }
 
   /**
@@ -116,7 +123,8 @@ public class EventAdapter implements IEvent {
    */
   @Override
   public IEventTime accessEndTime() {
-    return null;
+    ITime origTime = new Time(Time.Day.SUNDAY, this.adaptee.getEndTime().getHours(), this.adaptee.getEndTime().getMinutes());
+    return new TimeAdapter(origTime);
   }
 
   /**
@@ -126,7 +134,10 @@ public class EventAdapter implements IEvent {
    */
   @Override
   public IEventLocation accessLocation() {
-    return null;
+    model.IEvent newEvent = new Event(this.adaptee.getEventName(), this.adaptee.getStartTime(),
+            this.adaptee.getEndTime(), this.adaptee.getOnline(), this.adaptee.getLocation(),
+            this.adaptee.getUsers());
+    return new EventLocationAdapter(this.adaptee);
   }
 
   /**

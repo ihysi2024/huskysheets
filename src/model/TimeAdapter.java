@@ -12,7 +12,7 @@ import static model.Time.indexToTime;
 public class TimeAdapter implements IEventTime {
   private final ITime adaptee;
 
-  public TimeAdapter(Time adaptee) {
+  public TimeAdapter(ITime adaptee) {
     this.adaptee = Objects.requireNonNull(adaptee);
   }
 

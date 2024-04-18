@@ -9,10 +9,17 @@ import cs3500.nuplanner.provider.model.ICentralSystem;
 import cs3500.nuplanner.provider.view.event.EventFrame;
 import cs3500.nuplanner.provider.view.event.EventFrameAdapter;
 import cs3500.nuplanner.provider.view.event.IEventFrame;
+import cs3500.nuplanner.provider.view.main.GridPanel;
+import cs3500.nuplanner.provider.view.main.IGridPanel;
 import cs3500.nuplanner.provider.view.main.IMainFrame;
+import cs3500.nuplanner.provider.view.main.MainFrame;
+import cs3500.nuplanner.provider.view.main.MainFrameAdapter;
 import cs3500.nuplanner.provider.view.schedule.IScheduleFrame;
+import cs3500.nuplanner.provider.view.schedule.ScheduleFrame;
+import cs3500.nuplanner.provider.view.schedule.ScheduleFrameAdapter;
 import model.Event;
 import model.IEvent;
+import model.ISchedule;
 import model.NUPlanner;
 import model.NUPlannerAdapter;
 import model.PlannerSystem;
@@ -48,6 +55,7 @@ public class MainPlanner {
     IScheduleView schedView;
 
     IMainFrame providerMainView;
+    IGridPanel providerGridView;
     IEventFrame providerEventView;
     IScheduleFrame providerSchedView;
 
@@ -98,13 +106,18 @@ public class MainPlanner {
       }
       providerModel = new NUPlannerAdapter(model);
       providerEventView = new EventFrame(providerModel);
-      IEventView eViewAdapted = new EventFrameAdapter(providerEventView);
-      plannerView = new PlannerView(model);
-      schedView = new ScheduleView(model);
+      providerMainView = new MainFrame(providerModel);
+      providerGridView = new GridPanel(providerModel, providerEventView);
+      providerSchedView = new ScheduleFrame(providerModel);
 
-      controller.setPlannerView(plannerView);
+
+      IEventView eViewAdapted = new EventFrameAdapter(providerEventView);
+      IPlannerView plannerViewAdapted = new MainFrameAdapter(providerMainView, providerGridView);
+      IScheduleView schedViewAdapted = new ScheduleFrameAdapter(providerSchedView);
+
+      controller.setPlannerView(plannerViewAdapted);
       controller.setEventView(eViewAdapted);
-      controller.setScheduleView(schedView);
+      controller.setScheduleView(schedViewAdapted);
       IFeatures featuresAdapted = new FeaturesAdapter(controller);
 
       featuresAdapted.launch(providerModel);
