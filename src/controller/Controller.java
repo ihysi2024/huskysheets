@@ -1,7 +1,6 @@
 package controller;
 
 import java.awt.Component;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -155,6 +154,18 @@ public class Controller implements ViewFeatures {
   }
 
   /**
+   * Delegate to the view of the event to open a blank event. The given user is the
+   * host of the event
+   *
+   * @param host the host of the event
+   */
+  @Override
+  public void openBlankEventView(String host) {
+    eventView.openBlankEvent(host);
+  }
+
+
+  /**
    * Delegate to the view of the event to close the event view.
    */
 
@@ -259,37 +270,12 @@ public class Controller implements ViewFeatures {
 
     }
 
-
-    /*
-        System.out.println("tryin to remove event: " + eventToRemove.getEventName());
-    try {
-      ITime startTime = eventToRemove.getStartTime();
-      IEvent userEventAtStartTime =
-              plannerView.getCurrentUser().getSchedule().eventOccurring(startTime);
-      if ((eventToRemove.getStartTime().compareTimes(userEventAtStartTime.getStartTime()) == 0)
-        && (eventToRemove.getEndTime().compareTimes(userEventAtStartTime.getEndTime()) == 0)) {
-        model.removeEventForRelevantUsers(eventToRemove, this.plannerView.getCurrentUser());
-        this.openPlannerView();
-      }
-      else {
-        JOptionPane.showMessageDialog((Component) eventView,
-                "Event to be removed is not part of schedule",
-                "ERROR", JOptionPane.ERROR_MESSAGE);
-      }
-    }
-      catch (NullPointerException | IllegalArgumentException ignored) {
-      System.out.println("Error in removing event2: Given event not part of system, check inputs");
-
-    }
-     */
-
   }
 
   /**
    * Delegate to the view of the event and create a new event.
    */
 
-  // is casting okay here, and should this throw an error if event overlaps with any other schedule?? assumption that we're making
   @Override
   public void createEvent() {
     IEvent event = eventView.createEvent();
@@ -318,7 +304,7 @@ public class Controller implements ViewFeatures {
    * @return a Hashmap of String content tags to String[] content values.
    */
 
-  public HashMap<String, String[]> storeEvent() {
+  public Map<String, String[]> storeEvent() {
     return eventView.storeOpenedEventMap();
   }
 

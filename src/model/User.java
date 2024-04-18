@@ -221,7 +221,6 @@ public class User implements IUser {
    */
   public void addEventForUser(IEvent event) {
     try {
-      System.out.println("*********adding this event for the user: " + event. getEventName());
       this.schedule.addEvent(event);
     }
     catch (IllegalArgumentException ex) {
@@ -234,9 +233,7 @@ public class User implements IUser {
    * @param event to remove
    */
   public void removeEventForUser(IEvent event) {
-    System.out.println("Length of schedule pre-remove: " + this.schedule.getEvents().size());
     this.schedule.removeEvent(event);
-    System.out.println("Length of schedule post-remove: " + this.schedule.getEvents().size());
   }
 
 }

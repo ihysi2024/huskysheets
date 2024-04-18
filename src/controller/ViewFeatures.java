@@ -40,9 +40,13 @@ public interface ViewFeatures {
   /**
    * Delegate to the view of the event to open the view.
    */
-
   void openEventView(String host);
 
+  /**
+   * Delegate to the view of the event to open the view.
+   */
+
+  void openBlankEventView(String host);
 
   /**
    * Delegate to the view of the event and create a new event.
@@ -55,7 +59,7 @@ public interface ViewFeatures {
    * @return a Hashmap of String content tags to String[] content values.
    */
 
-  HashMap<String, String[]> storeEvent();
+  Map<String, String[]> storeEvent();
 
   /**
    * Modify an event with the user's new input to the event panel.

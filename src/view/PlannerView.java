@@ -1,9 +1,7 @@
 package view;
 
-import java.util.HashMap;
-import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 import controller.ViewFeatures;
 import model.IEvent;
@@ -117,6 +115,7 @@ public class PlannerView extends JFrame implements IPlannerView {
    */
   @Override
   public void openPlannerView() {
+    panel.openPlannerView();
   }
 
   /**

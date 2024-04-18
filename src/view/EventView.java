@@ -1,6 +1,5 @@
 package view;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.*;
@@ -48,7 +47,7 @@ public class EventView extends JFrame implements IEventView {
    * @param event event to visualize in the event panel.
    */
   public void populateEventContents(IEvent event) {
-    panel.populateEventContents(event);
+    this.panel.populateEventContents(event);
   }
 
   /**
@@ -108,7 +107,7 @@ public class EventView extends JFrame implements IEventView {
    * @return a map of strings to string[]
    */
   @Override
-  public HashMap<String, String[]> storeOpenedEventMap() {
+  public Map<String, String[]> storeOpenedEventMap() {
     return panel.storeOpenedEventMap();
   }
 
@@ -150,6 +149,18 @@ public class EventView extends JFrame implements IEventView {
   public void displayRemoveError(Map<String, String[]> eventToRemove) {
     panel.displayRemoveError(eventToRemove);
   }
+  /**
+   * Open the event view for the user to see.
+   * Delegate to the panel.
+   *
+   * @param host host of this event
+   */
+  public void openBlankEvent(String host) {
+    this.panel.openBlankEvent(host);
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.setVisible(true);
+  }
+
   /**
    * Updates list of users in event view.
    */

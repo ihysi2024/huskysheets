@@ -83,8 +83,6 @@ public class NUPlanner implements PlannerSystem {
     List<IEvent> newUserEvents = this.users.get(numUsers - 1).getSchedule().getEvents();
 
      ArrayList<IEvent> arrNewUserEvents = new ArrayList<>(newUserEvents);
-     System.out.println("user ************: " + this.users.get(numUsers - 1).getName());
-    System.out.println("ORIGINAL IMPORT SCHEDULE SIZE" + arrNewUserEvents.size());
 
     for (IEvent eventToAdd : arrNewUserEvents) {
       System.out.println("adding this event: " + eventToAdd.getEventName());
@@ -143,13 +141,12 @@ public class NUPlanner implements PlannerSystem {
     for (IUser currUser : this.users) {
       boolean eventAtTime = currUser.getSchedule().getEvents().contains(eventToAdd);
       if (eventToAdd.getUsers().contains(currUser.getName()) && !eventAtTime) {
-        System.out.println("current user adding event to: " + currUser.getName());
-        System.out.println("first user:" + eventToAdd.getUsers().get(0));
         try {
           // add event to current user's schedule
           currUser.addEventForUser(eventToAdd); // make sure event isn't being added for ira again
         } catch (IllegalArgumentException e) {
-          //throw new IllegalArgumentException("Cannot add event for: " + currUser.getName() + e.getMessage());
+          throw new IllegalArgumentException("Cannot add event for: "
+                  + currUser.getName() + e.getMessage());
           // event is not added because it overlaps
         }
       }
@@ -212,11 +209,9 @@ public class NUPlanner implements PlannerSystem {
     String hostOfEvent = eventToRemove.getUsers().get(0);
 
     if (userRemovingEvent.getName().equals(hostOfEvent)) { // host removing event, remove for all
-      System.out.println("user removing the event is the same as host");
       while (iterUsers.hasNext()) {
         IUser currUser = iterUsers.next();
         if (eventToRemove.getUsers().contains(currUser.getName())) {
-          System.out.println("list of users has the current user");
           try {
             // remove the event from the current user's schedule
             currUser.removeEventForUser(eventToRemove);
@@ -224,7 +219,6 @@ public class NUPlanner implements PlannerSystem {
           // given event is not in schedule
           catch (IllegalArgumentException e) {
             // ignoring exception because event will not be removed for this user
-            System.out.println("given event not part of this user's schedule: " + currUser.getName());
             throw new IllegalArgumentException("given event not part of this user's schedule");
           }
         }
@@ -234,10 +228,6 @@ public class NUPlanner implements PlannerSystem {
     else {
       userRemovingEvent.removeEventForUser(eventToRemove);
       removeUserFromEventList(eventToRemove, userRemovingEvent);
-      //eventToRemove.removeUserFromList(userRemovingEvent.getName());
-     // for (String userName : eventToRemove.getUsers()) {
-      //  System.out.println("updated user in event to remove: " + userName);
-     // }
     }
   }
 
@@ -264,15 +254,6 @@ public class NUPlanner implements PlannerSystem {
           }
         }
       }
-
-      /*
-            for (IEvent eventForThisUser : currUser.getSchedule().getEvents()) {
-        if (eventForThisUser.) {
-          System.out.println("for this user: " + currUser.getName() + ", found event: " + event.getEventName());
-          event.removeUserFromList(userToRemove.getName());
-        }
-      }
-       */
     }
   }
 

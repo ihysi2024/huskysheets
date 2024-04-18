@@ -3,17 +3,15 @@ package strategies;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.Event;
 import model.IEvent;
 import model.ITime;
 import model.IUser;
 import model.Time;
-import strategies.IScheduleStrategy;
+
 
 /**
  * This variation of the schedule strategy allows the user to schedule an event as early
@@ -40,7 +38,6 @@ public class scheduleWorkHours implements IScheduleStrategy {
     ITime startWorkWeek = new Time(Time.Day.MONDAY, 9, 0);
     int durationMin = 0;
 
-    System.out.println(orderedEvents.get(0).getEventName());
     // calculate the duration from 9 am on Monday morning to the earliest event
     // in the user's schedule
     durationMin = calculateDuration(startWorkWeek.getDate().getDayIdx(),

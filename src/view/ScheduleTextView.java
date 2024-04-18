@@ -1,8 +1,8 @@
 package view;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.IEvent;
 import model.ISchedule;
@@ -61,7 +61,7 @@ public class ScheduleTextView implements IScheduleTextView {
    */
   public String scheduleToString(ISchedule schedule) {
     StringBuilder scheduleStr = new StringBuilder();
-    HashMap<Time.Day, List<IEvent>> eventsMap = schedule.dayToEventsMappping();
+    Map<Time.Day, List<IEvent>> eventsMap = schedule.dayToEventsMappping();
     for (Time.Day dayOfTheWeek: eventsMap.keySet()) {
       scheduleStr.append(dayOfTheWeek.getDayString() + ": " + "\n");
       for (IEvent eventsInMap: eventsMap.get(dayOfTheWeek)) {

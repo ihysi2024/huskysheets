@@ -2,6 +2,7 @@ package model;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a user's schedule in the planner system. Main functionality is to add and remove
@@ -32,7 +33,7 @@ public interface ISchedule {
    *
    * @return a HashMap relating each day of the week to a list of events
    */
-  HashMap<Time.Day, List<IEvent>> dayToEventsMappping();
+  Map<Time.Day, List<IEvent>> dayToEventsMappping();
 
 
   /**

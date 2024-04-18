@@ -12,7 +12,6 @@ import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JPanel;
@@ -262,8 +261,10 @@ public class PlannerPanel extends JPanel implements IPlannerView {
                     Objects.requireNonNull(selectUserButton.getSelectedItem()).toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
 
-    createEventButton.addActionListener(evt -> features.resetPanelView());
-    createEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
+
+    createEventButton.addActionListener(evt ->
+            features.resetPanelView());
+    createEventButton.addActionListener(evt -> features.openBlankEventView(this.getCurrentUser().getName()));
 
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());

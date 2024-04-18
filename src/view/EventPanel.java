@@ -306,11 +306,24 @@ public class EventPanel extends JPanel implements IEventView {
    * Open the event view for the user to see.
    */
   public void openEvent(String host) {
+    this.updateUserListNoHostChange();
+   // this.currHost = host;
+   // this.updateUserList();
+
+    // this.updateUserList();
+  }
+
+  /**
+   * Open the event view for the user to see.
+   */
+  public void openBlankEvent(String host) {
     this.currHost = host;
     this.updateUserList();
 
     // this.updateUserList();
   }
+
+
 
   /**
    * Updates list of users in event view, putting this user as the first element in the list.
@@ -325,6 +338,19 @@ public class EventPanel extends JPanel implements IEventView {
     if (this.currHost != null) {
       newUsers.removeElement(this.currHost);
       newUsers.add(0, this.currHost);
+    }
+    usersList.setModel(newUsers);
+
+  }
+
+  /**
+   * Updates list of users in event view, putting this user as the first element in the list.
+   * Used because host is always the first
+   */
+  public void updateUserListNoHostChange() {
+    DefaultListModel<String> newUsers = new DefaultListModel<>();
+    for (IUser user : model.getUsers()) {
+      newUsers.addElement(user.getName());
     }
     usersList.setModel(newUsers);
 
@@ -397,7 +423,7 @@ public class EventPanel extends JPanel implements IEventView {
    * @return a map of strings to string[]
    */
 
-  public HashMap<String, String[]> storeOpenedEventMap() {
+  public Map<String, String[]> storeOpenedEventMap() {
     HashMap<String, String[]> eventMap = new HashMap<>();
     eventMap.put("name", this.getEventNameInput());
     eventMap.put("time", this.getTimeInput());
@@ -415,7 +441,7 @@ public class EventPanel extends JPanel implements IEventView {
     IScheduleTextView tView = new ScheduleTextView(modelForTextView,
             new StringBuilder());
 
-    HashMap<String, String[]> eventMap = this.storeOpenedEventMap();
+    Map<String, String[]> eventMap = this.storeOpenedEventMap();
     try {
       eventMade = makeEvent(eventMap);
       return eventMade;

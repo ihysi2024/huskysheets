@@ -126,7 +126,7 @@ interface for ScheduleView and its class implementation ScheduleTextView.
 ScheduleTextView, Time, and User have been tested in individual test files. 
 
 
-*******HW8 CHANGES*******
+*******HW6 CHANGES*******
 
 Changes to the model:
 1. All toString() methods implemented in model classes (i.e. Time, Event, Schedule)
@@ -188,3 +188,31 @@ an XML file.
 2. The controller takes in a ReadOnlyPlanner model and the two view interfaces to 
 easily delegate functionality between them. For example, a schedule view cannot modify
 an event but an event view can.
+
+
+*******HW7 CHANGES*******
+
+1. Instead of throwing error messages in the console, error dialog boxes now display the errors 
+in the GUI for the user to read and re-evaluate their inputs to the controller. 
+2. Instead of a regular event panel being displayed and interacted with by the user when 
+the Schedule Event button is pressed, a new Schedule View is implemented. This view allows
+the user to automatically schedule an event as early as possible given the following inputs:
+   a. Event Name
+   b. Event Location & Online Component
+   c. Event List of Users
+   d. Event Duration
+3. The event can be scheduled with the help of the IScheduleStrategy, which is implemented by 
+two separate classes. These classes are utilized by the controller depending on the time 
+constraints that the user details in their command line arguments. These time constraints
+can be one of:
+   a. anytime (in one word)
+   b. workhours (in one word)
+4. This strategy will schedule the event either with no time constraints or within the work week
+   (Monday 9 AM - 5 PM to Friday 9 AM - 5 PM)
+5. The controller now delegates to the view with methods written in the model for creating,
+removing, and modifying an event, rather than just printing to the console. 
+
+******EXTRA CREDIT**********
+
+All panels and views are resizable by allowing for clear separation between panel and view
+functionality, as well as correctly ordering the panel to the view. 

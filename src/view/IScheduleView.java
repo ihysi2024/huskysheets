@@ -1,13 +1,8 @@
 package view;
 
-import java.util.HashMap;
 import java.util.List;
 
 import controller.ViewFeatures;
-import model.IEvent;
-import model.ITime;
-import model.IUser;
-import model.Time;
 
 /**
  * Represents the view that allows an event to be scheduled as early as possible given

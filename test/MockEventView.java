@@ -6,6 +6,7 @@ import java.util.Map;
 import controller.ViewFeatures;
 import model.Event;
 import model.IEvent;
+import model.IUser;
 import model.NUPlanner;
 import model.PlannerSystem;
 import model.ReadOnlyPlanner;
@@ -105,12 +106,21 @@ public class MockEventView implements IEventView {
     out.append("Resetting the panel");
   }
 
+  @Override
+  public void openEvent(String host) {
+    out.delete(0, out.length());
+    out.append("Opening an event");
+  }
+
   /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
    * @param host of the event to open.
    */
-  public void openEvent(String host) {
+
+  @Override
+  public void openBlankEvent(String host) {
+    out.delete(0, out.length());
     out.append("Opening an event");
   }
 
@@ -125,7 +135,7 @@ public class MockEventView implements IEventView {
    * Useful for modifying an event with the current panel inputs.
    * @return a map of strings to string[]
    */
-  public HashMap<String, String[]> storeOpenedEventMap() {
+  public Map<String, String[]> storeOpenedEventMap() {
     out.delete(0, out.length());
     out.append("Storing an opened event");
     return null;
@@ -157,6 +167,12 @@ public class MockEventView implements IEventView {
   public void displayRemoveError(Map<String, String[]> eventToRemove) {
     out.delete(0, out.length());
     out.append("Error in removing an event");
+  }
+
+  @Override
+  public void displayModifyError(IUser host) {
+    out.delete(0, out.length());
+    out.append("Error in modifying an event");
   }
 
 }

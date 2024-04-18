@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
  * Represents a schedule in the planner system.
  */
 public class Schedule implements ISchedule {
-  private final ArrayList<IEvent> events;
+  private final List<IEvent> events;
 
 
-  public Schedule(ArrayList<IEvent> events) {
+  public Schedule(List<IEvent> events) {
     this.events = Objects.requireNonNull(events);
   }
 
@@ -32,6 +33,7 @@ public class Schedule implements ISchedule {
         countOverlapping++;
       }
     }
+    System.out.println(countOverlapping);
     if (countOverlapping != 0) {
       throw new IllegalArgumentException("Event coincides with another event");
     }
@@ -65,7 +67,7 @@ public class Schedule implements ISchedule {
    *
    * @return a HashMap relating each day of the week to a list of events
    */
-  public HashMap<Time.Day, List<IEvent>> dayToEventsMappping() {
+  public Map<Time.Day, List<IEvent>> dayToEventsMappping() {
     HashMap<Time.Day, List<IEvent>> dayToEvent = new LinkedHashMap<>();
     dayToEvent.put(Time.Day.SUNDAY, new ArrayList<>());
     dayToEvent.put(Time.Day.MONDAY, new ArrayList<>());

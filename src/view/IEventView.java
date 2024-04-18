@@ -1,7 +1,7 @@
 package view;
 
 import java.io.IOException;
-import java.util.HashMap;
+
 import java.util.Map;
 
 import controller.ViewFeatures;
@@ -63,12 +63,19 @@ public interface IEventView {
   void resetPanel();
 
   /**
+   * Opens an event panel to further populate its fields.
+   *
+   * @param host host of this event
+   */
+  void openEvent(String host);
+
+  /**
    * Resets the panel to its originally empty fields. Useful for trying to create a new event
    * after an event has already been created.
    *
    * @param host host of this event
    */
-  void openEvent(String host);
+  void openBlankEvent(String host);
 
   void displayCreateError();
 
@@ -77,7 +84,7 @@ public interface IEventView {
    * Useful for modifying an event with the current panel inputs.
    * @return a map of strings to string[]
    */
-  HashMap<String, String[]> storeOpenedEventMap();
+  Map<String, String[]> storeOpenedEventMap();
 
   /**
    * Store the user's input as an event that is added to their schedule.

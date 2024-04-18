@@ -193,6 +193,11 @@ public class testController {
 
     Assert.assertEquals("Opening an event", outEvent.toString());
 
+    controller.openBlankEventView("Prof. Lucia");
+
+    Assert.assertEquals("Opening an event", outEvent.toString());
+
+
     controller.resetPanelView();
 
     Assert.assertEquals("Resetting the panel", outEvent.toString());
@@ -236,6 +241,10 @@ public class testController {
     controller.displayEventRemoveErrors(dummyMap);
 
     Assert.assertEquals("Error in removing an event", outEvent.toString());
+
+    controller.displayEventModifyErrors();
+
+    Assert.assertEquals("Error in modifying an event", outEvent.toString());
 
   }
 
