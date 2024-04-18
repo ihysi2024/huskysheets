@@ -47,7 +47,11 @@ public class EventView extends JFrame implements IEventView {
    * @param event event to visualize in the event panel.
    */
   public void populateEventContents(IEvent event) {
+<<<<<<< HEAD
     this.panel.populateEventContents(event);
+=======
+    panel.populateEventContents(event);
+>>>>>>> 9ce7a66a97dd6d52ba94eb618a634ec9b7e25b2d
   }
 
   /**

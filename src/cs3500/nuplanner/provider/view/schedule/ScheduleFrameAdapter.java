@@ -1,30 +1,38 @@
-package view;
+package cs3500.nuplanner.provider.view.schedule;
 
 import java.util.List;
+import java.util.Objects;
 
-import javax.swing.JFrame;
-
+import controller.FeaturesAdapter;
 import controller.ViewFeatures;
+import cs3500.nuplanner.provider.controller.IFeatures;
+import cs3500.nuplanner.provider.view.event.IEventFrame;
+import view.IScheduleView;
 
-import model.ReadOnlyPlanner;
+public class ScheduleFrameAdapter implements IScheduleView {
 
-/**
- * Represents the view of the event panel that allows the user to automatically
- */
-public class ScheduleView extends JFrame implements IScheduleView {
-  private final SchedulePanel panel;
+  private final IScheduleFrame adaptee;
+
+  public ScheduleFrameAdapter(IScheduleFrame adaptee) {
+    this.adaptee = Objects.requireNonNull(adaptee);
+  }
 
   /**
-   * Creates a view of the Schedule view.
-   *
-   * @param model desired model to represent the Schedule view
+   * Opens up the current user's schedule.
    */
-  public ScheduleView(ReadOnlyPlanner model) {
-    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    this.panel = new SchedulePanel(model);
-    this.add(panel);
-    this.setVisible(false);
-    this.pack();
+  @Override
+  public void openScheduleView() {
+    this.adaptee.setVisible();
+
+  }
+
+  /**
+   * Closes the current schedule view.
+   */
+  @Override
+  public void closeScheduleView() {
+    this.adaptee.closeScheduleFrame();
+
   }
 
   /**
@@ -33,95 +41,77 @@ public class ScheduleView extends JFrame implements IScheduleView {
    *
    * @param features available features
    */
-
   @Override
   public void addFeatures(ViewFeatures features) {
-    panel.addFeatures(features);
+    IFeatures adaptedFeatures = new FeaturesAdapter(features);
+    this.adaptee.addFeatures(adaptedFeatures);
   }
 
   /**
    * Get the user's input for the event name.
+   *
    * @return a String of the event name
    */
-
   @Override
   public String getEventNameInput() {
-    return panel.getEventNameInput();
+    return null;
   }
 
   /**
    * Get the user's input for the event location.
+   *
    * @return a String of the location
    */
-
   @Override
   public String getLocationInput() {
-    return panel.getLocationInput();
+    return null;
   }
 
   /**
    * Get the user's input for the event list of users.
+   *
    * @return a String[] of the location
    */
-
   @Override
   public List<String> getUsersInput() {
-    return panel.getUsersInput();
+    return null;
   }
 
   /**
    * Observes the user's input for whether the event is online or not
+   *
    * @return whether the event is online
    */
-
-  public boolean getOnline() {
-    return panel.getOnline();
-  }
-
-  /**
-   * Opens up the current user's schedule.
-   */
-
   @Override
-  public void openScheduleView() {
-    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    this.setVisible(true);
+  public boolean getOnline() {
+    return false;
   }
 
   /**
    * Observes how long the event is.
+   *
    * @return the length of the event
    */
-
+  @Override
   public int getDuration() {
-    return panel.getDuration();
+    return 0;
   }
 
   /**
    * Empties the fields in the panel for the user to enter their own inputs.
+   *
    * @param host the host of the event.
    */
-
+  @Override
   public void resetSchedulePanel(String host) {
-    panel.resetSchedulePanel(host);
-  }
 
-  /**
-   * Closes the current schedule view.
-   */
-
-  public void closeScheduleView() {
-    this.setVisible(false);
   }
 
   /**
    * Display errors that may arise should the user provide invalid inputs to the panel.
    */
-
+  @Override
   public void displayError() {
-    panel.displayError();
 
   }
 }
-
-

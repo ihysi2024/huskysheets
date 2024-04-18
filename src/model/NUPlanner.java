@@ -104,7 +104,7 @@ public class NUPlanner implements PlannerSystem {
    */
   @Override
   public List<IEvent> retrieveUserEvents(IUser user) {
-    System.out.println("num events: " + user.getSchedule().getEvents().size());
+    // System.out.println("num events: " + user.getSchedule().getEvents().size());
     return user.getSchedule().getEvents();
   }
 

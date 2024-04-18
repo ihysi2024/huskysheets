@@ -171,4 +171,9 @@ public interface ViewFeatures {
    */
 
   void displayEventModifyErrors();
+
+  /**
+   * Listen to user input and visualize the game.
+   */
+  void goLaunchPlanner();
 }

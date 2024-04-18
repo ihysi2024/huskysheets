@@ -18,7 +18,6 @@ public interface IScheduleView {
   /**
    * Closes the current schedule view.
    */
-
   void closeScheduleView();
 
   /**
@@ -29,6 +28,7 @@ public interface IScheduleView {
    */
 
   void addFeatures(ViewFeatures features);
+
 
   /**
    * Get the user's input for the event name.

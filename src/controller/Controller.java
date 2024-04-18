@@ -124,6 +124,7 @@ public class Controller implements ViewFeatures {
   /**
    * Listen to user input and visualize the game.
    */
+  @Override
   public void goLaunchPlanner() {
     this.plannerView.addClickListener(this);
     this.plannerView.display(true);
@@ -164,6 +165,20 @@ public class Controller implements ViewFeatures {
     eventView.openBlankEvent(host);
   }
 
+<<<<<<< HEAD
+=======
+
+  /**
+   * Delegate to the view of the schedule to display the schedule of the user
+   * with the same given name.
+   * @param userName name to cross-reference with set of users in the system.
+   *
+   *                  public void selectUserSchedule(String userName) {
+   *     scheduleView.displayUserSchedule(userName);
+   *   }
+   */
+
+>>>>>>> 9ce7a66a97dd6d52ba94eb618a634ec9b7e25b2d
 
   /**
    * Delegate to the view of the event to close the event view.
@@ -221,6 +236,7 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the planner to display the schedule of the user
    * with the same given name.
+   *
    * @param userName name to cross-reference with set of users in the system.
    */
   @Override
@@ -262,7 +278,10 @@ public class Controller implements ViewFeatures {
    * @param eventToRemove event that the model should remove.
    */
   public void removeEvent(IEvent eventToRemove) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9ce7a66a97dd6d52ba94eb618a634ec9b7e25b2d
     try {
         model.removeEventForRelevantUsers(eventToRemove, this.plannerView.getCurrentUser());
     }
@@ -275,7 +294,10 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the event and create a new event.
    */
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9ce7a66a97dd6d52ba94eb618a634ec9b7e25b2d
   @Override
   public void createEvent() {
     IEvent event = eventView.createEvent();
@@ -320,7 +342,10 @@ public class Controller implements ViewFeatures {
     }
     int numUsers = model.getUsers().size();
     String newUserName = model.getUsers().get(numUsers - 1).getName();
+<<<<<<< HEAD
    // model.r
+=======
+>>>>>>> 9ce7a66a97dd6d52ba94eb618a634ec9b7e25b2d
     plannerView.addUserToDropdown(newUserName);
     this.openScheduleView();
   }

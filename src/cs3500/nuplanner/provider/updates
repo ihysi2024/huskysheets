@@ -1,0 +1,5 @@
+- changed "Schedule" to "ISchedule" in several places
+- deleted two methods having to do with strategies since we don't have to adapt those
+- potentially wont be able to upload xml because we take in a file path but they take in a Document
+- dont' think we can do removeUser in our planner system
+- had to change "calculateTime" method so that code would compile
