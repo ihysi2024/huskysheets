@@ -2,17 +2,25 @@ package view;
 
 import java.util.Objects;
 
+import controller.FeaturesAdapter;
+import controller.ViewFeatures;
 import cs3500.nuplanner.provider.controller.IFeatures;
 import cs3500.nuplanner.provider.model.IEvent;
 import cs3500.nuplanner.provider.view.eventFrame.IEventFrame;
+import model.EventAdapter;
 
 import static model.EventAdapter.convertToProviderEventType;
 
-public class EventPanelAdapter implements IEventFrame {
-  private final view.EventPanel adaptee;
+public class EventViewAdapter implements IEventFrame {
 
-  public EventPanelAdapter(view.EventPanel adaptee) {
+  private final view.IEventView adaptee;
+
+  public EventViewAdapter(view.IEventView adaptee) {
     this.adaptee = Objects.requireNonNull(adaptee);
+  }
+
+  private IEventView getEventView() {
+    return this.adaptee;
   }
 
   /**
@@ -20,7 +28,9 @@ public class EventPanelAdapter implements IEventFrame {
    */
   @Override
   public void setVisible() {
-    this.adaptee.setVisible(true);
+    //this.adaptee.setVisible(true);
+    IEventFrame viewAdapted = new EventViewAdapter(this.getEventView()); // is this circular??
+    viewAdapted.setVisible();
   }
 
   /**
@@ -49,6 +59,12 @@ public class EventPanelAdapter implements IEventFrame {
    */
   @Override
   public void addFeatures(IFeatures features) {
+    //IFeatures featuresAdapted = new FeaturesAdapter(features);
+   // ViewFeatures featuresAdapted;
+  //  this.getEventView();
+ //   IEventFrame viewAdapted = new EventViewAdapter(this.getEventView()); // is this circular??
+   // viewAdapted.addFeatures(features);
+    this.adaptee.addFeatures(features);
 
   }
 }

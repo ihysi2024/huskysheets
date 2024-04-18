@@ -1,6 +1,6 @@
-package cs3500.nuplanner.provider.view.scheduleFrame;
+package view.schedule;
 
-import cs3500.nuplanner.provider.controller.IFeatures;
+import controller.IFeatures;
 
 /**
  * interface for the SchedulePanel that handles scheduling events given a strategy.

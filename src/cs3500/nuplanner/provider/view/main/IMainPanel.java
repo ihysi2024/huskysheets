@@ -1,6 +1,6 @@
-package cs3500.nuplanner.provider.view.mainView;
+package view.main.panel;
 
-import cs3500.nuplanner.provider.controller.IFeatures;
+import controller.IFeatures;
 
 /**
  * Represents the JPanels for all the parts in the frame: GridPanel,
@@ -12,11 +12,6 @@ public interface IMainPanel {
    * Add features so that the controller can manipulate the filePanel.
    */
   void addFilePanelFeatures(IFeatures features);
-
-  /**
-   * Add features so that the controller can manipulate the GridPanel.
-   */
-  void addGridPanelFeatures(IFeatures features);
 
   /**
    * Add features so that the controller can manipulate the BottomPanel.

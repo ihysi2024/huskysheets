@@ -1,9 +1,9 @@
-package cs3500.nuplanner.provider.view.mainView;
+package view.main;
 
 
-import cs3500.nuplanner.provider.controller.IFeatures;
-import cs3500.nuplanner.provider.view.eventFrame.IEventFrame;
-import cs3500.nuplanner.provider.view.scheduleFrame.IScheduleFrame;
+import controller.IFeatures;
+import view.event.IEventFrame;
+import view.schedule.IScheduleFrame;
 
 /**
  * Represents the main view that holds the calendar in order to view user schedules.

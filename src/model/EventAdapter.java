@@ -11,9 +11,7 @@ import cs3500.nuplanner.provider.model.IEventTime;
 import static model.Time.indexToTime;
 
 public class EventAdapter implements IEvent {
-
   private final model.IEvent adaptee;
-
 
   public EventAdapter(model.IEvent adaptee) {
     this.adaptee = Objects.requireNonNull(adaptee);

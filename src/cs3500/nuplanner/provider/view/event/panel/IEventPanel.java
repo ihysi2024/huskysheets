@@ -1,4 +1,4 @@
-package cs3500.nuplanner.provider.view.eventFrame;
+package cs3500.nuplanner.provider.view.event.panel;
 
 import cs3500.nuplanner.provider.controller.IFeatures;
 import cs3500.nuplanner.provider.model.IEvent;
