@@ -189,8 +189,10 @@ public class GridPanel extends JPanel implements IGridPanel {
 
       private IEventTime calculateTime(Point2D coordinate) {
         Map<DayOfWeek, Integer> dayOfWeekNumbers = dayOfNumbersMap();
+        System.out.println(dayOfWeekNumbers);
         //int day = (int)coordinate.getX() / 10;
-        int day = (int)coordinate.getX() / 10 - 1;
+        int day = (int)coordinate.getX() / 10 ;
+
        // DayOfWeek currentDay = DayOfWeek.MONDAY;
         Time.Day currentDay = Time.Day.SUNDAY;
 

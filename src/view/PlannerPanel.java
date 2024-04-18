@@ -261,16 +261,10 @@ public class PlannerPanel extends JPanel implements IPlannerView {
                     Objects.requireNonNull(selectUserButton.getSelectedItem()).toString()));
     selectUserButton.addActionListener(evt -> features.setCurrentUser());
 
-
-<<<<<<< HEAD
-    createEventButton.addActionListener(evt ->
-            features.resetPanelView());
-    createEventButton.addActionListener(evt -> features.openBlankEventView(this.getCurrentUser().getName()));
-=======
   //  createEventButton.addActionListener(evt -> features.openBlankEventView(this.getCurrentUser().getName()));
     createEventButton.addActionListener(evt -> features.resetPanelView());
     createEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
->>>>>>> 9ce7a66a97dd6d52ba94eb618a634ec9b7e25b2d
+
 
     addCalendar.addActionListener(evt -> features.addCalendar());
     saveCalendar.addActionListener(evt -> features.saveCalendars());
@@ -289,6 +283,7 @@ public class PlannerPanel extends JPanel implements IPlannerView {
    * @param event IEvent to be painted
    */
   public void paintEvent(Graphics g, IEvent event) {
+    System.out.println(event.getEventName() + event.getStartTime() + event.getEndTime());
     Color color = new Color(255, 100, 200, 100);
     Graphics2D g2d = (Graphics2D) g.create();
     g2d.setColor(color);
@@ -300,6 +295,7 @@ public class PlannerPanel extends JPanel implements IPlannerView {
 
     int[] eventStartCoords = this.timeToPaintLoc(startTime);
     int[] eventEndCoords = this.timeToPaintLoc(endTime);
+
 
     int rectHeight = eventEndCoords[1] - eventStartCoords[1];  // length of one-day event
 
@@ -525,6 +521,7 @@ public class PlannerPanel extends JPanel implements IPlannerView {
    */
 
   public IEvent findEventAtTime(ITime timeOfEvent) {
+    System.out.println("TIME YOU'RE CLICKING: " + timeOfEvent);
     return model.retrieveUserScheduleAtTime(this.currentUser, timeOfEvent);
   }
 

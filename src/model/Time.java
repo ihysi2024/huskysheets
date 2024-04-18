@@ -216,7 +216,6 @@ public class Time implements ITime {
 
     int hours = totMinutes / 60;
     int minutes = totMinutes % 60;
-
     return new Time(tempDay, hours, minutes);
   }
 

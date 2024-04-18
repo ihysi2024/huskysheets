@@ -67,6 +67,7 @@ public class MainPlanner {
             "Churchill Hall 101",
             Arrays.asList("Prof. Lucia"));
 
+    /**
     IEvent officeHours = new Event("office hours",
             new Time(Time.Day.MONDAY, 12, 10),
             new Time(Time.Day.MONDAY, 15, 30),
@@ -80,18 +81,19 @@ public class MainPlanner {
             false,
             "home",
             Arrays.asList("Prof. Lucia"));
+     **/
 
     PlannerSystem model = new NUPlanner("None"); // Feel free to customize this as desired
     model.addUser(new User("Prof. Lucia",
-            new Schedule(new ArrayList<>(List.of(morningSnack, officeHours, sleep)))));
-    model.addUser(new User("Me", new Schedule(new ArrayList<>(List.of(officeHours)))));
+            new Schedule(new ArrayList<>(List.of(morningSnack)))));
+    model.addUser(new User("Me", new Schedule(new ArrayList<>(List.of()))));
 
 
     // using provider view + my model adapters. using my controller
     // my controller needs to set the planner view, eventview, and scheduleview - provider has equivalents of these?
 
     // my controller takes in a model: needs to be the adapted version of provider model (Read Only NU Planner Adapter)
-    if (args[1].equals("providerView")) {
+    if ((args.length > 1) && args[1].equals("providerView")) {
       ICentralSystem providerModel;
       if (args[0].equals("anytime")) {
         IScheduleStrategy anyTime = new scheduleAnyTime();

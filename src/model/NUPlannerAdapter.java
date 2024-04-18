@@ -137,8 +137,15 @@ public class NUPlannerAdapter implements ICentralSystem {
    * Convert customer's event into provider event type
    */
   private model.IEvent convertToProviderEventType(IEvent event) {
-    Time startTime = indexToTime(event.accessStartDay().getValue() - 1, event.accessStartTime().accessTimeAsInt());
-    Time endTime = indexToTime(event.accessEndDay().getValue() - 1, event.accessEndTime().accessTimeAsInt());
+    Time startTime = indexToTime(event.accessStartDay().getValue(), event.accessStartTime().accessTimeAsInt());
+    Time endTime = indexToTime(event.accessEndDay().getValue(), event.accessStartTime().accessTimeAsInt());
+
+    if (event.accessStartDay().getValue() == 7) {
+      startTime = indexToTime(0, event.accessStartTime().accessTimeAsInt());
+    }
+    if (event.accessEndDay().getValue() == 7) {
+      startTime = indexToTime(0, event.accessStartTime().accessTimeAsInt());
+    }
     String eventName = event.accessName();
     boolean online = event.accessLocation().accessOnline();
     String location = event.accessLocation().accessPlace();
@@ -243,8 +250,19 @@ public class NUPlannerAdapter implements ICentralSystem {
    */
   @Override
   public IEvent findEvent(String userId, IEventTime time) {
+
+    System.out.println("day: " + time.accessDay());
+    System.out.println("orig hours" + time.accessHour());
+    System.out.println("orig minutes" + time.accessMinute());
+
     ITime timeOfEvent = convertToProviderTimeType(time);
-    model.IEvent eventOccurring = this.adaptee.getUsers().get(0).getSchedule().eventOccurring(timeOfEvent);
+    System.out.println("hours" + timeOfEvent.getHours());
+    System.out.println("minutes" + timeOfEvent.getMinutes());
+
+
+    IUser currUser = getIUserFromUserName(userId);
+    model.IEvent eventOccurring = currUser.getSchedule().eventOccurring(timeOfEvent);
+    //model.IEvent eventOccurring = this.adaptee.getUsers().get(0).getSchedule().eventOccurring(timeOfEvent);
     if (eventOccurring == null) {
       throw new IllegalArgumentException("no event at this time");
     }

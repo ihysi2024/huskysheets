@@ -17,7 +17,7 @@ public class TimeAdapter implements IEventTime {
   }
 
   public static model.ITime convertToProviderTimeType(IEventTime time) {
-    int newDayVal = time.accessDay().getValue() - 1;
+    int newDayVal = time.accessDay().getValue();
     return indexToTime(newDayVal, time.accessTimeAsInt());
   }
 
@@ -86,7 +86,7 @@ public class TimeAdapter implements IEventTime {
    */
   @Override
   public int accessTimeAsInt() {
-    return 0; // not sure what this is
+    return this.accessHour() * 60 + this.accessMinute(); // not sure what this is
   }
 
   /**
