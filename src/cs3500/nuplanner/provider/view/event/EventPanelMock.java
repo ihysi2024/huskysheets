@@ -1,11 +1,10 @@
-package view.event.panel;
+package cs3500.nuplanner.provider.view.event;
 
 import java.time.DayOfWeek;
 import java.util.List;
 
-import controller.IFeatures;
-import model.IEvent;
-import view.event.panel.IEventPanel;
+import cs3500.nuplanner.provider.controller.IFeatures;
+import cs3500.nuplanner.provider.model.IEvent;
 
 /**
  * Mock for testing the EventPanel that uses the controller features.

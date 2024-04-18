@@ -1,9 +1,10 @@
-package view.schedule;
+package cs3500.nuplanner.provider.view.schedule;
 
 import javax.swing.JFrame;
 
-import controller.IFeatures;
-import model.IReadOnlyCentralSystem;
+import cs3500.nuplanner.provider.controller.IFeatures;
+import cs3500.nuplanner.provider.model.IReadOnlyCentralSystem;
+import cs3500.nuplanner.provider.view.schedule.SchedulePanel;
 
 /**
  * Represents the ScheduleFrame that manipulates the name, location, duration and list

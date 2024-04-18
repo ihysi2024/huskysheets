@@ -1,6 +1,6 @@
-package view.schedule;
+package cs3500.nuplanner.provider.view.schedule;
 
-import controller.IFeatures;
+import cs3500.nuplanner.provider.controller.IFeatures;
 
 /**
  * Interface for the schedule frame that allows user to schedule an event.

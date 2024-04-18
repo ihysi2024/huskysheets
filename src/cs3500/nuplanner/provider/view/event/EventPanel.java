@@ -1,4 +1,4 @@
-package cs3500.nuplanner.provider.view.event.panel;
+package cs3500.nuplanner.provider.view.event;
 
 import java.awt.FlowLayout;
 import java.awt.Dimension;

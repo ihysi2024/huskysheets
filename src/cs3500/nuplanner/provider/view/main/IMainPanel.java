@@ -1,6 +1,6 @@
-package view.main.panel;
+package cs3500.nuplanner.provider.view.main;
 
-import controller.IFeatures;
+import cs3500.nuplanner.provider.controller.IFeatures;
 
 /**
  * Represents the JPanels for all the parts in the frame: GridPanel,

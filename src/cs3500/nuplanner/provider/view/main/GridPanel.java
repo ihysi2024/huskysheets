@@ -1,4 +1,4 @@
-package view.main.panel;
+package cs3500.nuplanner.provider.view.main;
 
 import javax.swing.JPanel;
 
@@ -16,12 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import controller.IFeatures;
-import model.EventTime;
-import model.IEvent;
-import model.IEventTime;
-import model.IReadOnlyCentralSystem;
-import view.event.IEventFrame;
+import cs3500.nuplanner.provider.controller.IFeatures;
+//import cs3500.nuplanner.provider.model.EventTime;
+import cs3500.nuplanner.provider.model.IEvent;
+import cs3500.nuplanner.provider.model.IEventTime;
+import cs3500.nuplanner.provider.model.IReadOnlyCentralSystem;
+import cs3500.nuplanner.provider.view.event.IEventFrame;
+
+import model.Time;
+import model.TimeAdapter;
+import static model.Time.indexToTime;
 
 /**
  * Represents the Grid panel that adds the calendar grid with colored blocks
@@ -185,18 +189,24 @@ public class GridPanel extends JPanel implements IGridPanel {
 
       private IEventTime calculateTime(Point2D coordinate) {
         Map<DayOfWeek, Integer> dayOfWeekNumbers = dayOfNumbersMap();
-        int day = (int)coordinate.getX() / 10;
-        DayOfWeek currentDay = DayOfWeek.MONDAY;
+        //int day = (int)coordinate.getX() / 10;
+        int day = (int)coordinate.getX() / 10 - 1;
+       // DayOfWeek currentDay = DayOfWeek.MONDAY;
+        Time.Day currentDay = Time.Day.SUNDAY;
+
         int hour = (int)coordinate.getY() / 60;
         int minute = (int)coordinate.getY() % 60;
 
+        /*
         for (Entry<DayOfWeek, Integer> entry : dayOfWeekNumbers.entrySet()) {
           if (entry.getValue() == day) {
-            currentDay = entry.getKey();
-            break;
+              currentDay = entry.getKey();
+              break;
+            }
           }
-        }
-        return new EventTime(currentDay, hour, minute);
+         */
+
+        return new TimeAdapter(indexToTime(day, (int)coordinate.getY()));
       }
 
       @Override

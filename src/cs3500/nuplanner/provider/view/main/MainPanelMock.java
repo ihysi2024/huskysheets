@@ -1,4 +1,4 @@
-package view.main.panel;
+package cs3500.nuplanner.provider.view.main;
 
 import org.xml.sax.SAXException;
 
@@ -6,9 +6,9 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import controller.IFeatures;
-import view.main.panel.IMainPanel;
-import view.main.panel.MainPanel;
+import cs3500.nuplanner.provider.controller.IFeatures;
+import cs3500.nuplanner.provider.view.main.IMainPanel;
+import cs3500.nuplanner.provider.view.main.MainPanel;
 
 /**
  * Mock for testing the MainPanel that uses the controller features.

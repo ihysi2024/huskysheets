@@ -1,4 +1,4 @@
-package view.main.panel;
+package cs3500.nuplanner.provider.view.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,10 +21,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import model.IReadOnlyCentralSystem;
-import view.event.IEventFrame;
-import controller.IFeatures;
-import view.schedule.IScheduleFrame;
+import cs3500.nuplanner.provider.model.IReadOnlyCentralSystem;
+import cs3500.nuplanner.provider.view.event.IEventFrame;
+import cs3500.nuplanner.provider.controller.IFeatures;
+import cs3500.nuplanner.provider.view.schedule.IScheduleFrame;
+import cs3500.nuplanner.provider.view.main.IMainPanel;
+
 
 /**
  * Main panel that represents the JPanels of the MainFrame: FilePanel, GridPanel,

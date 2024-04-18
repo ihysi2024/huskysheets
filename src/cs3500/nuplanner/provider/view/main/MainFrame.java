@@ -1,20 +1,20 @@
-package view.main;
+package cs3500.nuplanner.provider.view.main;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import controller.IFeatures;
-import model.CentralSystemMock;
-import model.ICentralSystem;
-import model.IReadOnlyCentralSystem;
-import view.event.EventFrame;
-import view.event.IEventFrame;
-import view.main.panel.MainPanel;
-import view.main.panel.MainPanelMock;
-import view.event.panel.EventPanelMock;
-import view.schedule.IScheduleFrame;
-import view.schedule.ScheduleFrame;
-import view.schedule.SchedulePanelMock;
+import cs3500.nuplanner.provider.controller.IFeatures;
+//import cs3500.nuplanner.provider.model.CentralSystemMock;
+import cs3500.nuplanner.provider.model.ICentralSystem;
+import cs3500.nuplanner.provider.model.IReadOnlyCentralSystem;
+import cs3500.nuplanner.provider.view.event.EventFrame;
+import cs3500.nuplanner.provider.view.event.IEventFrame;
+import cs3500.nuplanner.provider.view.main.MainPanel;
+import cs3500.nuplanner.provider.view.main.MainPanelMock;
+import cs3500.nuplanner.provider.view.event.EventPanelMock;
+import cs3500.nuplanner.provider.view.schedule.IScheduleFrame;
+import cs3500.nuplanner.provider.view.schedule.ScheduleFrame;
+import cs3500.nuplanner.provider.view.schedule.SchedulePanelMock;
 
 
 /**
@@ -48,7 +48,7 @@ public class MainFrame extends JFrame implements IMainFrame {
    * @param model read-only model.
    * @param mainPanel mock MainPanel instance.
    */
-  public MainFrame(CentralSystemMock model, MainPanelMock mainPanel,
+  public MainFrame(IReadOnlyCentralSystem model, MainPanelMock mainPanel,
                    EventPanelMock eventPanel, SchedulePanelMock schedulePanel) {
     super();
     this.model = model;
@@ -149,5 +149,3 @@ public class MainFrame extends JFrame implements IMainFrame {
     scheduleFrame.closeScheduleFrame();
   }
 }
-
-

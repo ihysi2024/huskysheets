@@ -3,10 +3,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import controller.Controller;
+import cs3500.nuplanner.provider.model.ICentralSystem;
+import cs3500.nuplanner.provider.view.event.EventFrameAdapter;
 import model.Event;
 import model.IEvent;
 import model.NUPlanner;
+import model.NUPlannerAdapter;
 import model.PlannerSystem;
+import model.ReadOnlyNUPlannerAdapter;
 import model.Schedule;
 import model.Time;
 import model.User;
@@ -33,8 +37,10 @@ public class MainPlanner {
    */
   public static void main(String[] args) {
     Controller controller;
+    IPlannerView plannerView;
+    IEventView eView;
+    IScheduleView schedView;
 
-    PlannerSystem model = new NUPlanner("None"); // Feel free to customize this as desired
 
     IEvent morningSnack = new Event("snack",
             new Time(Time.Day.TUESDAY, 10, 30),
@@ -57,28 +63,47 @@ public class MainPlanner {
             "home",
             Arrays.asList("Prof. Lucia"));
 
+    PlannerSystem model = new NUPlanner("None"); // Feel free to customize this as desired
     model.addUser(new User("Prof. Lucia",
             new Schedule(new ArrayList<>(List.of(morningSnack, officeHours, sleep)))));
     model.addUser(new User("Me", new Schedule(new ArrayList<>(List.of(officeHours)))));
 
-    if (args[0].equals("anytime")) {
-      IScheduleStrategy anyTime = new scheduleAnyTime();
-      controller = new Controller(model, anyTime);
-    } else if (args[0].equals("workhours")) {
-      IScheduleStrategy workHours = new scheduleWorkHours();
-      controller = new Controller(model, workHours);
-    } else {
-      throw new IllegalArgumentException("Not a valid scheduling strategy");
-    }
-    IPlannerView plannerView = new PlannerView(model);
 
-    IEventView eView = new EventView(model);
-    IScheduleView schedView = new ScheduleView(model);
-    IScheduleTextView tView = new ScheduleTextView(model, System.out);
+    if (args[1].equals("providerView")) {
+      ICentralSystem providerModel;
+      if (args[0].equals("anytime")) {
+        IScheduleStrategy anyTime = new scheduleAnyTime();
+        providerModel = new NUPlannerAdapter(model);
+        controller = new Controller(model, anyTime);
+      } else if (args[0].equals("workhours")) {
+        IScheduleStrategy workHours = new scheduleWorkHours();
+        providerModel = new ReadOnlyNUPlannerAdapter(model);
+        controller = new Controller(model, workHours);
+      } else {
+        throw new IllegalArgumentException("Not a valid scheduling strategy");
+      }
+      plannerView = new PlannerView(model);
+      eView = new EventFrameAdapter(providerModel);
+      schedView = new ScheduleView(model);
+    }
+
+    else {
+      if (args[0].equals("anytime")) {
+        IScheduleStrategy anyTime = new scheduleAnyTime();
+        controller = new Controller(model, anyTime);
+      } else if (args[0].equals("workhours")) {
+        IScheduleStrategy workHours = new scheduleWorkHours();
+        controller = new Controller(model, workHours);
+      } else {
+        throw new IllegalArgumentException("Not a valid scheduling strategy");
+      }
+      plannerView = new PlannerView(model);
+      eView = new EventView(model);
+      schedView = new ScheduleView(model);
+    }
 
     controller.setPlannerView(plannerView);
     controller.setEventView(eView);
-    controller.setTextView(tView);
     controller.setScheduleView(schedView);
     controller.goLaunchPlanner();
   }

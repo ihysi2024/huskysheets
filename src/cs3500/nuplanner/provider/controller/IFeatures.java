@@ -9,7 +9,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import cs3500.nuplanner.provider.model.ICentralSystem;
-import model.IEvent;
+import cs3500.nuplanner.provider.model.IEvent;
 import cs3500.nuplanner.provider.model.IEventTime;
 
 /**

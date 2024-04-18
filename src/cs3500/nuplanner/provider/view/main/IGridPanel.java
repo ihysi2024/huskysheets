@@ -1,6 +1,6 @@
-package view.main.panel;
+package cs3500.nuplanner.provider.view.main;
 
-import controller.IFeatures;
+import cs3500.nuplanner.provider.controller.IFeatures;
 
 /**
  * Represents the interface for the GridPanel that implements the grid in the event menu.

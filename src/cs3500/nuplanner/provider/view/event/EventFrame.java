@@ -4,9 +4,8 @@ import javax.swing.JFrame;
 
 import cs3500.nuplanner.provider.model.IEvent;
 import cs3500.nuplanner.provider.model.IReadOnlyCentralSystem;
-import cs3500.nuplanner.provider.view.event.panel.EventPanel;
 import cs3500.nuplanner.provider.controller.IFeatures;
-import view.event.panel.EventPanelMock;
+import cs3500.nuplanner.provider.view.event.EventPanelMock;
 
 /**
  * Represents the event frame view that manipulates event name, location, time, and

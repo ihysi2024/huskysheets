@@ -1,4 +1,4 @@
-package view.schedule;
+package cs3500.nuplanner.provider.view.schedule;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,8 +15,8 @@ import javax.swing.Box;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import controller.IFeatures;
-import model.IReadOnlyCentralSystem;
+import cs3500.nuplanner.provider.controller.IFeatures;
+import cs3500.nuplanner.provider.model.IReadOnlyCentralSystem;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
 import java.awt.BorderLayout;

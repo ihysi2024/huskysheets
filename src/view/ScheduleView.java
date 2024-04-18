@@ -15,9 +15,9 @@ public class ScheduleView extends JFrame implements IScheduleView {
   private final SchedulePanel panel;
 
   /**
-   * Creates a view of the Simon game.
+   * Creates a view of the Schedule view.
    *
-   * @param model desired model to represent Simon game
+   * @param model desired model to represent the Schedule view
    */
   public ScheduleView(ReadOnlyPlanner model) {
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

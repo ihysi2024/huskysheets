@@ -1,8 +1,11 @@
-package cs3500.nuplanner.provider.view.event.panel;
+package cs3500.nuplanner.provider.view.schedule;
 
 import java.util.List;
 
 import cs3500.nuplanner.provider.controller.IFeatures;
+
+import cs3500.nuplanner.provider.view.schedule.SchedulePanel;
+import cs3500.nuplanner.provider.view.schedule.ISchedulePanel;
 
 /**
  *  Mock for testing SchedulePanel's use of controller features.
