@@ -327,7 +327,7 @@ public class testController {
             "Friday: \n" +
             "Saturday: \n", outPlanner.toString());
 
-    controller.saveCalendars();
+    controller.saveCalendars("test");
 
     Assert.assertEquals("Opening planner view", outPlanner.toString());
 

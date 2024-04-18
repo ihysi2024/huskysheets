@@ -63,10 +63,10 @@ public class MockPlannerView implements IPlannerView {
   /**
    * Sets the current user to what is selected in the appropriate button in the schedule view.
    */
-
-  public void setCurrentUser() {
-    out.delete(0, out.length());
+  public String setCurrentUser() {
     out.append("Setting the current user");
+    out.delete(0, out.length());
+    return "";
   }
 
   /**

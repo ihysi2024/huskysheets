@@ -3,3 +3,5 @@
 - potentially wont be able to upload xml because we take in a file path but they take in a Document
 - dont' think we can do removeUser in our planner system
 - had to change "calculateTime" method so that code would compile
+- provider 'saveCalendar' takes in a String but ours doesn't and grabs the String from the field within the view
+    - changed our view / model to accomade this, now works for both our view and provider view

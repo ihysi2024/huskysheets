@@ -109,7 +109,17 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void openNewEventFrame() {
-    this.adaptee.openBlankEventView(""); // setting blank host
+    System.out.println("getting here, create event");
+   // this.adaptee.openBlankEventView(""); // setting blank host
+  //  this.adaptee.openEventView("");
+    String currHost = this.adaptee.setCurrentUser();
+    System.out.println("curr host: " + currHost);
+    this.adaptee.resetPanelView();
+    this.adaptee.openEventView(currHost);
+
+    //createEventButton.addActionListener(evt -> features.resetPanelView());
+  //  createEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
+   // this.adaptee.
   }
 
   /**
@@ -138,7 +148,7 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void saveCalendarsXML(String filePath) {
-    this.adaptee.saveCalendars();
+    this.adaptee.saveCalendars(filePath);
   }
 
   /**

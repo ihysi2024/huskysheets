@@ -32,8 +32,8 @@ public class PlannerView extends JFrame implements IPlannerView {
   /**
    * Sets the current user to what is selected in the appropriate button in the schedule view.
    */
-  public void setCurrentUser() {
-    panel.setCurrentUser();
+  public String setCurrentUser() {
+    return panel.setCurrentUser();
   }
 
   /**

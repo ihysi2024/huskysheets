@@ -27,7 +27,7 @@ public interface IPlannerView {
   /**
    * Sets the current user to what is selected in the appropriate button in the schedule view.
    */
-  void setCurrentUser();
+  String setCurrentUser();
 
   /**
    * Retrieves the currently selected user.

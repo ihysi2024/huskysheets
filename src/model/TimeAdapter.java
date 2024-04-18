@@ -86,7 +86,8 @@ public class TimeAdapter implements IEventTime {
    */
   @Override
   public int accessTimeAsInt() {
-    return 0; // not sure what this is
+    return this.adaptee.minutesSinceMidnight();
+   // return 0; // not sure what this is
   }
 
   /**

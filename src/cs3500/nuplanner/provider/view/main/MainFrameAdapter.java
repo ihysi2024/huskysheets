@@ -40,6 +40,7 @@ public class MainFrameAdapter implements IPlannerView {
   @Override
   public void openPlannerView() {
     //this.adapteeMain.
+    this.adapteeMain.setVisible();
 
   }
 
@@ -47,7 +48,8 @@ public class MainFrameAdapter implements IPlannerView {
    * Sets the current user to what is selected in the appropriate button in the schedule view.
    */
   @Override
-  public void setCurrentUser() {
+  public String setCurrentUser() {
+    return "";
 
   }
 
@@ -111,7 +113,6 @@ public class MainFrameAdapter implements IPlannerView {
   @Override
   public void addClickListener(ViewFeatures features) {
    // this.adapteeMain.
-
   }
 
   /**

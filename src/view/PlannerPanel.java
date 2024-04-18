@@ -134,14 +134,16 @@ public class PlannerPanel extends JPanel implements IPlannerView {
   /**
    * Sets the current user to what is selected in the appropriate button in the schedule view.
    */
-  public void setCurrentUser() {
+  public String setCurrentUser() {
     this.currentUser = null;
     for (IUser user : model.getUsers()) {
       if (user.getName().equals(
               Objects.requireNonNull(selectUserButton.getSelectedItem()).toString())) {
         this.currentUser = user;
+        return this.currentUser.getName();
       }
     }
+    return this.currentUser.getName();
   }
 
   /**
@@ -268,7 +270,7 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     createEventButton.addActionListener(evt -> features.openEventView(this.getCurrentUser().getName()));
 
     addCalendar.addActionListener(evt -> features.addCalendar());
-    saveCalendar.addActionListener(evt -> features.saveCalendars());
+    saveCalendar.addActionListener(evt -> features.saveCalendars(this.saveCalendarInfo()));
 
     scheduleEventButton.addActionListener(evt -> features.openScheduleView());
     scheduleEventButton.addActionListener(evt ->
@@ -492,6 +494,7 @@ public class PlannerPanel extends JPanel implements IPlannerView {
     }
     return "";
   }
+
 
   /**
    * Allowing user to select a folder where they will export the user schedules.

@@ -166,18 +166,6 @@ public class Controller implements ViewFeatures {
     eventView.openBlankEvent(host);
   }
 
-
-  /**
-   * Delegate to the view of the schedule to display the schedule of the user
-   * with the same given name.
-   * @param userName name to cross-reference with set of users in the system.
-   *
-   *                  public void selectUserSchedule(String userName) {
-   *     scheduleView.displayUserSchedule(userName);
-   *   }
-   */
-
-
   /**
    * Delegate to the view of the event to close the event view.
    */
@@ -189,9 +177,16 @@ public class Controller implements ViewFeatures {
   /**
    * Delegate to the view of the schedule to set who the current user is.
    */
+  public String setCurrentUser() {
+    return plannerView.setCurrentUser();
+  }
+
+  /*
   public void setCurrentUser() {
     plannerView.setCurrentUser();
-  }
+
+   */
+
 
   /**
    * Determine the event occurring at the given time. Useful for user mouse events in the
@@ -340,8 +335,9 @@ public class Controller implements ViewFeatures {
    * Delegate to the view of the schedule to save the calendar info to the planner system.
    */
   @Override
-  public void saveCalendars() {
-    String filePath = plannerView.saveCalendarInfo();
+  public void saveCalendars(String filePath) {
+    //String filePath = plannerView.saveCalendarInfo();
+   // String filePath = plannerView.saveCalendarInfo();
     if (!filePath.isEmpty()) {
       model.exportScheduleAsXML(filePath);
     }

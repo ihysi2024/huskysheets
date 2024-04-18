@@ -91,7 +91,7 @@ public class MainPlanner {
     // my controller needs to set the planner view, eventview, and scheduleview - provider has equivalents of these?
 
     // my controller takes in a model: needs to be the adapted version of provider model (Read Only NU Planner Adapter)
-    if (args[1].equals("providerView")) {
+    if (args.length > 1 && args[1].equals("providerView")) {
       ICentralSystem providerModel;
       if (args[0].equals("anytime")) {
         IScheduleStrategy anyTime = new scheduleAnyTime();
