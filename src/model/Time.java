@@ -165,6 +165,39 @@ public class Time implements ITime {
     }
   }
 
+  /**
+   * Convert given String into a Time object. Time String must be in format HHMM.
+   *
+   * @param day String day to be converted into a Day
+   * @param time time in format 0000 (1st two values are hours, 2nd two are minutes)
+   * @return Time representation of given String in format 00:00
+   * @throws IllegalArgumentException if the given day and/or time values are invalid
+   *         ex. day does not exist, or time isn't in proper format
+   */
+  public static Time stringToTime(int day, String time) {
+    Day tempDay = Day.SATURDAY;
+    int tempHours;
+    int tempMin;
+    for (Day constDay : Day.values()) {
+      if (day == constDay.getDayIdx()) {
+        tempDay = constDay;
+      }
+    }
+    if (time.length() != 5) {
+      throw new IllegalArgumentException("invalid time input: " + time);
+    }
+
+    tempHours = Integer.parseInt(time.charAt(0) + String.valueOf(time.charAt(1)));
+    tempMin = Integer.parseInt(time.charAt(3) + String.valueOf(time.charAt(4)));
+
+    try {
+      return new Time(tempDay, tempHours, tempMin);
+    }
+    catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException("invalid hours and/or minutes");
+    }
+  }
+
 
   /**
    * Creates a time from the given day index and time.

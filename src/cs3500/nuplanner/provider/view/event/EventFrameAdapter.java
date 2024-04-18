@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import controller.ViewFeatures;
+import cs3500.nuplanner.provider.controller.FeaturesAdapter;
+import cs3500.nuplanner.provider.controller.IFeatures;
+import model.EventAdapter;
 import model.IEvent;
 import model.IUser;
 import view.IEventView;
@@ -12,9 +15,11 @@ import view.IEventView;
 public class EventFrameAdapter implements IEventView {
 
   private final IEventFrame adaptee;
+ // private final cs3500.nuplanner.provider.model.IEvent currEvent;
 
   public EventFrameAdapter(IEventFrame adaptee) {
     this.adaptee = Objects.requireNonNull(adaptee);
+    //this.currEvent = Objects.requireNonNull(currEvent);
   }
 
   /**
@@ -25,7 +30,8 @@ public class EventFrameAdapter implements IEventView {
    */
   @Override
   public void addFeatures(ViewFeatures features) {
-
+    IFeatures adaptedFeatures = new FeaturesAdapter(features);
+    this.adaptee.addFeatures(adaptedFeatures);
   }
 
   /**
@@ -33,7 +39,7 @@ public class EventFrameAdapter implements IEventView {
    */
   @Override
   public void closeEvent() {
-
+    this.adaptee.closeEventFrame();
   }
 
   /**
@@ -44,7 +50,8 @@ public class EventFrameAdapter implements IEventView {
    */
   @Override
   public void populateEventContents(IEvent event) {
-
+    cs3500.nuplanner.provider.model.IEvent adaptedEvent = new EventAdapter(event);
+    this.adaptee.autofill(adaptedEvent);
   }
 
   /**
@@ -55,6 +62,8 @@ public class EventFrameAdapter implements IEventView {
   @Override
   public String[] getEventNameInput() {
     return new String[0];
+
+   // return new String[]{this.currEvent.accessName()}; // ?? our view uses the fields of the swing components to get these
   }
 
   /**
@@ -93,6 +102,7 @@ public class EventFrameAdapter implements IEventView {
    */
   @Override
   public void resetPanel() {
+  //  this.adaptee.
 
   }
 
@@ -130,6 +140,7 @@ public class EventFrameAdapter implements IEventView {
    */
   @Override
   public HashMap<String, String[]> storeOpenedEventMap() {
+    //new String[]{this.currEvent.accessName()};
     return null;
   }
 

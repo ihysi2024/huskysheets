@@ -3,8 +3,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import controller.Controller;
+import controller.FeaturesAdapter;
+import cs3500.nuplanner.provider.controller.IFeatures;
 import cs3500.nuplanner.provider.model.ICentralSystem;
+import cs3500.nuplanner.provider.view.event.EventFrame;
 import cs3500.nuplanner.provider.view.event.EventFrameAdapter;
+import cs3500.nuplanner.provider.view.event.IEventFrame;
+import cs3500.nuplanner.provider.view.main.IMainFrame;
+import cs3500.nuplanner.provider.view.schedule.IScheduleFrame;
 import model.Event;
 import model.IEvent;
 import model.NUPlanner;
@@ -41,6 +47,10 @@ public class MainPlanner {
     IEventView eView;
     IScheduleView schedView;
 
+    IMainFrame providerMainView;
+    IEventFrame providerEventView;
+    IScheduleFrame providerSchedView;
+
 
     IEvent morningSnack = new Event("snack",
             new Time(Time.Day.TUESDAY, 10, 30),
@@ -69,22 +79,40 @@ public class MainPlanner {
     model.addUser(new User("Me", new Schedule(new ArrayList<>(List.of(officeHours)))));
 
 
+    // using provider view + my model adapters. using my controller
+    // my controller needs to set the planner view, eventview, and scheduleview - provider has equivalents of these?
+
+    // my controller takes in a model: needs to be the adapted version of provider model (Read Only NU Planner Adapter)
     if (args[1].equals("providerView")) {
       ICentralSystem providerModel;
       if (args[0].equals("anytime")) {
         IScheduleStrategy anyTime = new scheduleAnyTime();
-        providerModel = new NUPlannerAdapter(model);
+      //  providerModel = new NUPlannerAdapter(model);
         controller = new Controller(model, anyTime);
       } else if (args[0].equals("workhours")) {
         IScheduleStrategy workHours = new scheduleWorkHours();
-        providerModel = new ReadOnlyNUPlannerAdapter(model);
         controller = new Controller(model, workHours);
+
       } else {
         throw new IllegalArgumentException("Not a valid scheduling strategy");
       }
+      providerModel = new NUPlannerAdapter(model);
+      providerEventView = new EventFrame(providerModel);
+      IEventView eViewAdapted = new EventFrameAdapter(providerEventView);
       plannerView = new PlannerView(model);
-      eView = new EventFrameAdapter(providerModel);
       schedView = new ScheduleView(model);
+
+      controller.setPlannerView(plannerView);
+      controller.setEventView(eViewAdapted);
+      controller.setScheduleView(schedView);
+      IFeatures featuresAdapted = new FeaturesAdapter(controller);
+
+      featuresAdapted.launch(providerModel);
+    //  plannerView = new PlannerView(model);
+     // eView = new EventFrameAdapter(providerModel);
+    //  schedView = new ScheduleView(model);
+     // controller.goLaunchPlanner();
+
     }
 
     else {
@@ -100,12 +128,14 @@ public class MainPlanner {
       plannerView = new PlannerView(model);
       eView = new EventView(model);
       schedView = new ScheduleView(model);
+
+      controller.setPlannerView(plannerView);
+      controller.setEventView(eView);
+      controller.setScheduleView(schedView);
+      controller.goLaunchPlanner();
     }
 
-    controller.setPlannerView(plannerView);
-    controller.setEventView(eView);
-    controller.setScheduleView(schedView);
-    controller.goLaunchPlanner();
+
   }
 
 

@@ -21,8 +21,8 @@ public class EventAdapter implements IEvent {
    * Convert customer's event into provider event type
    */
   public static model.IEvent convertToProviderEventType(IEvent event) {
-    Time startTime = indexToTime(event.accessStartDay().getValue(), event.accessStartTime().accessTimeAsInt());
-    Time endTime = indexToTime(event.accessEndDay().getValue(), event.accessEndTime().accessTimeAsInt());
+    Time startTime = indexToTime(event.accessStartDay().getValue() - 1, event.accessStartTime().accessTimeAsInt());
+    Time endTime = indexToTime(event.accessEndDay().getValue() - 1, event.accessEndTime().accessTimeAsInt());
     String eventName = event.accessName();
     boolean online = event.accessLocation().accessOnline();
     String location = event.accessLocation().accessPlace();

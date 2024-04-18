@@ -12,7 +12,17 @@ import javax.xml.parsers.ParserConfigurationException;
 import cs3500.nuplanner.provider.controller.IFeatures;
 import cs3500.nuplanner.provider.model.ICentralSystem;
 import cs3500.nuplanner.provider.model.IEventTime;
+import model.Event;
+import model.EventAdapter;
 import model.IEvent;
+import model.ITime;
+import model.Time;
+import model.TimeAdapter;
+
+import static model.EventAdapter.convertToProviderEventType;
+import static model.Time.indexToTime;
+import static model.Time.stringToTime;
+import static model.TimeAdapter.convertToProviderTimeType;
 
 public class FeaturesAdapter implements IFeatures {
   private final controller.ViewFeatures adaptee;
@@ -35,7 +45,9 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void addEvent(String name, boolean isOnline, String place, DayOfWeek startDay, String startTime, DayOfWeek endDay, String endTime, List<String> users) {
-
+    Time startTimeOfEvent = stringToTime(startDay.getValue() - 1, startTime);
+    Time endTimeOfEvent = stringToTime(endDay.getValue() - 1, endTime);
+    this.adaptee.populateEvent(new Event(name, startTimeOfEvent, endTimeOfEvent, isOnline, place, users));
   }
 
   /**
@@ -52,8 +64,12 @@ public class FeaturesAdapter implements IFeatures {
    * @param users         (Modified) list of users attending the event.
    */
   @Override
-  public void modifyEvent(IEvent originalEvent, String name, boolean isOnline, String place, DayOfWeek startDay, String startTime, DayOfWeek endDay, String endTime, List<String> users) {
-
+  public void modifyEvent(cs3500.nuplanner.provider.model.IEvent originalEvent, String name, boolean isOnline, String place, DayOfWeek startDay, String startTime, DayOfWeek endDay, String endTime, List<String> users) {
+    Time startTimeOfEvent = stringToTime(startDay.getValue() - 1, startTime);
+    Time endTimeOfEvent = stringToTime(endDay.getValue() - 1, endTime);
+    IEvent adaptedNewEvent = new Event(name, startTimeOfEvent, endTimeOfEvent, isOnline, place, users);
+    IEvent adaptedOldEvent = convertToProviderEventType(originalEvent);
+    this.adaptee.modifyEvent(adaptedOldEvent, adaptedNewEvent);
   }
 
   /**
@@ -70,7 +86,9 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void removeEvent(String name, boolean isOnline, String place, DayOfWeek startDay, String startTime, DayOfWeek endDay, String endTime, List<String> users) {
-
+    Time startTimeOfEvent = stringToTime(startDay.getValue() - 1, startTime);
+    Time endTimeOfEvent = stringToTime(endDay.getValue() - 1, endTime);
+    this.adaptee.removeEvent(new Event(name, startTimeOfEvent, endTimeOfEvent, isOnline, place, users));
   }
 
   /**
@@ -82,7 +100,8 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void openExistingEventFrame(String currentUser, IEventTime time) {
-
+    IEvent desiredEvent = this.adaptee.findEvent(convertToProviderTimeType(time));
+    this.adaptee.populateEvent(desiredEvent);
   }
 
   /**
@@ -90,7 +109,7 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void openNewEventFrame() {
-
+    this.adaptee.openBlankEventView(""); // setting blank host
   }
 
   /**
@@ -98,7 +117,7 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void openNewScheduleFrame() {
-
+    this.adaptee.openScheduleView();
   }
 
   /**
@@ -109,7 +128,7 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void launch(ICentralSystem model) {
-
+    this.adaptee.goLaunchPlanner();
   }
 
   /**
@@ -119,7 +138,7 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void saveCalendarsXML(String filePath) {
-
+    this.adaptee.saveCalendars();
   }
 
   /**
@@ -132,6 +151,7 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void loadCalendarXML(String filePath) throws IOException, SAXException, ParserConfigurationException {
+    this.adaptee.addCalendar();
 
   }
 
@@ -148,6 +168,6 @@ public class FeaturesAdapter implements IFeatures {
    */
   @Override
   public void scheduleEvent(String name, boolean isOnline, String place, String durationMinutes, List<String> userIds) {
-
+    this.adaptee.scheduleEventInPlanner();
   }
 }

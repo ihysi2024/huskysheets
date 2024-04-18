@@ -125,6 +125,7 @@ public class Controller implements ViewFeatures {
   /**
    * Listen to user input and visualize the game.
    */
+  @Override
   public void goLaunchPlanner() {
     this.plannerView.addClickListener(this);
     this.plannerView.display(true);
@@ -155,7 +156,6 @@ public class Controller implements ViewFeatures {
   }
 
   /**
-<<<<<<< HEAD
    * Delegate to the view of the event to open a blank event. The given user is the
    * host of the event
    *
@@ -332,7 +332,6 @@ public class Controller implements ViewFeatures {
     }
     int numUsers = model.getUsers().size();
     String newUserName = model.getUsers().get(numUsers - 1).getName();
-   // model.r
     plannerView.addUserToDropdown(newUserName);
     this.openScheduleView();
   }
