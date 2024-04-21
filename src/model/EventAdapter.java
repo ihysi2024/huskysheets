@@ -53,7 +53,6 @@ public class EventAdapter implements IEvent {
    */
   @Override
   public boolean isOverlapping(IEventTime otherStartTime, IEventTime otherEndTime) {
-    //IEvent newEvent = new Event()
     return false;
   }
 
@@ -134,9 +133,6 @@ public class EventAdapter implements IEvent {
    */
   @Override
   public IEventLocation accessLocation() {
-    model.IEvent newEvent = new Event(this.adaptee.getEventName(), this.adaptee.getStartTime(),
-            this.adaptee.getEndTime(), this.adaptee.getOnline(), this.adaptee.getLocation(),
-            this.adaptee.getUsers());
     return new EventLocationAdapter(this.adaptee);
   }
 

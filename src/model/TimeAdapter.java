@@ -118,7 +118,7 @@ public class TimeAdapter implements IEventTime {
   @Override
   public String timeToString() {
     int mins = this.adaptee.getMinutes();
-    int hrs = this.adaptee.getMinutes();
+    int hrs = this.adaptee.getHours();
     String minsStr = "" + mins;
     String hrsStr = "" + hrs;
     if (mins < 10) {

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import controller.FeaturesAdapter;
 import controller.ViewFeatures;
-import cs3500.nuplanner.provider.controller.FeaturesAdapter;
 import cs3500.nuplanner.provider.controller.IFeatures;
 import model.EventAdapter;
 import model.IEvent;
